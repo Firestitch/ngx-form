@@ -1,5 +1,5 @@
 {
-  "name": "fs-form",
+  "name": "@firestitch/form",
   "version": "0.1.0",
   "scripts": {
     "build": "gulp build",

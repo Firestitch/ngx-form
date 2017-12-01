@@ -1,9 +1,9 @@
 {
-  "name": "@fs/api",
+  "name": "@firestitch/form",
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Firestitch/fs-api"
+    "url": "https://github.com/Firestitch/fs-form"
   },
   "author": {
     "name": "Maksim Sergeev",
@@ -14,12 +14,12 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Firestitch/fs-api/issues"
+    "url": "https://github.com/Firestitch/fs-form/issues"
   },
-  "main": "fsapi.umd.js",
-  "module": "fsapi.js",
-  "jsnext:main": "fsapi.js",
-  "typings": "fsapi.d.ts",
+  "main": "fs-form.umd.js",
+  "module": "fs-form.js",
+  "jsnext:main": "fs-form.js",
+  "typings": "fs-form.d.ts",
   "peerDependencies": {
     "@angular/core": "^4.0.0",
     "rxjs": "^5.1.0",
