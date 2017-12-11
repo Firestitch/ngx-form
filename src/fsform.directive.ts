@@ -13,7 +13,7 @@ import { FormGroupDirective, ControlContainer, FormGroup, NgForm, Validators } f
     4) add an ability to write custom error messages with variables (like "New pattern error, invalid $(parrern)")
 */
 @Directive({
-    selector: '[fs-form]'
+    selector: '[fsForm]'
 })
 export class FsFormDirective implements OnInit {
     @Input() fsFormBinding: NgForm;
@@ -24,15 +24,17 @@ export class FsFormDirective implements OnInit {
     }
 
     ngOnInit() {
-        if (this.fsFormBinding)
+        
+        if (this.fsFormBinding) {
             this.fsFormBinding.ngSubmit.subscribe(res => {
-                if (!res['valid'])
+                if (!res['valid']) {
                     for (const key in this.fsFormBinding.controls) {
                         this.fsFormBinding.controls[key].markAsDirty();
                         this.fsFormBinding.controls[key].updateValueAndValidity();
                     }
+                }
             })
-
+        }
     }
 
 }

@@ -21,8 +21,8 @@
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
-    "flatModuleOutFile": "fs-form.js",
-    "flatModuleId": "fs-form"
+    "flatModuleOutFile": "form.js",
+    "flatModuleId": "form"
   },
   "files": [
     "./index.ts"
