@@ -44,6 +44,7 @@
     "@angular/http": "^5.0.3",
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
+    "@angular/flex-layout": "2.0.0-beta.10-4905443",
     "@compodoc/compodoc": "^1.0.0-beta.10",
     "@types/jasmine": "2.5.53",
     "@types/node": "~6.0.60",

@@ -1,11 +1,42 @@
-<form fsForm>
+<form (ngSubmit)="save(myForm)" [fsFormBinding]="myForm" #myForm="ngForm" fsForm fxLayout="column">
     <mat-form-field>
-    <input  placeholder="4 to 7 characters in length" value=""
-      name="model"
-      [(ngModel)]="model" 
-      [fsMinLength]="4" 
-      matInput
-      fs-input    
-      />
+      <input  placeholder="3 to 8 characters in length"
+        [(ngModel)]="model"
+        name="simple_input"
+        matInput
+        fsRequired="required"
+        fsMin="3"
+        fsMax="8"
+        fsRequiredMessage="This is custom required message"
+        />
     </mat-form-field>
+    <!--
+    <div fxLayout="row">
+      <mat-form-field>
+          <input  placeholder="Password"
+            #passwordInput
+            name="password"
+            [(ngModel)]="password"
+            [fsRequired]="true"
+            matInput
+            fs-input
+            />
+        </mat-form-field>
+      <mat-form-field>
+        <input  placeholder="Password Confirm"
+          name="password_confirm"
+          [(ngModel)]="password_confirm"
+          [fsRequired]="true"
+          [fsCompare]="passwordInput"
+          matInput
+          fs-input
+          />
+      </mat-form-field>
+    </div>
+  -->
+    <div>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+      <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">Change Required</button>
+    </div>
+    {{ required }}
 </form>

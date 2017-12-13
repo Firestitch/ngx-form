@@ -2,23 +2,22 @@ import { Observable } from 'rxjs/Observable';
 import { Input, OnInit, Directive, ElementRef, Renderer2, ViewContainerRef, forwardRef } from '@angular/core';
 import { FormControl, NgControl, Validators, ValidatorFn, AbstractControl, ValidationErrors, NG_ASYNC_VALIDATORS } from '@angular/forms';
 
-const ERROR_MESSAGES = {
-    required: "This field is required.",
-    email: "This is not a valid email address.",
-    numeric: "Value should be numeric",
-    integer: "Value should be an integer",
-    min: 'Should not be less than $(1).',
-    max: 'Should not be bigger than $(1).',
-    minlength: 'Should not be shorter than $(1) characters.',
-    maxlength: 'Should not be longer than $(1) characters.'
-}
-
 @Directive({
     selector: '[fs-input]'
 })
 export class FsInputDirective implements OnInit {
     validators: ValidatorFn[] = [];
     asyncValidators: any;
+
+    @Input() fsRequiredMessage = 'This field is required.';
+    @Input() fsEmailMessage = 'This is not a valid email address.';
+    @Input() fsNumericMessage = 'Value should be numeric.';
+    @Input() fsIntegerMessage = 'Value should be an integer.';
+    @Input() fsMinMessage = 'Should not be less than $(1).';
+    @Input() fsMaxMessage = 'Should not be bigger than $(1).';
+    @Input() fsMinlengthMessage = 'Should not be shorter than $(1) characters.';
+    @Input() fsMaxlengthMessage = 'Should not be longer than $(1) characters.';
+    @Input() fsCompareMessage = 'Inputs do not match.';
 
     @Input() set fsMax(length: number) {
         this.validators.push(Validators.max(length));
@@ -40,6 +39,16 @@ export class FsInputDirective implements OnInit {
         this.validators.push(Validators.email);
     }
 
+    @Input() set fsCompare(formControl) {
+        this.validators.push(() => {
+            if (formControl.value === this.elRef.nativeElement.value) {
+                return null;
+            } else {
+                return { compare: true };
+            }
+        });
+    }
+
     @Input() set fsInteger(apply: boolean) {
         if (apply) {
             this.validators.push((control: AbstractControl): { [key: string]: boolean } => {
@@ -51,12 +60,13 @@ export class FsInputDirective implements OnInit {
             });
         }
     }
-
+    /*
     @Input() set fsRequired(apply: boolean) {
         if (apply) {
             this.validators.push(Validators.required);
         }
     }
+    */
 
     @Input() set fsNumeric(apply: boolean) {
         if (apply) {
@@ -102,9 +112,9 @@ export class FsInputDirective implements OnInit {
         if (this.asyncValidators) {
             this.controlRef.control.setAsyncValidators(this.asyncValidators);
         }
-        
+
         this.controlRef.control.statusChanges.subscribe(res => {
-            this.renderErrors();           
+            this.renderErrors();
         })
     }
 
@@ -112,37 +122,43 @@ export class FsInputDirective implements OnInit {
         if (this.controlRef.dirty) {
             let parentNode = this.elRef.nativeElement.parentNode;
 
-            //not the most elegant way to compile errors, but i couldnt get a better one working. right now its depepndant on styles/DOM we have in existing angular-material, which is not right
+            // not the most elegant way to compile errors, but i couldnt get a better one working. right now its depepndant on styles/DOM we have in existing angular-material, which is not right
             let errorContainer = this.renderer.createElement('div');
             this.renderer.addClass(errorContainer, 'ng-trigger');
             this.renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');
             for (const errKey in this.controlRef.errors) {
+
+                if (!this.controlRef.errors[errKey]) {
+                    continue;
+                }
+
                 let errorElement = this.renderer.createElement('mat-error');
                 this.renderer.addClass(errorElement, 'mat-error')
                 this.renderer.setProperty(errorElement, 'id', 'mat-error-' + errKey)
                 let errorText;
-                if (ERROR_MESSAGES[errKey]) {
-                    errorText = this.renderer.createText(this.parseErrorMessage(ERROR_MESSAGES[errKey], this.controlRef.errors[errKey]));
-                }
-                else
+
+                const messageVariable = `fs${this.capitalizeFirstLetter(errKey)}Message`;
+
+                if (this[messageVariable]) {
+                    errorText = this.renderer.createText(this.parseErrorMessage(this[messageVariable], this.controlRef.errors[errKey]));
+                } else {
                     errorText = this.renderer.createText(this.controlRef.errors[errKey]);
+                }
 
                 this.renderer.appendChild(errorElement, errorText);
                 this.renderer.appendChild(errorContainer, errorElement);
-             
             }
 
-            //searching for a container if we are at input element
+            // searching for a container if we are at input element
             let errorPlaceholder = this.findClass(this.elRef.nativeElement.parentNode.parentNode.parentNode, 'mat-form-field-subscript-wrapper')
 
             if (errorPlaceholder) {
                 errorPlaceholder.innerHTML = '';
                 errorPlaceholder.appendChild(errorContainer);
-            }
-            else {
+            }else {
                 errorPlaceholder = this.renderer.createElement('div');
                 this.renderer.addClass(errorPlaceholder, 'mat-form-field-subscript-wrapper');
-                this.renderer.appendChild(errorPlaceholder, errorContainer);                
+                this.renderer.appendChild(errorPlaceholder, errorContainer);
                 this.elRef.nativeElement.appendChild(errorPlaceholder);
             }
         }
@@ -181,6 +197,7 @@ export class FsInputDirective implements OnInit {
         return foundElement;
     }
 
-
-
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 }

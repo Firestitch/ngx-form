@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FsMaterialModule } from '@firestitch/material';
 import { FsFormModule }  from '@firestitch/form';
@@ -18,20 +19,27 @@ import { FsFormModule }  from '@firestitch/form';
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'template.html'
 })
-class AppComponent {}
+class AppComponent {
+  required = true;
+  save(form) {
+    console.log('Save', form);
+  }
+}
 
 @NgModule({
   bootstrap: [ AppComponent ],
   declarations: [ AppComponent ],
-  imports: [ 
+  imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    FsFormModule,     
+    FsFormModule,
     FormsModule,
-    FsMaterialModule
+    FsMaterialModule,
+    FlexLayoutModule
    ]
 })
-class AppModule {}
+class AppModule {
+ }
 
 
 platformBrowserDynamic().bootstrapModule(AppModule);
