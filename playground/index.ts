@@ -7,6 +7,7 @@ import { NgModule, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { Observable } from 'rxjs/Observable';
 
 import { FsMaterialModule } from '@firestitch/material';
 import { FsFormModule }  from '@firestitch/form';
@@ -23,6 +24,19 @@ class AppComponent {
   required = true;
   save(form) {
     console.log('Save', form);
+  }
+
+  asyncValidate(formControl) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        let testValue = formControl.value;
+        if (testValue === 'existing@email.com') {
+          resolve({ asyncInvalid: 'Email already exists!' });
+        } else {
+          resolve(null);
+        }
+      }, 1000);
+    });
   }
 }
 

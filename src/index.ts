@@ -1,6 +1,5 @@
-import { FsAsyncValidateDirective } from './fsAsyncValidate.directive';
 import { FsInputDirective } from './fsInput.directive';
-
+import { FsCommonModule } from '@firestitch/common';
 import { FsForm } from './fsform.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,15 +11,25 @@ import {
   FsControlDirective,
   FsRequiredDirective,
   FsMinDirective,
-  FsMaxDirective
+  FsMaxDirective,
+  FsMinLengthDirective,
+  FsMaxLengthDirective,
+  FsEmailDirective,
+  FsCompareDirective,
+  FsIntegerDirective,
+  FsNumericDirective,
+  FsPatternDirective,
+  FsValidateDirective,
+  FsAsyncValidateDirective
 } from './fsform.directive';
 
-export * from './fsAsyncValidate.directive';
+// export * from './fsAsyncValidate.directive';
 export * from './fsInput.directive';
 export * from './fsform.directive';
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    FsCommonModule
 ],
 declarations: [
   FsFormDirective,
@@ -29,17 +38,26 @@ declarations: [
   FsControlDirective,
   FsRequiredDirective,
   FsMinDirective,
-  FsMaxDirective
+  FsMaxDirective,
+  FsMinLengthDirective,
+  FsMaxLengthDirective,
+  FsEmailDirective,
+  FsCompareDirective,
+  FsIntegerDirective,
+  FsNumericDirective,
+  FsPatternDirective,
+  FsValidateDirective,
+  FsAsyncValidateDirective
 ],
 providers: [
   FsForm,
   FsFormDirective,
   // FsInputDirective,
   // FsAsyncValidateDirective,
-  FsControlDirective,
-  FsRequiredDirective,
-  FsMinDirective,
-  FsMaxDirective
+  // FsControlDirective,
+  // FsRequiredDirective,
+  // FsMinDirective,
+  // FsMaxDirective
 ],
 exports: [
   FsFormDirective,
@@ -48,7 +66,16 @@ exports: [
   FsControlDirective,
   FsRequiredDirective,
   FsMinDirective,
-  FsMaxDirective
+  FsMaxDirective,
+  FsMinLengthDirective,
+  FsMaxLengthDirective,
+  FsEmailDirective,
+  FsCompareDirective,
+  FsIntegerDirective,
+  FsNumericDirective,
+  FsPatternDirective,
+  FsValidateDirective,
+  FsAsyncValidateDirective
 ]
 })
 export class FsFormModule {
@@ -62,7 +89,16 @@ export class FsFormModule {
         FsControlDirective,
         FsRequiredDirective,
         FsMinDirective,
-        FsMaxDirective
+        FsMaxDirective,
+        FsMinLengthDirective,
+        FsMaxLengthDirective,
+        FsEmailDirective,
+        FsCompareDirective,
+        FsIntegerDirective,
+        FsNumericDirective,
+        FsPatternDirective,
+        FsValidateDirective,
+        FsAsyncValidateDirective
       ]
     };
   }

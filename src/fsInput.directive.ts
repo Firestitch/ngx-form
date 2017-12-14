@@ -93,11 +93,13 @@ export class FsInputDirective implements OnInit {
         how to use async validators: https://netbasal.com/angular-2-forms-create-async-validator-directive-dd3fd026cb45
         mention that in control you have access to all the controls in the form through parent, so you can validate multiple values
     */
+    /*
     @Input() set fsAsyncValidate(validator:
         Promise<ValidationErrors | null> | Observable<ValidationErrors | null>
     ) {
         this.asyncValidators = validator;
     }
+    */
 
     constructor(
         private elRef: ElementRef,

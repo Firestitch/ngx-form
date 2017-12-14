@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
+import { FsArray } from '@firestitch/common';
+import { FsUtil } from '@firestitch/common';
 
 @Injectable()
 export class FsForm {
+
+    constructor(private fsArray: FsArray, private fsUtil: FsUtil) {}
 
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
@@ -84,5 +88,19 @@ export class FsForm {
 
     capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    searchIndex(data, item) {
+        return this.fsArray.indexOf(data, value => {
+            return JSON.stringify(value) === JSON.stringify(item);
+        });
+    }
+
+    isInt(value) {
+        return !this.fsUtil.string(value).length || this.fsUtil.isInt(value);
+    }
+
+    isNumeric(value) {
+        return !this.fsUtil.string(value).length || this.fsUtil.isNumeric(value);
     }
 }
