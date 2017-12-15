@@ -50,7 +50,12 @@
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
       '@firestitch/form': '../dist',
       '@firestitch/common': 'npm:@firestitch/common/common.umd.js',
-      '@firestitch/material': './.playground/material.module.js'
+      '@firestitch/fs-datepicker': 'npm:@firestitch/datepicker/fs-datepicker.umd.js',
+      '@firestitch/fs-checkbox': 'npm:@firestitch/checkbox/fs-checkbox.umd.js',
+      '@firestitch/material': './.playground/material.module.js',
+      'iscroll': 'npm:iscroll/build/iscroll.js',
+      'moment': 'npm:moment/moment.js',
+      'moment-timezone': 'npm:moment-timezone/moment-timezone.js'
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {

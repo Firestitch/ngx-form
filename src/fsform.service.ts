@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FsArray } from '@firestitch/common';
-import { FsUtil } from '@firestitch/common';
+import { FsArray, FsUtil, FsValidate } from '@firestitch/common';
 
 @Injectable()
 export class FsForm {
 
-    constructor(private fsArray: FsArray, private fsUtil: FsUtil) {}
+    constructor(private fsArray: FsArray, private fsUtil: FsUtil, private fsValidate: FsValidate) {}
 
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
@@ -102,5 +101,13 @@ export class FsForm {
 
     isNumeric(value) {
         return !this.fsUtil.string(value).length || this.fsUtil.isNumeric(value);
+    }
+
+    phone(value) {
+        return this.fsValidate.phone(value);
+    }
+
+    email(value) {
+        return this.fsValidate.email(value);
     }
 }

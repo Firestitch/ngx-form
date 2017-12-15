@@ -8,6 +8,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
+import { FsDatepickerModule } from '@firestitch/fs-datepicker';
 
 import { FsMaterialModule } from '@firestitch/material';
 import { FsFormModule }  from '@firestitch/form';
@@ -22,6 +23,9 @@ import { FsFormModule }  from '@firestitch/form';
 })
 class AppComponent {
   required = true;
+  visible = true;
+  show = true;
+
   save(form) {
     console.log('Save', form);
   }
@@ -38,7 +42,7 @@ class AppComponent {
       setTimeout(() => {
         let testValue = formControl.value;
         if (testValue === 'existing@email.com') {
-          resolve({ asyncInvalid: 'Email already exists!' });
+          resolve({ email: 'Email already exists!' });
         } else {
           resolve(null);
         }
@@ -56,7 +60,9 @@ class AppComponent {
     FsFormModule,
     FormsModule,
     FsMaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FsMaterialModule,
+    FsDatepickerModule
    ]
 })
 class AppModule {

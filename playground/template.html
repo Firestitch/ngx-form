@@ -1,5 +1,5 @@
 <form (ngSubmit)="save(myForm)" [fsFormBinding]="myForm" #myForm="ngForm" fsForm fxLayout="column">
-    <mat-form-field>
+    <mat-form-field [hidden]="!visible" *ngIf="show">
       <input  placeholder="3 to 8 characters in length"
         [(ngModel)]="model"
         name="simple_input"
@@ -11,7 +11,7 @@
         />
     </mat-form-field>
 
-    <div fxLayout="row">
+    <div fxLayout="row" [hidden]="!visible" *ngIf="show">
       <mat-form-field>
           <input  placeholder="Password"
             #passwordInput
@@ -34,7 +34,7 @@
       </mat-form-field>
     </div>
 
-    <mat-form-field>
+    <mat-form-field [hidden]="!visible" *ngIf="show">
       <input  placeholder="Integer"
         [(ngModel)]="integer"
         name="integer_input"
@@ -43,7 +43,25 @@
         />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field [hidden]="!visible" *ngIf="show">
+      <input  placeholder="Email"
+        [(ngModel)]="email"
+        name="email_input"
+        matInput
+        [fsEmail]="true"
+        />
+    </mat-form-field>
+
+    <mat-form-field [hidden]="!visible" *ngIf="show">
+      <input  placeholder="Phone"
+        [(ngModel)]="phone"
+        name="phone_input"
+        matInput
+        fsPhone="true"
+        />
+    </mat-form-field>
+
+    <mat-form-field [hidden]="!visible" *ngIf="show">
       <input  placeholder="Numeric"
         [(ngModel)]="numeric"
         name="numeric_input"
@@ -52,7 +70,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field [hidden]="!visible" *ngIf="show">
       <input  placeholder="Pattern"
         [(ngModel)]="pattern"
         name="pattern_input"
@@ -61,7 +79,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field [hidden]="!visible" *ngIf="show">
       <input  placeholder="Validate Function"
         [(ngModel)]="valid_function"
         name="valid_function"
@@ -71,7 +89,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field [hidden]="!visible" *ngIf="show">
       <input  placeholder="Async Validator"
         [(ngModel)]="async"
         name="async_input"
@@ -81,8 +99,14 @@
         />
     </mat-form-field>
 
+    <mat-form-field [hidden]="!visible" *ngIf="show">
+      <input matInput fsDatepicker fsRequired="true" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
+    </mat-form-field>
+
     <div>
       <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">Change Required</button>
+      <button mat-raised-button color="primary" type="button" (click)="visible = !(!!visible)">Change Visibility</button>
+      <button mat-raised-button color="primary" type="button" (click)="show = !(!!show)">Change If condition</button>
     </div>
 </form>
