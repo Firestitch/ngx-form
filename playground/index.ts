@@ -26,6 +26,13 @@ class AppComponent {
     console.log('Save', form);
   }
 
+  syncValidate(formControl) {
+    if (formControl.value === 'some@email.com') {
+      return null;
+    }
+    return { validationError: 'Should be some@email.com' };
+  }
+
   asyncValidate(formControl) {
     return new Promise(resolve => {
       setTimeout(() => {

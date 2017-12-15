@@ -62,6 +62,16 @@
     </mat-form-field>
 
     <mat-form-field>
+      <input  placeholder="Validate Function"
+        [(ngModel)]="valid_function"
+        name="valid_function"
+        matInput
+        [fsRequired]="true"
+        [fsValidate]="syncValidate"
+        />
+    </mat-form-field>
+
+    <mat-form-field>
       <input  placeholder="Async Validator"
         [(ngModel)]="async"
         name="async_input"

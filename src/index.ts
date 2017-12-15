@@ -23,8 +23,6 @@ import {
   FsAsyncValidateDirective
 } from './fsform.directive';
 
-// export * from './fsAsyncValidate.directive';
-export * from './fsInput.directive';
 export * from './fsform.directive';
 @NgModule({
   imports: [
@@ -33,8 +31,6 @@ export * from './fsform.directive';
 ],
 declarations: [
   FsFormDirective,
-  // FsInputDirective,
-  // FsAsyncValidateDirective,
   FsControlDirective,
   FsRequiredDirective,
   FsMinDirective,
@@ -51,18 +47,10 @@ declarations: [
 ],
 providers: [
   FsForm,
-  FsFormDirective,
-  // FsInputDirective,
-  // FsAsyncValidateDirective,
-  // FsControlDirective,
-  // FsRequiredDirective,
-  // FsMinDirective,
-  // FsMaxDirective
+  FsFormDirective
 ],
 exports: [
   FsFormDirective,
-  // FsInputDirective,
-  // FsAsyncValidateDirective,
   FsControlDirective,
   FsRequiredDirective,
   FsMinDirective,
@@ -84,8 +72,6 @@ export class FsFormModule {
       ngModule: FsFormModule,
       providers: [
         FsFormDirective,
-        // FsInputDirective,
-        // FsAsyncValidateDirective,
         FsControlDirective,
         FsRequiredDirective,
         FsMinDirective,
