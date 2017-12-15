@@ -8,11 +8,12 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FsArray } from '@firestitch/common';
 import { FsForm } from './fsform.service';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Directive({
     selector: '[fsControl]'
 })
-export class FsControlDirective implements AfterViewChecked {
+export class FsControlDirective implements AfterViewChecked, OnDestroy {
 
     @Input() fsRequiredMessage = 'This field is required.';
     @Input() fsEmailMessage = 'This is not a valid email address.';
@@ -32,6 +33,8 @@ export class FsControlDirective implements AfterViewChecked {
     protected controlRef: NgControl;
     protected viewContainer: ViewContainerRef;
 
+    protected statusChanges$;
+
     constructor(
         ElementRef: ElementRef,
         Renderer2: Renderer2,
@@ -45,12 +48,16 @@ export class FsControlDirective implements AfterViewChecked {
         this.controlRef = NgControl;
         this.viewContainer = ViewContainerRef;
 
-        this.controlRef.control.statusChanges.subscribe(res => {
+        this.statusChanges$ = this.controlRef.control.statusChanges.subscribe(res => {
             FsForm.renderErrors(this, this.controlRef, this.renderer, this.elRef);
         });
 
         this.controlRef.control['fsValidators'] = this.controlRef.control['fsValidators'] || [];
         this.controlRef.control['fsAsyncValidators'] = this.controlRef.control['fsAsyncValidators'] || [];
+    }
+
+    ngOnDestroy() {
+        this.statusChanges$.unsubscribe();
     }
 
     // If the  inputs are not visible (display: none) then don't include the input in the validation
@@ -327,7 +334,7 @@ export class FsAsyncValidateDirective extends FsControlDirective implements OnIn
 @Directive({
     selector: '[fsForm]'
 })
-export class FsFormDirective implements OnInit {
+export class FsFormDirective implements OnInit, OnDestroy {
     @Input() fsFormBinding: NgForm;
 
     constructor(
@@ -341,23 +348,6 @@ export class FsFormDirective implements OnInit {
         if (this.fsFormBinding) {
             this.fsFormBinding.ngSubmit.subscribe(res => {
 
-                // console.log(this.fsFormBinding);
-                /*
-                for (let key in this.fsFormBinding.form.controls) {
-
-                    if(!this.fsFormBinding.form.controls[key]) {
-                        return;
-                    }
-
-                    const element = this.elRef.nativeElement.elements.namedItem(key);
-
-                    if(element.offsetParent === null) {
-                        this.fsFormBinding.form.controls[key].clearValidators();
-                        this.fsFormBinding.form.controls[key].clearAsyncValidators();
-                    }
-                }
-                */
-
                 if (this.fsFormBinding.form.status === 'INVALID') {
                     for (const key in this.fsFormBinding.controls) {
 
@@ -370,5 +360,9 @@ export class FsFormDirective implements OnInit {
                 }
             })
         }
+    }
+
+    ngOnDestroy() {
+        this.fsFormBinding.ngSubmit.unsubscribe();
     }
 }
