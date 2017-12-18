@@ -15,17 +15,17 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 })
 export class FsControlDirective implements AfterViewChecked, OnDestroy {
 
-    @Input() fsRequiredMessage = 'This field is required.';
-    @Input() fsEmailMessage = 'This is not a valid email address.';
-    @Input() fsPhoneMessage = 'Invalid phone number.';
-    @Input() fsNumericMessage = 'Value should be numeric.';
-    @Input() fsIntegerMessage = 'Value should be an integer.';
-    @Input() fsMinMessage = 'Should not be less than $(1).';
-    @Input() fsMaxMessage = 'Should not be bigger than $(1).';
-    @Input() fsMinlengthMessage = 'Should not be shorter than $(1) characters.';
-    @Input() fsMaxlengthMessage = 'Should not be longer than $(1) characters.';
-    @Input() fsCompareMessage = 'Inputs do not match.';
-    @Input() fsPatternMessage = 'Value should match pattern $(1)';
+    @Input() fsFormRequiredMessage = 'This field is required.';
+    @Input() fsFormEmailMessage = 'This is not a valid email address.';
+    @Input() fsFormPhoneMessage = 'Invalid phone number.';
+    @Input() fsFormNumericMessage = 'Value should be numeric.';
+    @Input() fsFormIntegerMessage = 'Value should be an integer.';
+    @Input() fsFormMinMessage = 'Should not be less than $(1).';
+    @Input() fsFormMaxMessage = 'Should not be bigger than $(1).';
+    @Input() fsFormMinlengthMessage = 'Should not be shorter than $(1) characters.';
+    @Input() fsFormMaxlengthMessage = 'Should not be longer than $(1) characters.';
+    @Input() fsFormCompareMessage = 'Inputs do not match.';
+    @Input() fsFormPatternMessage = 'Value should match pattern $(1)';
 
     protected fsForm: FsForm;
     protected elRef: ElementRef;
@@ -111,17 +111,17 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
 }
 
 @Directive({
-    selector: '[fsRequired]'
+    selector: '[fsFormRequired]'
 })
-export class FsRequiredDirective extends FsControlDirective implements OnChanges {
-    @Input() fsRequired: boolean;
+export class FsFormRequiredDirective extends FsControlDirective implements OnChanges {
+    @Input() fsFormRequired: boolean;
 
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
 
     ngOnChanges() {
-        if (this.fsRequired) {
+        if (this.fsFormRequired) {
             super.addValidator(Validators.required);
         }else {
             super.removeValidator(Validators.required);
@@ -130,62 +130,62 @@ export class FsRequiredDirective extends FsControlDirective implements OnChanges
 }
 
 @Directive({
-    selector: '[fsMax]'
+    selector: '[fsFormMax]'
 })
-export class FsMaxDirective extends FsControlDirective implements OnInit {
-    @Input() fsMax;
+export class FsFormMaxDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormMax;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addValidator(Validators.max(this.fsMax));
+        super.addValidator(Validators.max(this.fsFormMax));
     }
 }
 
 @Directive({
-    selector: '[fsMin]'
+    selector: '[fsFormMin]'
 })
-export class FsMinDirective extends FsControlDirective implements OnInit {
-    @Input() fsMin;
+export class FsFormMinDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormMin;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addValidator(Validators.min(this.fsMin));
+        super.addValidator(Validators.min(this.fsFormMin));
     }
 }
 
 @Directive({
-    selector: '[fsMinLength]'
+    selector: '[fsFormMinLength]'
 })
-export class FsMinLengthDirective extends FsControlDirective implements OnInit {
-    @Input() fsMinLength;
+export class FsFormMinLengthDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormMinLength;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addValidator(Validators.minLength(this.fsMinLength));
+        super.addValidator(Validators.minLength(this.fsFormMinLength));
     }
 }
 
 @Directive({
-    selector: '[fsMaxLength]'
+    selector: '[fsFormMaxLength]'
 })
-export class FsMaxLengthDirective extends FsControlDirective implements OnInit {
-    @Input() fsMaxLength;
+export class FsFormMaxLengthDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormMaxLength;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addValidator(Validators.maxLength(this.fsMaxLength));
+        super.addValidator(Validators.maxLength(this.fsFormMaxLength));
     }
 }
 
 @Directive({
-    selector: '[fsEmail]'
+    selector: '[fsFormEmail]'
 })
-export class FsEmailDirective extends FsControlDirective implements OnChanges {
-    @Input() fsEmail;
+export class FsFormEmailDirective extends FsControlDirective implements OnChanges {
+    @Input() fsFormEmail;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
@@ -198,7 +198,7 @@ export class FsEmailDirective extends FsControlDirective implements OnChanges {
             return { email: true };
         };
 
-        if (this.fsEmail) {
+        if (this.fsFormEmail) {
             super.addValidator(validator);
         }else {
             super.removeValidator(validator);
@@ -207,10 +207,10 @@ export class FsEmailDirective extends FsControlDirective implements OnChanges {
 }
 
 @Directive({
-    selector: '[fsPhone]'
+    selector: '[fsFormPhone]'
 })
-export class FsPhoneDirective extends FsControlDirective implements OnChanges {
-    @Input() fsPhone;
+export class FsFormPhoneDirective extends FsControlDirective implements OnChanges {
+    @Input() fsFormPhone;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
@@ -223,7 +223,7 @@ export class FsPhoneDirective extends FsControlDirective implements OnChanges {
             return { phone: true };
         };
 
-        if (this.fsPhone) {
+        if (this.fsFormPhone) {
             super.addValidator(validator);
         }else {
             super.removeValidator(validator);
@@ -232,16 +232,16 @@ export class FsPhoneDirective extends FsControlDirective implements OnChanges {
 }
 
 @Directive({
-    selector: '[fsCompare]'
+    selector: '[fsFormCompare]'
 })
-export class FsCompareDirective extends FsControlDirective implements OnInit {
-    @Input() fsCompare;
+export class FsFormCompareDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormCompare;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
         super.addValidator(() => {
-            if (this.fsCompare.value === this.elRef.nativeElement.value) {
+            if (this.fsFormCompare.value === this.elRef.nativeElement.value) {
                 return null;
             } else {
                 return { compare: true };
@@ -251,15 +251,15 @@ export class FsCompareDirective extends FsControlDirective implements OnInit {
 }
 
 @Directive({
-    selector: '[fsInteger]'
+    selector: '[fsFormInteger]'
 })
-export class FsIntegerDirective extends FsControlDirective implements OnInit {
-    @Input() fsInteger;
+export class FsFormIntegerDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormInteger;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        if (this.fsInteger) {
+        if (this.fsFormInteger) {
             super.addValidator((control: AbstractControl): { [key: string]: boolean } => {
                 if (this.fsForm.isInt(control.value)) {
                     return null;
@@ -272,15 +272,15 @@ export class FsIntegerDirective extends FsControlDirective implements OnInit {
 }
 
 @Directive({
-    selector: '[fsNumeric]'
+    selector: '[fsFormNumeric]'
 })
-export class FsNumericDirective extends FsControlDirective implements OnInit {
-    @Input() fsNumeric;
+export class FsFormNumericDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormNumeric;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        if (this.fsNumeric) {
+        if (this.fsFormNumeric) {
             super.addValidator((control: AbstractControl): { [key: string]: boolean } => {
                 if (this.fsForm.isNumeric(control.value)) {
                     return null;
@@ -293,41 +293,41 @@ export class FsNumericDirective extends FsControlDirective implements OnInit {
 }
 
 @Directive({
-    selector: '[fsPattern]'
+    selector: '[fsFormPattern]'
 })
-export class FsPatternDirective extends FsControlDirective implements OnInit {
-    @Input() fsPattern: RegExp;
+export class FsFormPatternDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormPattern: RegExp;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addValidator(Validators.pattern(this.fsPattern));
+        super.addValidator(Validators.pattern(this.fsFormPattern));
     }
 }
 
 @Directive({
-    selector: '[fsValidate]'
+    selector: '[fsFormValidate]'
 })
-export class FsValidateDirective extends FsControlDirective implements OnInit {
-    @Input() fsValidate;
+export class FsFormValidateDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormValidate;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addValidator(this.fsValidate);
+        super.addValidator(this.fsFormValidate);
     }
 }
 
 @Directive({
-    selector: '[fsAsyncValidate]'
+    selector: '[fsFormAsyncValidate]'
 })
-export class FsAsyncValidateDirective extends FsControlDirective implements OnInit {
-    @Input() fsAsyncValidate: Promise<ValidationErrors | null> | Observable<ValidationErrors | null>;
+export class FsFormAsyncValidateDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormAsyncValidate: Promise<ValidationErrors | null> | Observable<ValidationErrors | null>;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addAsyncValidator(this.fsAsyncValidate);
+        super.addAsyncValidator(this.fsFormAsyncValidate);
     }
 }
 

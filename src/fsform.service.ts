@@ -10,6 +10,23 @@ export class FsForm {
         if (controlRef.dirty) {
             let parentNode = elRef.nativeElement.parentNode;
 
+            if (elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP') {
+                let wraperContainer = renderer.createElement('div');
+                renderer.addClass(wraperContainer, 'mat-input-subscript-wrapper');
+                renderer.addClass(wraperContainer, 'mat-form-field-subscript-wrapper');
+
+                let wraperExist = false;
+
+                for (let i = 0; i < elRef.nativeElement.childNodes.length; i++) {
+                    if (elRef.nativeElement.childNodes[i]['className'] && elRef.nativeElement.childNodes[i]['className'].match(/mat-input-subscript-wrapper/)) {
+                        wraperExist = true;
+                    }
+                }
+
+                if (!wraperExist) {
+                    renderer.appendChild(elRef.nativeElement, wraperContainer);
+                }
+            }
             // not the most elegant way to compile errors, but i couldnt get a better one working. right now its depepndant on styles/DOM we have in existing angular-material, which is not right
             let errorContainer = renderer.createElement('div');
             renderer.addClass(errorContainer, 'ng-trigger');
@@ -25,7 +42,7 @@ export class FsForm {
                 renderer.setProperty(errorElement, 'id', 'mat-error-' + errKey)
                 let errorText;
 
-                const messageVariable = `fs${this.capitalizeFirstLetter(errKey)}Message`;
+                const messageVariable = `fsForm${this.capitalizeFirstLetter(errKey)}Message`;
 
                 if (instance[messageVariable]) {
                     errorText = renderer.createText(this.parseErrorMessage(instance[messageVariable], controlRef.errors[errKey]));

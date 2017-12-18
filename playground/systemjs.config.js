@@ -51,7 +51,7 @@
       '@firestitch/form': '../dist',
       '@firestitch/common': 'npm:@firestitch/common/common.umd.js',
       '@firestitch/fs-datepicker': 'npm:@firestitch/datepicker/fs-datepicker.umd.js',
-      '@firestitch/fs-checkbox': 'npm:@firestitch/checkbox/fs-checkbox.umd.js',
+      '@firestitch/fscheckboxgroup': 'npm:@firestitch/checkboxgroup/checkboxgroup.umd.js',
       '@firestitch/material': './.playground/material.module.js',
       'iscroll': 'npm:iscroll/build/iscroll.js',
       'moment': 'npm:moment/moment.js',

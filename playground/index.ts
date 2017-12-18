@@ -9,6 +9,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { Observable } from 'rxjs/Observable';
 import { FsDatepickerModule } from '@firestitch/fs-datepicker';
+import { FsCheckboxGroupModule } from '@firestitch/fscheckboxgroup';
 
 import { FsMaterialModule } from '@firestitch/material';
 import { FsFormModule }  from '@firestitch/form';
@@ -25,6 +26,15 @@ class AppComponent {
   required = true;
   visible = true;
   show = true;
+
+  checkbox: object[] = [];
+
+  items = [
+    { name: 'Item 1', id: 1 },
+    { name: 'Item 2', id: 2 },
+    { name: 'Item 3', id: 3 },
+    { name: 'Item 4', id: 4 }
+  ];
 
   save(form) {
     console.log('Save', form);
@@ -62,7 +72,8 @@ class AppComponent {
     FsMaterialModule,
     FlexLayoutModule,
     FsMaterialModule,
-    FsDatepickerModule
+    FsDatepickerModule,
+    FsCheckboxGroupModule
    ]
 })
 class AppModule {

@@ -9,19 +9,19 @@ import { CommonModule } from '@angular/common';
 import {
   FsFormDirective,
   FsControlDirective,
-  FsRequiredDirective,
-  FsMinDirective,
-  FsMaxDirective,
-  FsMinLengthDirective,
-  FsMaxLengthDirective,
-  FsEmailDirective,
-  FsPhoneDirective,
-  FsCompareDirective,
-  FsIntegerDirective,
-  FsNumericDirective,
-  FsPatternDirective,
-  FsValidateDirective,
-  FsAsyncValidateDirective
+  FsFormRequiredDirective,
+  FsFormMinDirective,
+  FsFormMaxDirective,
+  FsFormMinLengthDirective,
+  FsFormMaxLengthDirective,
+  FsFormEmailDirective,
+  FsFormPhoneDirective,
+  FsFormCompareDirective,
+  FsFormIntegerDirective,
+  FsFormNumericDirective,
+  FsFormPatternDirective,
+  FsFormValidateDirective,
+  FsFormAsyncValidateDirective
 } from './fsform.directive';
 
 export * from './fsform.directive';
@@ -33,19 +33,19 @@ export * from './fsform.directive';
 declarations: [
   FsFormDirective,
   FsControlDirective,
-  FsRequiredDirective,
-  FsMinDirective,
-  FsMaxDirective,
-  FsMinLengthDirective,
-  FsMaxLengthDirective,
-  FsEmailDirective,
-  FsPhoneDirective,
-  FsCompareDirective,
-  FsIntegerDirective,
-  FsNumericDirective,
-  FsPatternDirective,
-  FsValidateDirective,
-  FsAsyncValidateDirective
+  FsFormRequiredDirective,
+  FsFormMinDirective,
+  FsFormMaxDirective,
+  FsFormMinLengthDirective,
+  FsFormMaxLengthDirective,
+  FsFormEmailDirective,
+  FsFormPhoneDirective,
+  FsFormCompareDirective,
+  FsFormIntegerDirective,
+  FsFormNumericDirective,
+  FsFormPatternDirective,
+  FsFormValidateDirective,
+  FsFormAsyncValidateDirective
 ],
 providers: [
   FsForm,
@@ -54,19 +54,19 @@ providers: [
 exports: [
   FsFormDirective,
   FsControlDirective,
-  FsRequiredDirective,
-  FsMinDirective,
-  FsMaxDirective,
-  FsMinLengthDirective,
-  FsMaxLengthDirective,
-  FsEmailDirective,
-  FsPhoneDirective,
-  FsCompareDirective,
-  FsIntegerDirective,
-  FsNumericDirective,
-  FsPatternDirective,
-  FsValidateDirective,
-  FsAsyncValidateDirective
+  FsFormRequiredDirective,
+  FsFormMinDirective,
+  FsFormMaxDirective,
+  FsFormMinLengthDirective,
+  FsFormMaxLengthDirective,
+  FsFormEmailDirective,
+  FsFormPhoneDirective,
+  FsFormCompareDirective,
+  FsFormIntegerDirective,
+  FsFormNumericDirective,
+  FsFormPatternDirective,
+  FsFormValidateDirective,
+  FsFormAsyncValidateDirective
 ]
 })
 export class FsFormModule {
@@ -76,19 +76,19 @@ export class FsFormModule {
       providers: [
         FsFormDirective,
         FsControlDirective,
-        FsRequiredDirective,
-        FsMinDirective,
-        FsMaxDirective,
-        FsMinLengthDirective,
-        FsMaxLengthDirective,
-        FsEmailDirective,
-        FsPhoneDirective,
-        FsCompareDirective,
-        FsIntegerDirective,
-        FsNumericDirective,
-        FsPatternDirective,
-        FsValidateDirective,
-        FsAsyncValidateDirective
+        FsFormRequiredDirective,
+        FsFormMinDirective,
+        FsFormMaxDirective,
+        FsFormMinLengthDirective,
+        FsFormMaxLengthDirective,
+        FsFormEmailDirective,
+        FsFormPhoneDirective,
+        FsFormCompareDirective,
+        FsFormIntegerDirective,
+        FsFormNumericDirective,
+        FsFormPatternDirective,
+        FsFormValidateDirective,
+        FsFormAsyncValidateDirective
       ]
     };
   }
