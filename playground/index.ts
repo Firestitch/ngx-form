@@ -40,21 +40,14 @@ class AppComponent {
     console.log('Save', form);
   }
 
-  syncValidate(formControl) {
-    if (formControl.value === 'some@email.com') {
-      return null;
-    }
-    return { validationError: 'Should be some@email.com' };
-  }
-
-  asyncValidate(formControl) {
-    return new Promise(resolve => {
+  functionPromise(formControl) {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
         let testValue = formControl.value;
-        if (testValue === 'existing@email.com') {
-          resolve({ email: 'Email already exists!' });
+        if (testValue !== 'existing@email.com') {
+          reject('Email should match "existing@email.com"');
         } else {
-          resolve(null);
+          resolve();
         }
       }, 1000);
     });

@@ -78,22 +78,12 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="!visible" *ngIf="show">
-      <input  placeholder="Validate Function"
-        [(ngModel)]="valid_function"
-        name="valid_function"
+      <input  placeholder="Function Promise"
+        [(ngModel)]="function_promise"
+        name="function_promise_input"
         matInput
         [fsFormRequired]="true"
-        [fsFormValidate]="syncValidate"
-        />
-    </mat-form-field>
-
-    <mat-form-field [hidden]="!visible" *ngIf="show">
-      <input  placeholder="Async Validator"
-        [(ngModel)]="async"
-        name="async_input"
-        matInput
-        [fsFormRequired]="true"
-        [fsFormAsyncValidate]="asyncValidate"
+        [fsFormFunction]="functionPromise"
         />
     </mat-form-field>
 

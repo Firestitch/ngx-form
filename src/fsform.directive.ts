@@ -304,7 +304,7 @@ export class FsFormPatternDirective extends FsControlDirective implements OnInit
         super.addValidator(Validators.pattern(this.fsFormPattern));
     }
 }
-
+/*
 @Directive({
     selector: '[fsFormValidate]'
 })
@@ -317,17 +317,32 @@ export class FsFormValidateDirective extends FsControlDirective implements OnIni
         super.addValidator(this.fsFormValidate);
     }
 }
+*/
 
 @Directive({
-    selector: '[fsFormAsyncValidate]'
+    selector: '[fsFormFunction]'
 })
-export class FsFormAsyncValidateDirective extends FsControlDirective implements OnInit {
-    @Input() fsFormAsyncValidate: Promise<ValidationErrors | null> | Observable<ValidationErrors | null>;
+export class FsFormFunctionDirective extends FsControlDirective implements OnInit {
+    @Input() fsFormFunction;
     constructor(elRef: ElementRef, renderer: Renderer2, controlRef: NgControl, viewContainer: ViewContainerRef, fsForm: FsForm) {
         super(elRef, renderer, controlRef, viewContainer, fsForm);
     }
     ngOnInit() {
-        super.addAsyncValidator(this.fsFormAsyncValidate);
+
+        super.addAsyncValidator(() => {
+            const result = this.fsFormFunction(this.controlRef);
+
+            if (result instanceof Promise) {
+                return new Promise((resolve, reject) => {
+                    result.then(() => {
+                        resolve(null);
+                    })
+                    .catch((err) => {
+                        resolve({ validationError: err });
+                    });
+                });
+            }
+        });
     }
 }
 

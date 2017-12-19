@@ -20,8 +20,7 @@ import {
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormValidateDirective,
-  FsFormAsyncValidateDirective
+  FsFormFunctionDirective
 } from './fsform.directive';
 
 export * from './fsform.directive';
@@ -44,8 +43,7 @@ declarations: [
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormValidateDirective,
-  FsFormAsyncValidateDirective
+  FsFormFunctionDirective
 ],
 providers: [
   FsForm,
@@ -65,8 +63,7 @@ exports: [
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormValidateDirective,
-  FsFormAsyncValidateDirective
+  FsFormFunctionDirective
 ]
 })
 export class FsFormModule {
@@ -87,8 +84,7 @@ export class FsFormModule {
         FsFormIntegerDirective,
         FsFormNumericDirective,
         FsFormPatternDirective,
-        FsFormValidateDirective,
-        FsFormAsyncValidateDirective
+        FsFormFunctionDirective
       ]
     };
   }
