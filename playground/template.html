@@ -90,15 +90,28 @@
     <mat-form-field [hidden]="!visible" *ngIf="show">
       <input matInput fsDatepicker fsFormRequired="true" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
     </mat-form-field>
-
+    
     <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="true" name="checkbox">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
     <div>
       <button mat-raised-button color="primary" type="submit">Submit</button>
+      <button mat-raised-button color="primary" type="button" (click)="submit(myForm)">Submit Manually</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">Change Required</button>
       <button mat-raised-button color="primary" type="button" (click)="visible = !(!!visible)">Change Visibility</button>
       <button mat-raised-button color="primary" type="button" (click)="show = !(!!show)">Change If condition</button>
     </div>
+</form>
+
+<form (ngSubmit)="save(myForm2)" [fsFormBinding]="myForm2" #myForm2="ngForm" fsForm fxLayout="column">
+  <mat-form-field>
+    <input 
+      [(ngModel)]="model_required"
+      name="input_required"
+      matInput
+      fsFormRequired="true"
+      />
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>

@@ -11,6 +11,9 @@ export class FsForm {
             let parentNode = elRef.nativeElement.parentNode;
 
             if (elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP') {
+
+                elRef.nativeElement.name = elRef.nativeElement.getAttribute('name');
+
                 let wraperContainer = renderer.createElement('div');
                 renderer.addClass(wraperContainer, 'mat-input-subscript-wrapper');
                 renderer.addClass(wraperContainer, 'mat-form-field-subscript-wrapper');
@@ -55,7 +58,10 @@ export class FsForm {
             }
 
             // searching for a container if we are at input element
-            let errorPlaceholder = this.findClass(elRef.nativeElement.parentNode.parentNode.parentNode, 'mat-form-field-subscript-wrapper')
+            const elContainer = elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP' ?
+                elRef.nativeElement : elRef.nativeElement.parentNode.parentNode.parentNode;
+
+            let errorPlaceholder = this.findClass(elContainer, 'mat-form-field-subscript-wrapper');
 
             if (errorPlaceholder) {
                 errorPlaceholder.innerHTML = '';

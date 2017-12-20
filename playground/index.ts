@@ -3,7 +3,7 @@
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, Component, ViewEncapsulation } from '@angular/core';
+import { NgModule, Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -12,7 +12,7 @@ import { FsDatepickerModule } from '@firestitch/fs-datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/fscheckboxgroup';
 
 import { FsMaterialModule } from '@firestitch/material';
-import { FsFormModule }  from '@firestitch/form';
+import { FsFormModule, FsFormBroadcaster }  from '@firestitch/form';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ import { FsFormModule }  from '@firestitch/form';
   encapsulation: ViewEncapsulation.None,
   templateUrl: 'template.html'
 })
-class AppComponent {
+class AppComponent implements OnInit {
   required = true;
   visible = true;
   show = true;
@@ -36,8 +36,31 @@ class AppComponent {
     { name: 'Item 4', id: 4 }
   ];
 
+  constructor(private fsFormBroadcaster: FsFormBroadcaster) {  }
+
+  ngOnInit() {
+    this.fsFormBroadcaster.on<string>('submit')
+      .subscribe((form: any) => {
+        console.log('broadcaster submit', form);
+      });
+
+    this.fsFormBroadcaster.on<string>('valid')
+      .subscribe((form: any) => {
+        console.log('broadcaster valid', form);
+      });
+
+    this.fsFormBroadcaster.on<string>('invalid')
+      .subscribe((form: any) => {
+        console.log('broadcaster not valid', form);
+      });
+  }
+
   save(form) {
     console.log('Save', form);
+  }
+
+  submit(form) {
+    form.ngSubmit.emit();
   }
 
   functionPromise(formControl) {

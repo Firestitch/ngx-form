@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FsArray } from '@firestitch/common';
 import { FsForm } from './fsform.service';
+import { FsFormBroadcaster } from './fsformbroadcaster.service';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Directive({
@@ -354,16 +355,21 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
     constructor(
         private elRef: ElementRef,
-        private vc: ViewContainerRef
+        private vc: ViewContainerRef,
+        private fsFormBroadcaster: FsFormBroadcaster
     ) { }
 
     ngOnInit() {
-        // console.log(this.fsFormBinding);
 
         if (this.fsFormBinding) {
             this.fsFormBinding.ngSubmit.subscribe(res => {
 
+                this.fsFormBroadcaster.broadcast('submit', this.fsFormBinding);
+
                 if (this.fsFormBinding.form.status === 'INVALID') {
+
+                    this.fsFormBroadcaster.broadcast('invalid', this.fsFormBinding);
+
                     for (const key in this.fsFormBinding.controls) {
 
                         if (!this.fsFormBinding.controls[key]) {
@@ -372,6 +378,8 @@ export class FsFormDirective implements OnInit, OnDestroy {
                         this.fsFormBinding.controls[key].markAsDirty();
                         this.fsFormBinding.controls[key].updateValueAndValidity();
                     }
+                } else {
+                    this.fsFormBroadcaster.broadcast('valid', this.fsFormBinding);
                 }
             })
         }

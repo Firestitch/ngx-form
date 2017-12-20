@@ -1,6 +1,7 @@
 import { FsInputDirective } from './fsInput.directive';
 import { FsCommonModule } from '@firestitch/common';
 import { FsForm } from './fsform.service';
+import { FsFormBroadcaster } from './fsformbroadcaster.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule, ModuleWithProviders } from '@angular/core';
@@ -24,6 +25,8 @@ import {
 } from './fsform.directive';
 
 export * from './fsform.directive';
+export * from './fsformbroadcaster.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -47,6 +50,7 @@ declarations: [
 ],
 providers: [
   FsForm,
+  FsFormBroadcaster,
   FsFormDirective
 ],
 exports: [
@@ -84,7 +88,8 @@ export class FsFormModule {
         FsFormIntegerDirective,
         FsFormNumericDirective,
         FsFormPatternDirective,
-        FsFormFunctionDirective
+        FsFormFunctionDirective,
+        FsFormBroadcaster
       ]
     };
   }
