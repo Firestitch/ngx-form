@@ -12,7 +12,7 @@ import { FsDatepickerModule } from '@firestitch/fs-datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/fscheckboxgroup';
 
 import { FsMaterialModule } from '@firestitch/material';
-import { FsFormModule, FsFormBroadcaster }  from '@firestitch/form';
+import { FsFormModule, FsForm }  from '@firestitch/form';
 
 @Component({
   selector: 'app-root',
@@ -36,20 +36,20 @@ class AppComponent implements OnInit {
     { name: 'Item 4', id: 4 }
   ];
 
-  constructor(private fsFormBroadcaster: FsFormBroadcaster) {  }
+  constructor(private fsForm: FsForm) {  }
 
   ngOnInit() {
-    this.fsFormBroadcaster.on<string>('submit')
+    this.fsForm.on<string>('submit')
       .subscribe((form: any) => {
         console.log('broadcaster submit', form);
       });
 
-    this.fsFormBroadcaster.on<string>('valid')
+    this.fsForm.on<string>('valid')
       .subscribe((form: any) => {
         console.log('broadcaster valid', form);
       });
 
-    this.fsFormBroadcaster.on<string>('invalid')
+    this.fsForm.on<string>('invalid')
       .subscribe((form: any) => {
         console.log('broadcaster not valid', form);
       });
