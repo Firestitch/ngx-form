@@ -1,4 +1,3 @@
-import { FsInputDirective } from './fsInput.directive';
 import { FsCommonModule } from '@firestitch/common';
 import { FsFormCommon } from './fsformcommon.service';
 import { FsForm } from './fsform.service';
