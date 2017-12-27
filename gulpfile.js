@@ -167,14 +167,14 @@ gulp.task('copy:readme', function () {
  * 10. Delete /.tmp folder
  */
 gulp.task('clean:tmp', function () {
-  return deleteFolders([tmpFolder]);
+  return deleteFolders([`{$tmpFolder}/**`]);
 });
 
 /**
  * 11. Delete /build folder
  */
 gulp.task('clean:build', function () {
-  return deleteFolders([buildFolder]);
+  return deleteFolders([`{$buildFolder/**}`]);
 });
 
 gulp.task('compile', function () {
