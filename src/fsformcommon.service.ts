@@ -34,9 +34,10 @@ export class FsFormCommon {
             let errorContainer = renderer.createElement('div');
             renderer.addClass(errorContainer, 'ng-trigger');
             renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');
-            for (const errKey in controlRef.errors) {
+            const errors = this.getErrors(instance, controlRef);
+            for (const errKey in errors) {
 
-                if (!controlRef.errors[errKey]) {
+                if (!errors[errKey]) {
                     continue;
                 }
 
@@ -48,9 +49,9 @@ export class FsFormCommon {
                 const messageVariable = `fsForm${this.capitalizeFirstLetter(errKey)}Message`;
 
                 if (instance[messageVariable]) {
-                    errorText = renderer.createText(this.parseErrorMessage(instance[messageVariable], controlRef.errors[errKey]));
+                    errorText = renderer.createText(this.parseErrorMessage(instance[messageVariable], errors[errKey]));
                 } else {
-                    errorText = renderer.createText(controlRef.errors[errKey]);
+                    errorText = renderer.createText(errors[errKey]);
                 }
 
                 renderer.appendChild(errorElement, errorText);
@@ -73,6 +74,29 @@ export class FsFormCommon {
                 elRef.nativeElement.appendChild(errorPlaceholder);
             }
         }
+    }
+
+    getErrors(instance, controlRef) {
+
+        let messagesOrder = [];
+
+        for (const value of instance.fsFormErrorsOrder) {
+            messagesOrder.push(value.replace(/fsForm/, '').toLowerCase());
+        }
+
+        if (messagesOrder.length) {
+            for (const value of messagesOrder) {
+                if (controlRef.control.errors[value]) {
+                    return { [value]: controlRef.control.errors[value] };
+                }
+            }
+        }
+
+        for (let key in controlRef.control.errors) {
+            return { [key]: controlRef.control.errors[key] };
+        }
+
+        return {};
     }
 
     parseErrorMessage(message, args): string {

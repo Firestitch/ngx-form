@@ -28,6 +28,8 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
     @Input() fsFormCompareMessage = 'Inputs do not match.';
     @Input() fsFormPatternMessage = 'Value should match pattern $(1)';
 
+    @Input() fsFormErrorsOrder = [];
+
     protected fsFormCommon: FsFormCommon;
     protected elRef: ElementRef;
     protected renderer: Renderer2;
@@ -122,7 +124,7 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
     }
 
     ngOnChanges() {
-        if (this.fsFormRequired) {
+        if (this.fsFormRequired !== false) {
             super.addValidator(Validators.required);
         }else {
             super.removeValidator(Validators.required);
@@ -193,7 +195,7 @@ export class FsFormEmailDirective extends FsControlDirective implements OnChange
     ngOnChanges() {
 
         const validator = () => {
-            if (this.fsFormCommon.email(this.elRef.nativeElement.value)) {
+            if (!this.elRef.nativeElement.value || this.fsFormCommon.email(this.elRef.nativeElement.value)) {
                 return null;
             }
             return { email: true };
