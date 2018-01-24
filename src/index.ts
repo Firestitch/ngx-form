@@ -1,5 +1,5 @@
-import { FsInputDirective } from './fsInput.directive';
 import { FsCommonModule } from '@firestitch/common';
+import { FsFormCommon } from './fsformcommon.service';
 import { FsForm } from './fsform.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -20,11 +20,12 @@ import {
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormValidateDirective,
-  FsFormAsyncValidateDirective
+  FsFormFunctionDirective
 } from './fsform.directive';
 
 export * from './fsform.directive';
+export * from './fsform.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -44,10 +45,10 @@ declarations: [
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormValidateDirective,
-  FsFormAsyncValidateDirective
+  FsFormFunctionDirective
 ],
 providers: [
+  FsFormCommon,
   FsForm,
   FsFormDirective
 ],
@@ -65,8 +66,7 @@ exports: [
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormValidateDirective,
-  FsFormAsyncValidateDirective
+  FsFormFunctionDirective
 ]
 })
 export class FsFormModule {
@@ -87,8 +87,8 @@ export class FsFormModule {
         FsFormIntegerDirective,
         FsFormNumericDirective,
         FsFormPatternDirective,
-        FsFormValidateDirective,
-        FsFormAsyncValidateDirective
+        FsFormFunctionDirective,
+        FsForm
       ]
     };
   }
