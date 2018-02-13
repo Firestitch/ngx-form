@@ -7,8 +7,8 @@ import { FormGroupDirective, ControlContainer,
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FsArray } from '@firestitch/common';
-import { FsFormCommon } from './fsformcommon.service';
-import { FsForm } from './fsform.service';
+import { FsFormCommon } from './services/fsformcommon.service';
+import { FsForm } from './services/fsform.service';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Directive({
