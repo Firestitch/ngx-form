@@ -9,8 +9,10 @@ import { FsForm } from './../../../../src/services/fsform.service';
 })
 export class FirstExampleComponent implements OnInit {
   required = true;
-  visible = true;
-  show = true;
+  hidden = false;
+  render = true;
+  status = 'Not Submitted';
+  lengthInput = '';
 
   checkbox: object[] = [];
 
@@ -32,16 +34,18 @@ export class FirstExampleComponent implements OnInit {
     this.fsForm.on<string>('valid')
       .subscribe((form: any) => {
         console.log('broadcaster valid', form);
+        this.status = 'Valid';
       });
 
     this.fsForm.on<string>('invalid')
       .subscribe((form: any) => {
         console.log('broadcaster not valid', form);
+        this.status = 'Invalid';
       });
   }
 
   save(form) {
-    console.log('Save', form);
+    console.log('Called Save', form);
   }
 
   submit(form) {
@@ -57,7 +61,7 @@ export class FirstExampleComponent implements OnInit {
         } else {
           resolve();
         }
-      }, 1000);
+      }, 300);
     });
   }
 
