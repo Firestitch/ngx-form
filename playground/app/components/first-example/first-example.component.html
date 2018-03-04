@@ -1,8 +1,8 @@
 <form (ngSubmit)="save(myForm)" [fsFormBinding]="myForm" #myForm="ngForm" fsForm fxLayout="column">
-    <mat-form-field [hidden]="!visible" *ngIf="show">
-      <input  placeholder="3 to 8 characters in length"
-        [(ngModel)]="model"
-        name="simple_input"
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input  placeholder="Value >= 3 and <=8"
+        [(ngModel)]="minMaxInput"
+        name="minMaxInput"
         matInput
         [fsFormRequired]="required"
         fsFormMin="3"
@@ -11,13 +11,24 @@
         />
     </mat-form-field>
 
-    <div fxLayout="row" [hidden]="!visible" *ngIf="show">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+        <input  placeholder="5 to 10 characters in length"
+          [(ngModel)]="lengthInput"
+          name="lengthInput"
+          matInput
+          [fsFormRequired]="required"
+          fsFormMinLength="5"
+          fsFormMaxLength="10"
+          />
+    </mat-form-field>
+
+    <div fxLayout="row" [hidden]="hidden" *ngIf="render">
       <mat-form-field>
           <input  placeholder="Password"
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            [fsFormRequired]="true"
+            [fsFormRequired]="required"
             matInput
             />
         </mat-form-field>
@@ -25,14 +36,14 @@
         <input  placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="password_confirm"
-          [fsFormRequired]="true"
+          [fsFormRequired]="required"
           [fsFormCompare]="passwordInput"
           matInput
           />
       </mat-form-field>
     </div>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
       <input  placeholder="Integer"
         [(ngModel)]="integer"
         name="integer_input"
@@ -41,7 +52,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
       <input  placeholder="Email"
         [(ngModel)]="email"
         name="email_input"
@@ -50,7 +61,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
       <input  placeholder="Phone"
         [(ngModel)]="phone"
         name="phone_input"
@@ -59,7 +70,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
       <input  placeholder="Numeric"
         [(ngModel)]="numeric"
         name="numeric_input"
@@ -68,7 +79,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
       <input  placeholder="Pattern"
         [(ngModel)]="pattern"
         name="pattern_input"
@@ -77,41 +88,35 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
-      <input  placeholder="Function Promise"
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input  placeholder="Function Validation"
         [(ngModel)]="function_promise"
         name="function_promise_input"
         matInput
-        [fsFormRequired]="true"
+        [fsFormRequired]="required"
         [fsFormFunction]="functionPromise"
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="!visible" *ngIf="show">
-      <input matInput fsDatepicker fsFormRequired="true" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input matInput fsDatepicker [fsFormRequired]="required" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
     </mat-form-field>
 
-    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="true" name="checkbox">
+    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="required" name="checkbox" [hidden]="hidden" *ngIf="render">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
-    <div>
+    <fieldset>
+      <legend>Actions</legend>
       <button mat-raised-button color="primary" type="submit">Submit</button>
-      <button mat-raised-button color="primary" type="button" (click)="submit(myForm)">Submit Manually</button>
-      <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">Change Required</button>
-      <button mat-raised-button color="primary" type="button" (click)="visible = !(!!visible)">Change Visibility</button>
-      <button mat-raised-button color="primary" type="button" (click)="show = !(!!show)">Change If condition</button>
-    </div>
-</form>
+      <button mat-raised-button color="primary" type="button" (click)="submit(myForm)">Trigger Submit</button>
+      <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
+      <button mat-raised-button color="primary" type="button" (click)="hidden = !(!!hidden)">{{hidden ? 'Show' : 'Hide'}} Inputs</button>
+      <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>
+    </fieldset>
 
-<form (ngSubmit)="save(myForm2)" [fsFormBinding]="myForm2" #myForm2="ngForm" fsForm fxLayout="column">
-  <mat-form-field>
-    <input
-      [(ngModel)]="model_required"
-      name="input_required"
-      matInput
-      fsFormRequired="true"
-      />
-  </mat-form-field>
-  <button mat-raised-button color="primary" type="submit">Submit</button>
+    <fieldset>
+        <legend>Submit Validation Status</legend>
+        <div>{{status}}</div>
+      </fieldset>
 </form>

@@ -21,7 +21,7 @@ import {
   FsFormNumericDirective,
   FsFormPatternDirective,
   FsFormFunctionDirective
-} from './fsform.directive';
+} from './directives';
 
 @NgModule({
   imports: [
