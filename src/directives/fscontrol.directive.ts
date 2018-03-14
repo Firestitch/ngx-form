@@ -84,6 +84,7 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
  updateValidators() {
      this.controlRef.control.setValidators(this.controlRef.control['fsValidators']);
      this.controlRef.control.setAsyncValidators(this.controlRef.control['fsAsyncValidators']);
+     this.controlRef.control.updateValueAndValidity();
  }
 
  addValidator(validator) {

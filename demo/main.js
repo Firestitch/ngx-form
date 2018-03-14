@@ -8,7 +8,7 @@ exports = module.exports = __webpack_require__("../node_modules/css-loader/lib/c
 
 
 // module
-exports.push([module.i, "[hidden] {\n  display: none !important;\n}", "", {"version":3,"sources":["C:/Projects/fs-form/playground/app/components/first-example/C:/Projects/fs-form/first-example.component.css"],"names":[],"mappings":"AAAA;EAAW,yBAAA;CAEV","file":"first-example.component.css","sourcesContent":["[hidden] { display: none !important; }\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "[hidden] {\n  display: none !important;\n}", "", {"version":3,"sources":["/Users/mendor/work/fs-form/first-example.component.css"],"names":[],"mappings":"AAAA;EAAW,yBAAA;CAEV","file":"first-example.component.css","sourcesContent":["[hidden] { display: none !important; }\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -470,6 +470,7 @@ var FsControlDirective = (function () {
     FsControlDirective.prototype.updateValidators = function () {
         this.controlRef.control.setValidators(this.controlRef.control['fsValidators']);
         this.controlRef.control.setAsyncValidators(this.controlRef.control['fsAsyncValidators']);
+        this.controlRef.control.updateValueAndValidity();
     };
     FsControlDirective.prototype.addValidator = function (validator) {
         this.controlRef.control['fsValidators'].push(validator);
@@ -1545,7 +1546,7 @@ webpackEmptyAsyncContext.id = "../tools lazy recursive";
 /***/ "./app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1>FsForm Examples</h1>\r\n<div class=\"example\">\r\n    <fs-example title=\"FsForm Example\" componentName=\"first-example\">\r\n        <first-example></first-example>\r\n    </fs-example>\r\n</div>\r\n"
+module.exports = "<h1>FsForm Examples</h1>\n<div class=\"example\">\n    <fs-example title=\"FsForm Example\" componentName=\"first-example\">\n        <first-example></first-example>\n    </fs-example>\n</div>\n"
 
 /***/ }),
 

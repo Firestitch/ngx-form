@@ -11,7 +11,7 @@ var fsformcommon_service_1 = require("./services/fsformcommon.service");
 var fsform_service_1 = require("./services/fsform.service");
 var core_1 = require("@angular/core");
 var common_2 = require("@angular/common");
-var fsform_directive_1 = require("./fsform.directive");
+var directives_1 = require("./directives");
 var FsFormModule = (function () {
     function FsFormModule() {
     }
@@ -22,7 +22,7 @@ var FsFormModule = (function () {
             providers: [
                 fsformcommon_service_1.FsFormCommon,
                 fsform_service_1.FsForm,
-                fsform_directive_1.FsFormDirective
+                directives_1.FsFormDirective
             ]
         };
     };
@@ -33,42 +33,42 @@ var FsFormModule = (function () {
                 common_1.FsCommonModule
             ],
             exports: [
-                fsform_directive_1.FsFormDirective,
-                fsform_directive_1.FsControlDirective,
-                fsform_directive_1.FsFormRequiredDirective,
-                fsform_directive_1.FsFormMinDirective,
-                fsform_directive_1.FsFormMaxDirective,
-                fsform_directive_1.FsFormMinLengthDirective,
-                fsform_directive_1.FsFormMaxLengthDirective,
-                fsform_directive_1.FsFormEmailDirective,
-                fsform_directive_1.FsFormPhoneDirective,
-                fsform_directive_1.FsFormCompareDirective,
-                fsform_directive_1.FsFormIntegerDirective,
-                fsform_directive_1.FsFormNumericDirective,
-                fsform_directive_1.FsFormPatternDirective,
-                fsform_directive_1.FsFormFunctionDirective
+                directives_1.FsFormDirective,
+                directives_1.FsControlDirective,
+                directives_1.FsFormRequiredDirective,
+                directives_1.FsFormMinDirective,
+                directives_1.FsFormMaxDirective,
+                directives_1.FsFormMinLengthDirective,
+                directives_1.FsFormMaxLengthDirective,
+                directives_1.FsFormEmailDirective,
+                directives_1.FsFormPhoneDirective,
+                directives_1.FsFormCompareDirective,
+                directives_1.FsFormIntegerDirective,
+                directives_1.FsFormNumericDirective,
+                directives_1.FsFormPatternDirective,
+                directives_1.FsFormFunctionDirective
             ],
             entryComponents: [],
             declarations: [
-                fsform_directive_1.FsFormDirective,
-                fsform_directive_1.FsControlDirective,
-                fsform_directive_1.FsFormRequiredDirective,
-                fsform_directive_1.FsFormMinDirective,
-                fsform_directive_1.FsFormMaxDirective,
-                fsform_directive_1.FsFormMinLengthDirective,
-                fsform_directive_1.FsFormMaxLengthDirective,
-                fsform_directive_1.FsFormEmailDirective,
-                fsform_directive_1.FsFormPhoneDirective,
-                fsform_directive_1.FsFormCompareDirective,
-                fsform_directive_1.FsFormIntegerDirective,
-                fsform_directive_1.FsFormNumericDirective,
-                fsform_directive_1.FsFormPatternDirective,
-                fsform_directive_1.FsFormFunctionDirective
+                directives_1.FsFormDirective,
+                directives_1.FsControlDirective,
+                directives_1.FsFormRequiredDirective,
+                directives_1.FsFormMinDirective,
+                directives_1.FsFormMaxDirective,
+                directives_1.FsFormMinLengthDirective,
+                directives_1.FsFormMaxLengthDirective,
+                directives_1.FsFormEmailDirective,
+                directives_1.FsFormPhoneDirective,
+                directives_1.FsFormCompareDirective,
+                directives_1.FsFormIntegerDirective,
+                directives_1.FsFormNumericDirective,
+                directives_1.FsFormPatternDirective,
+                directives_1.FsFormFunctionDirective
             ],
             providers: [
                 fsformcommon_service_1.FsFormCommon,
                 fsform_service_1.FsForm,
-                fsform_directive_1.FsFormDirective
+                directives_1.FsFormDirective
             ],
         })
     ], FsFormModule);
