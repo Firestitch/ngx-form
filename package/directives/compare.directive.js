@@ -24,18 +24,29 @@ var fscontrol_directive_1 = require("./fscontrol.directive");
 var FsFormCompareDirective = (function (_super) {
     __extends(FsFormCompareDirective, _super);
     function FsFormCompareDirective() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    FsFormCompareDirective.prototype.ngOnInit = function () {
-        var _this = this;
-        _super.prototype.addValidator.call(this, function () {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.validator = function () {
             if (_this.fsFormCompare.value === _this.elRef.nativeElement.value) {
                 return null;
             }
             else {
                 return { compare: true };
             }
-        });
+        };
+        return _this;
+    }
+    FsFormCompareDirective.prototype.ngOnInit = function () {
+        var _this = this;
+        _super.prototype.addValidator.call(this, this.validator);
+        this.fsFormCompare.addEventListener('keyup', function () {
+            _this.controlRef.control.updateValueAndValidity();
+        }, false);
+    };
+    FsFormCompareDirective.prototype.ngOnDestroy = function () {
+        var _this = this;
+        this.fsFormCompare.removeEventListener('keyup', function () {
+            _this.controlRef.control.updateValueAndValidity();
+        }, false);
     };
     __decorate([
         core_1.Input(),
