@@ -12,6 +12,7 @@ import { FsExampleModule } from '@firestitch/example';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatepickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
+import { FsRadioGroupModule } from '@firestitch/radiogroup';
 
 @NgModule({
   bootstrap: [ AppComponent ],
@@ -24,6 +25,7 @@ import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
     FsExampleModule,
     FsDatepickerModule,
     FsCheckboxGroupModule,
+    FsRadioGroupModule,
     FlexLayoutModule
   ],
   entryComponents: [

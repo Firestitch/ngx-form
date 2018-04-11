@@ -59,8 +59,10 @@ export class FsFormCommon {
             }
 
             // searching for a container if we are at input element
-            const elContainer = elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP' ?
-                elRef.nativeElement : elRef.nativeElement.parentNode.parentNode.parentNode;
+            let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
+            if (['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) !== -1) {
+              elContainer = elRef.nativeElement;
+            }
 
             let errorPlaceholder = this.findClass(elContainer, 'mat-form-field-subscript-wrapper');
 

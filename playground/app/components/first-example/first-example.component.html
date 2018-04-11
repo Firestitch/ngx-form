@@ -11,6 +11,14 @@
         />
     </mat-form-field>
 
+    <fs-radio-group [(ngModel)]="radioRequired" label="Required" name="radio_required" [fsFormRequired]="required" fxLayout="column">
+      <mat-radio-button [value]="5">5</mat-radio-button>
+      <mat-radio-button [value]="4">4</mat-radio-button>
+      <mat-radio-button [value]="3">3</mat-radio-button>
+      <mat-radio-button [value]="2">2</mat-radio-button>
+      <mat-radio-button [value]="1">1</mat-radio-button>
+    </fs-radio-group>
+
     <mat-form-field [hidden]="hidden" *ngIf="render">
         <input  placeholder="5 to 10 characters in length"
           [(ngModel)]="lengthInput"

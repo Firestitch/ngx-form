@@ -59,8 +59,10 @@ var FsFormCommon = (function () {
                 renderer.appendChild(errorContainer, errorElement);
             }
             // searching for a container if we are at input element
-            var elContainer = elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP' ?
-                elRef.nativeElement : elRef.nativeElement.parentNode.parentNode.parentNode;
+            var elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
+            if (['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) !== -1) {
+                elContainer = elRef.nativeElement;
+            }
             var errorPlaceholder = this.findClass(elContainer, 'mat-form-field-subscript-wrapper');
             if (errorPlaceholder) {
                 errorPlaceholder.innerHTML = '';
