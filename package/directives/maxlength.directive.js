@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -18,28 +17,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var forms_1 = require("@angular/forms");
-var fscontrol_directive_1 = require("./fscontrol.directive");
+import { Directive, Input } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { FsControlDirective } from './fscontrol.directive';
 var FsFormMaxLengthDirective = (function (_super) {
     __extends(FsFormMaxLengthDirective, _super);
     function FsFormMaxLengthDirective() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     FsFormMaxLengthDirective.prototype.ngOnInit = function () {
-        _super.prototype.addValidator.call(this, forms_1.Validators.maxLength(this.fsFormMaxLength));
+        _super.prototype.addValidator.call(this, Validators.maxLength(this.fsFormMaxLength));
     };
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsFormMaxLengthDirective.prototype, "fsFormMaxLength", void 0);
     FsFormMaxLengthDirective = __decorate([
-        core_1.Directive({
+        Directive({
             selector: '[fsFormMaxLength]'
         })
     ], FsFormMaxLengthDirective);
     return FsFormMaxLengthDirective;
-}(fscontrol_directive_1.FsControlDirective));
-exports.FsFormMaxLengthDirective = FsFormMaxLengthDirective;
+}(FsControlDirective));
+export { FsFormMaxLengthDirective };
 //# sourceMappingURL=maxlength.directive.js.map

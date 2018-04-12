@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,9 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var common_1 = require("@firestitch/common");
+import { Injectable } from '@angular/core';
+import { FsArray, FsUtil, FsValidate } from '@firestitch/common';
 var FsFormCommon = (function () {
     function FsFormCommon(fsArray, fsUtil, fsValidate) {
         this.fsArray = fsArray;
@@ -148,10 +146,10 @@ var FsFormCommon = (function () {
         return this.fsValidate.email(value);
     };
     FsFormCommon = __decorate([
-        core_1.Injectable(),
-        __metadata("design:paramtypes", [common_1.FsArray, common_1.FsUtil, common_1.FsValidate])
+        Injectable(),
+        __metadata("design:paramtypes", [FsArray, FsUtil, FsValidate])
     ], FsFormCommon);
     return FsFormCommon;
 }());
-exports.FsFormCommon = FsFormCommon;
+export { FsFormCommon };
 //# sourceMappingURL=fsformcommon.service.js.map

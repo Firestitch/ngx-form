@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -18,9 +17,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var fscontrol_directive_1 = require("./fscontrol.directive");
+import { Directive, Input } from '@angular/core';
+import { FsControlDirective } from './fscontrol.directive';
 var FsFormIntegerDirective = (function (_super) {
     __extends(FsFormIntegerDirective, _super);
     function FsFormIntegerDirective() {
@@ -40,15 +38,15 @@ var FsFormIntegerDirective = (function (_super) {
         }
     };
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsFormIntegerDirective.prototype, "fsFormInteger", void 0);
     FsFormIntegerDirective = __decorate([
-        core_1.Directive({
+        Directive({
             selector: '[fsFormInteger]'
         })
     ], FsFormIntegerDirective);
     return FsFormIntegerDirective;
-}(fscontrol_directive_1.FsControlDirective));
-exports.FsFormIntegerDirective = FsFormIntegerDirective;
+}(FsControlDirective));
+export { FsFormIntegerDirective };
 //# sourceMappingURL=integer.directive.js.map

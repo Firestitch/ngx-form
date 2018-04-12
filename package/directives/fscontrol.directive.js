@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,10 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var forms_1 = require("@angular/forms");
-var fsformcommon_service_1 = require("./../services/fsformcommon.service");
+import { Directive, Input, ElementRef, ViewContainerRef, Renderer2 } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { FsFormCommon } from './../services/fsformcommon.service';
 var FsControlDirective = (function () {
     function FsControlDirective(ElementRef, Renderer2, NgControl, ViewContainerRef, FsFormCommon) {
         var _this = this;
@@ -84,64 +82,64 @@ var FsControlDirective = (function () {
         this.controlRef.control.setAsyncValidators(this.controlRef.control['fsAsyncValidators']);
     };
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormRequiredMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormEmailMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormPhoneMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormNumericMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormIntegerMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormMinMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormMaxMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormMinlengthMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormMaxlengthMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormCompareMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormPatternMessage", void 0);
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Object)
     ], FsControlDirective.prototype, "fsFormErrorsOrder", void 0);
     FsControlDirective = __decorate([
-        core_1.Directive({
+        Directive({
             selector: '[fsControl]'
         }),
-        __metadata("design:paramtypes", [core_1.ElementRef,
-            core_1.Renderer2,
-            forms_1.NgControl,
-            core_1.ViewContainerRef,
-            fsformcommon_service_1.FsFormCommon])
+        __metadata("design:paramtypes", [ElementRef,
+            Renderer2,
+            NgControl,
+            ViewContainerRef,
+            FsFormCommon])
     ], FsControlDirective);
     return FsControlDirective;
 }());
-exports.FsControlDirective = FsControlDirective;
+export { FsControlDirective };
 //# sourceMappingURL=fscontrol.directive.js.map

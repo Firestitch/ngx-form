@@ -1,4 +1,3 @@
-"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -18,10 +17,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var forms_1 = require("@angular/forms");
-var fscontrol_directive_1 = require("./fscontrol.directive");
+import { Directive, Input } from '@angular/core';
+import { Validators } from '@angular/forms';
+import { FsControlDirective } from './fscontrol.directive';
 var FsFormRequiredDirective = (function (_super) {
     __extends(FsFormRequiredDirective, _super);
     function FsFormRequiredDirective() {
@@ -29,22 +27,22 @@ var FsFormRequiredDirective = (function (_super) {
     }
     FsFormRequiredDirective.prototype.ngOnChanges = function () {
         if (this.fsFormRequired !== false) {
-            _super.prototype.addValidator.call(this, forms_1.Validators.required);
+            _super.prototype.addValidator.call(this, Validators.required);
         }
         else {
-            _super.prototype.removeValidator.call(this, forms_1.Validators.required);
+            _super.prototype.removeValidator.call(this, Validators.required);
         }
     };
     __decorate([
-        core_1.Input(),
+        Input(),
         __metadata("design:type", Boolean)
     ], FsFormRequiredDirective.prototype, "fsFormRequired", void 0);
     FsFormRequiredDirective = __decorate([
-        core_1.Directive({
+        Directive({
             selector: '[fsFormRequired]'
         })
     ], FsFormRequiredDirective);
     return FsFormRequiredDirective;
-}(fscontrol_directive_1.FsControlDirective));
-exports.FsFormRequiredDirective = FsFormRequiredDirective;
+}(FsControlDirective));
+export { FsFormRequiredDirective };
 //# sourceMappingURL=required.directive.js.map
