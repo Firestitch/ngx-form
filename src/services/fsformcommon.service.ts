@@ -8,40 +8,41 @@ export class FsFormCommon {
 
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
-            let parentNode = elRef.nativeElement.parentNode;
+            const errors = this.getErrors(instance, controlRef);
+            const parentNode = elRef.nativeElement.parentNode;
+            const isGroup = ['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) !== -1;
 
-            if (elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP') {
+            if (isGroup) {
 
                 elRef.nativeElement.name = elRef.nativeElement.getAttribute('name');
+                const wrapper = elRef.nativeElement.querySelector('.mat-input-subscript-wrapper');
 
-                let wraperContainer = renderer.createElement('div');
-                renderer.addClass(wraperContainer, 'mat-input-subscript-wrapper');
-                renderer.addClass(wraperContainer, 'mat-form-field-subscript-wrapper');
+                if (this.fsUtil.isEmpty(errors)) {
+                  if (wrapper) {
+                    wrapper.parentNode.removeChild(wrapper);
+                  }
 
-                let wraperExist = false;
-
-                for (let i = 0; i < elRef.nativeElement.childNodes.length; i++) {
-                    if (elRef.nativeElement.childNodes[i]['className'] && elRef.nativeElement.childNodes[i]['className'].match(/mat-input-subscript-wrapper/)) {
-                        wraperExist = true;
-                    }
-                }
-
-                if (!wraperExist) {
-                    renderer.appendChild(elRef.nativeElement, wraperContainer);
+                } else if (!wrapper) {
+                  const wraperContainer = renderer.createElement('div');
+                  renderer.addClass(wraperContainer, 'mat-input-subscript-wrapper');
+                  renderer.addClass(wraperContainer, 'mat-form-field-subscript-wrapper');
+                  renderer.appendChild(elRef.nativeElement, wraperContainer);
                 }
             }
-            // not the most elegant way to compile errors, but i couldnt get a better one working. right now its depepndant on styles/DOM we have in existing angular-material, which is not right
-            let errorContainer = renderer.createElement('div');
+
+            // not the most elegant way to compile errors, but i couldnt get a better one working.
+            // right now its depepndant on styles/DOM we have in existing angular-material, which is not right
+            const errorContainer = renderer.createElement('div');
             renderer.addClass(errorContainer, 'ng-trigger');
             renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');
-            const errors = this.getErrors(instance, controlRef);
+
             for (const errKey in errors) {
 
                 if (!errors[errKey]) {
                     continue;
                 }
 
-                let errorElement = renderer.createElement('mat-error');
+                const errorElement = renderer.createElement('mat-error');
                 renderer.addClass(errorElement, 'mat-error')
                 renderer.setProperty(errorElement, 'id', 'mat-error-' + errKey)
                 let errorText;
@@ -60,10 +61,11 @@ export class FsFormCommon {
 
             // searching for a container if we are at input element
             let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
-            if (['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) !== -1) {
+            if (isGroup) {
               elContainer = elRef.nativeElement;
             }
 
+            // I feel like this area needs some attention.
             let errorPlaceholder = this.findClass(elContainer, 'mat-form-field-subscript-wrapper');
 
             if (errorPlaceholder) {
@@ -80,7 +82,7 @@ export class FsFormCommon {
 
     getErrors(instance, controlRef) {
 
-        let messagesOrder = [];
+        const messagesOrder = [];
 
         for (const value of instance.fsFormErrorsOrder) {
             messagesOrder.push(value.replace(/fsForm/, '').toLowerCase());
@@ -94,6 +96,7 @@ export class FsFormCommon {
             }
         }
 
+        // seems a bit hacky
         for (let key in controlRef.control.errors) {
             return { [key]: controlRef.control.errors[key] };
         }
@@ -115,9 +118,11 @@ export class FsFormCommon {
             for (var i = 0; i < element.childNodes.length && !found; i++) {
                 var el = element.childNodes[i];
                 let classes;
-                if (typeof el.className == 'string')
+                if (typeof el.className == 'string') {
                     classes = el.className != undefined ? el.className.split(" ") : [];
-                else classes = [];
+                } else  {
+                  classes = [];
+                }
                 for (var j = 0, jl = classes.length; j < jl; j++) {
                     if (classes[j] == className) {
                         found = true;
@@ -125,8 +130,9 @@ export class FsFormCommon {
                         break;
                     }
                 }
-                if (found)
+                if (found) {
                     break;
+                }
                 recurse(element.childNodes[i], className, found);
             }
         }
@@ -134,8 +140,8 @@ export class FsFormCommon {
         return foundElement;
     }
 
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     searchIndex(data, item) {

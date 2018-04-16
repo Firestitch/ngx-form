@@ -7,12 +7,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FsFormModule } from '../src';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModule } from './app/material.module';
-import { FirstExampleComponent } from './app/components/first-example/first-example.component';
 import { FsExampleModule } from '@firestitch/example';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatepickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
+import { FsExamplesComponent } from './../tools/components/examples/examples.component';
+import { FirstExampleComponent } from './app/components/first-example/first-example.component';
+import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
 
 @NgModule({
   bootstrap: [ AppComponent ],
@@ -32,7 +34,9 @@ import { FsRadioGroupModule } from '@firestitch/radiogroup';
   ],
   declarations: [
     AppComponent,
-    FirstExampleComponent
+    FsExamplesComponent,
+    FirstExampleComponent,
+    EmitExampleComponent
   ],
   providers: [
   ],

@@ -1,55 +1,79 @@
-import { Directive, OnInit, OnChanges, Input, DoCheck, AfterViewChecked,
-     AfterViewInit, EventEmitter, ElementRef, Renderer2, forwardRef, ViewContainerRef } from '@angular/core';
-import { FormGroupDirective, ControlContainer,
-         FormGroup, NgForm, Validators, NgControl,
-         FormControl, ValidatorFn, AbstractControl, ValidationErrors, NG_ASYNC_VALIDATORS } from '@angular/forms';
-
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { FsArray } from '@firestitch/common';
-import { FsFormCommon } from './../services/fsformcommon.service';
+import { Directive, OnInit, Input, Output, EventEmitter, ContentChild } from '@angular/core';
+import { NgForm, FormControl } from '@angular/forms';
 import { FsForm } from './../services/fsform.service';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Observable } from 'rxjs/Rx';
 
 @Directive({
     selector: '[fsForm]'
 })
 export class FsFormDirective implements OnInit, OnDestroy {
-    @Input() fsFormBinding: NgForm;
 
-    constructor(
-        private elRef: ElementRef,
-        private vc: ViewContainerRef,
-        private fsForm: FsForm
-    ) { }
+  public submitting = false;
+  @ContentChild(NgForm) ngForm;
+  @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
+  @Output() invalid: EventEmitter<any> = new EventEmitter();
 
-    ngOnInit() {
+  constructor(
+      private fsForm: FsForm
+  ) {}
 
-        if (this.fsFormBinding) {
-            this.fsFormBinding.ngSubmit.subscribe(res => {
+  ngOnInit() {
 
-                this.fsForm.broadcast('submit', this.fsFormBinding);
-
-                if (this.fsFormBinding.form.status === 'INVALID') {
-
-                    this.fsForm.broadcast('invalid', this.fsFormBinding);
-
-                    for (const key in this.fsFormBinding.controls) {
-
-                        if (!this.fsFormBinding.controls[key]) {
-                            continue;
-                        }
-                        this.fsFormBinding.controls[key].markAsDirty();
-                        this.fsFormBinding.controls[key].updateValueAndValidity();
-                    }
-                } else {
-                    this.fsForm.broadcast('valid', this.fsFormBinding);
-                }
-            })
+    if (this.ngForm) {
+      this.ngForm.ngSubmit.subscribe(event => {
+        if (event) {
+          event.preventDefault();
         }
-    }
 
-    ngOnDestroy() {
-        this.fsFormBinding.ngSubmit.unsubscribe();
+        if (this.submitting) {
+          return false;
+        }
+
+        this.submitting = true;
+        this.fsForm.broadcast('submit', this.ngForm);
+        const validations = [];
+
+        for (const key in this.ngForm.controls) {
+
+            if (!this.ngForm.controls[key]) {
+                continue;
+            }
+
+            const control =  this.ngForm.controls[key];
+            control.markAsDirty();
+            control.markAsTouched();
+            control.updateValueAndValidity();
+
+            if (control.asyncValidator) {
+              validations.push(control.asyncValidator().toPromise());
+            }
+        }
+
+        Promise.all(validations)
+        .then(() => {
+            this.submitting = false;
+            if (this.ngForm.form.status === 'INVALID') {
+
+              this.fsForm.broadcast('invalid', this.ngForm);
+
+              if (this.invalid) {
+                this.invalid.emit(this.ngForm);
+              }
+
+            } else {
+              this.fsForm.broadcast('valid', this.ngForm);
+
+              if (this.submit) {
+                this.submit.emit(this.ngForm);
+              }
+            }
+        });
+      });
     }
+  }
+
+  ngOnDestroy() {
+      this.ngForm.ngSubmit.unsubscribe();
+  }
 }

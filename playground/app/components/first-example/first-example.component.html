@@ -1,5 +1,6 @@
-<form (ngSubmit)="save(myForm)" [fsFormBinding]="myForm" #myForm="ngForm" fsForm fxLayout="column">
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+<form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
+  <div fxLayout="column">
+   <mat-form-field [hidden]="hidden" *ngIf="render">
       <input  placeholder="Value >= 3 and <=8"
         [(ngModel)]="minMaxInput"
         name="minMaxInput"
@@ -117,14 +118,15 @@
     <fieldset>
       <legend>Actions</legend>
       <button mat-raised-button color="primary" type="submit">Submit</button>
-      <button mat-raised-button color="primary" type="button" (click)="submit(myForm)">Trigger Submit</button>
+      <button mat-raised-button color="primary" type="button" (click)="emitSubmit()">Emit Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="hidden = !(!!hidden)">{{hidden ? 'Show' : 'Hide'}} Inputs</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>
     </fieldset>
 
     <fieldset>
-        <legend>Submit Validation Status</legend>
-        <div>{{status}}</div>
-      </fieldset>
+      <legend>Submit Validation Status</legend>
+      <div>{{status}}</div>
+    </fieldset>
+  </div>
 </form>

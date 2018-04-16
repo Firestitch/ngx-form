@@ -26,36 +26,45 @@ export class FirstExampleComponent implements OnInit {
   constructor(private fsForm: FsForm) {  }
 
   ngOnInit() {
-    this.fsForm.on<string>('submit')
-      .subscribe((form: any) => {
-        console.log('broadcaster submit', form);
-      });
+    // this.fsForm.on<string>('submit')
+    //   .subscribe((form: any) => {
+    //     console.log('broadcaster submit', form);
+    //   });
 
-    this.fsForm.on<string>('valid')
-      .subscribe((form: any) => {
-        console.log('broadcaster valid', form);
-        this.status = 'Valid';
-      });
+    // this.fsForm.on<string>('valid')
+    //   .subscribe((form: any) => {
+    //     console.log('broadcaster valid', form);
+    //     this.status = 'Valid';
+    //   });
 
-    this.fsForm.on<string>('invalid')
-      .subscribe((form: any) => {
-        console.log('broadcaster not valid', form);
-        this.status = 'Invalid';
-      });
+    // this.fsForm.on<string>('invalid')
+    //   .subscribe((form: any) => {
+    //     console.log('broadcaster not valid', form);
+    //     this.status = 'Invalid';
+    //   });
   }
 
-  save(form) {
-    console.log('Called Save', form);
+  submitting() {
+    this.status = 'Submitting...';
   }
 
-  submit(form) {
-    form.ngSubmit.emit();
+  save() {
+    this.status = 'Valid';
+    console.log('Called Save');
+  }
+
+  invalid(form) {
+    this.status = 'Invalid';
+  }
+
+  emitSubmit(form) {
+    //form.ngSubmit.emit();
   }
 
   functionPromise(formControl) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        let testValue = formControl.value;
+        const testValue = formControl.value;
         if (testValue !== 'existing@email.com') {
           reject('Email should match "existing@email.com"');
         } else {
