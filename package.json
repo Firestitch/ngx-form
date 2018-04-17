@@ -78,7 +78,7 @@
     "gulp-rollup": "^2.15.0",
     "gulp-replace": "^0.6.1",
     "inquirer": "^4.0.1",
-    "@firestitch/example": "^0.1.3",
+    "@firestitch/example": "^0.1.8",
     "ucfirst": "^1.0.0",
     "gulp-regex-rename": "^0.1.0",
     "gulp-babel": "^7.0.0",
