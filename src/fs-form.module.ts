@@ -1,4 +1,3 @@
-import { FsCommonModule } from '@firestitch/common';
 import { FsFormCommon } from './services/fsformcommon.service';
 import { FsForm } from './services/fsform.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,8 +24,7 @@ import {
 
 @NgModule({
   imports: [
-    CommonModule,
-    FsCommonModule
+    CommonModule
   ],
   exports: [
     FsFormDirective,
