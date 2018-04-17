@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { FsArray, FsUtil, FsValidate } from '@firestitch/common';
+import { phone } from '@firestitch/common/validate/phone';
+import { email } from '@firestitch/common/validate/email';
+import { toString, isInteger, isNumber, isEmpty, filter } from 'lodash';
 
 @Injectable()
 export class FsFormCommon {
 
-    constructor(private fsArray: FsArray, private fsUtil: FsUtil, private fsValidate: FsValidate) {}
+    constructor() {}
 
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
@@ -17,7 +19,7 @@ export class FsFormCommon {
                 elRef.nativeElement.name = elRef.nativeElement.getAttribute('name');
                 const wrapper = elRef.nativeElement.querySelector('.mat-input-subscript-wrapper');
 
-                if (this.fsUtil.isEmpty(errors)) {
+                if (isEmpty(errors)) {
                   if (wrapper) {
                     wrapper.parentNode.removeChild(wrapper);
                   }
@@ -107,7 +109,7 @@ export class FsFormCommon {
     parseErrorMessage(message, args): string {
 
         for (const key in args) {
-            message = message.replace(/\$\(\d\)/, args[key])
+            message = message.replace(/\$\(\d\)/, args[key]);
         }
         return message;
     }
@@ -145,24 +147,24 @@ export class FsFormCommon {
     }
 
     searchIndex(data, item) {
-        return this.fsArray.indexOf(data, value => {
+        return filter(data, value => {
             return JSON.stringify(value) === JSON.stringify(item);
         });
     }
 
     isInt(value) {
-        return !this.fsUtil.string(value).length || this.fsUtil.isInt(value);
+        return !toString(value).length || isInteger(value);
     }
 
     isNumeric(value) {
-        return !this.fsUtil.string(value).length || this.fsUtil.isNumeric(value);
+        return !toString(value).length || isNumber(value);
     }
 
     phone(value) {
-        return this.fsValidate.phone(value);
+        return phone(value);
     }
 
     email(value) {
-        return this.fsValidate.email(value);
+        return email(value);
     }
 }

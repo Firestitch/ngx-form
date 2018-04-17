@@ -15,6 +15,7 @@ import { FsRadioGroupModule } from '@firestitch/radiogroup';
 import { FsExamplesComponent } from './../tools/components/examples/examples.component';
 import { FirstExampleComponent } from './app/components/first-example/first-example.component';
 import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
+import { BroadcastExampleComponent } from './app/components/broadcast-example/broadcast-example.component';
 
 @NgModule({
   bootstrap: [ AppComponent ],
@@ -36,7 +37,8 @@ import { EmitExampleComponent } from './app/components/emit-example/emit-example
     AppComponent,
     FsExamplesComponent,
     FirstExampleComponent,
-    EmitExampleComponent
+    EmitExampleComponent,
+    BroadcastExampleComponent
   ],
   providers: [
   ],

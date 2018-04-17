@@ -118,7 +118,6 @@
     <fieldset>
       <legend>Actions</legend>
       <button mat-raised-button color="primary" type="submit">Submit</button>
-      <button mat-raised-button color="primary" type="button" (click)="emitSubmit()">Emit Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="hidden = !(!!hidden)">{{hidden ? 'Show' : 'Hide'}} Inputs</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>

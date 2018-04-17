@@ -1,6 +1,5 @@
 import { NgModule, Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { FsForm } from './../../../../src/services/fsform.service';
+import { FsForm } from './../../../../src';
 
 @Component({
   selector: 'first-example',
@@ -55,10 +54,6 @@ export class FirstExampleComponent implements OnInit {
 
   invalid(form) {
     this.status = 'Invalid';
-  }
-
-  emitSubmit(form) {
-    //form.ngSubmit.emit();
   }
 
   functionPromise(formControl) {

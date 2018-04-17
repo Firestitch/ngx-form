@@ -1,6 +1,4 @@
 import { NgModule, Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { FsForm } from './../../../../src/services/fsform.service';
 
 @Component({
   selector: 'emit-example',
@@ -10,7 +8,7 @@ export class EmitExampleComponent implements OnInit {
   @ViewChild('form') form;
   status = 'Not Submitted';
 
-  constructor(private fsForm: FsForm) {  }
+  constructor() {  }
 
   ngOnInit() {  }
 
