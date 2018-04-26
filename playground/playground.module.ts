@@ -12,7 +12,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatepickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
-import { FsExamplesComponent } from './../tools/components/examples/examples.component';
 import { FirstExampleComponent } from './app/components/first-example/first-example.component';
 import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
 import { BroadcastExampleComponent } from './app/components/broadcast-example/broadcast-example.component';
@@ -35,7 +34,6 @@ import { BroadcastExampleComponent } from './app/components/broadcast-example/br
   ],
   declarations: [
     AppComponent,
-    FsExamplesComponent,
     FirstExampleComponent,
     EmitExampleComponent,
     BroadcastExampleComponent
