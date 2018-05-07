@@ -1,6 +1,6 @@
 {
   "name": "@firestitch/form",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/fs-form"
@@ -133,7 +133,7 @@
     "replace": "^0.3.0",
     "replace-in-file": "^3.4.0",
     "lodash": "^4.17.5",
-    "@firestitch/common": "^0.2.10"
+    "@firestitch/common": "^0.2.22"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -142,9 +142,6 @@
     "rxjs": ">=5.1.0",
     "zone.js": ">=0.8.4",
     "lodash": ">=4.0.0",
-    "@firestitch/common": ">=0.2.10"
-  },
-  "dependencies": {
-    "tsmodels": "^0.2.7"
+    "@firestitch/common": ">=0.2.22"
   }
 }
