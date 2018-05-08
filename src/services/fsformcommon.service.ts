@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { phone } from '@firestitch/common/validate/phone';
 import { email } from '@firestitch/common/validate/email';
-import { toString, isInteger, isNumber, isEmpty, filter } from 'lodash';
+import { toString, isInteger, isNumber, isString, isEmpty, isFinite, filter } from 'lodash';
 
 @Injectable()
 export class FsFormCommon {
@@ -153,11 +153,11 @@ export class FsFormCommon {
     }
 
     isInt(value) {
-        return !toString(value).length || isInteger(value);
+        return this.isNumeric(value) && value % 1 === 0;
     }
 
     isNumeric(value) {
-        return !toString(value).length || isNumber(value);
+        return ((typeof value === 'number' || typeof value === 'string') && !isNaN(Number(value)));
     }
 
     phone(value) {
