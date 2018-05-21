@@ -143,28 +143,37 @@ export class FsFormCommon {
     }
 
     capitalizeFirstLetter(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+      return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     searchIndex(data, item) {
-        return filter(data, value => {
-            return JSON.stringify(value) === JSON.stringify(item);
-        });
+      return filter(data, value => {
+        return JSON.stringify(value) === JSON.stringify(item);
+      });
     }
 
     isInt(value) {
-        return this.isNumeric(value) && value % 1 === 0;
+      return this.string(value) === '' || (this.isNumeric(value) && value % 1 === 0);
     }
 
     isNumeric(value) {
-        return ((typeof value === 'number' || typeof value === 'string') && !isNaN(Number(value)));
+      return this.string(value) === '' || (this.string(value).length && !!this.string(value).match(/^-?\d*\.?\d*$/));
     }
 
     phone(value) {
-        return phone(value);
+      return phone(value);
     }
 
     email(value) {
-        return email(value);
+      return email(value);
+    }
+
+    private string(value) {
+
+      if (value === null || value === undefined) {
+        value = '';
+      }
+
+      return value.toString();
     }
 }
