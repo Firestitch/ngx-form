@@ -11,7 +11,7 @@ export class FsFormEmailDirective extends FsControlDirective implements OnChange
   ngOnChanges() {
 
       const validator = () => {
-          if (!this.elRef.nativeElement.value || this.fsFormCommon.email(this.elRef.nativeElement.value)) {
+          if (!this.elementRef.nativeElement.value || this.fsFormCommon.email(this.elementRef.nativeElement.value)) {
               return null;
           }
           return { email: true };
@@ -19,7 +19,7 @@ export class FsFormEmailDirective extends FsControlDirective implements OnChange
 
       if (this.fsFormEmail) {
           super.addValidator(validator);
-      }else {
+      } else {
           super.removeValidator(validator);
       }
   }

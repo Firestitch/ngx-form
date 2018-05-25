@@ -1,0 +1,36 @@
+<form (fsForm)="save()">
+  <div fxLayout="column">
+    <mat-form-field>
+      <input placeholder="Function Promise Validation"
+        [(ngModel)]="function_promise"
+        name="function_promise"
+        matInput
+        [fsFormFunction]="functionPromise"
+        />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input placeholder="Function Exception Validation"
+        [(ngModel)]="function_exception"
+        name="function_exception"
+        matInput
+        [fsFormFunction]="functionException"
+        />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input placeholder="Anonymous Function Exception Validation"
+        [(ngModel)]="function_anonymous"
+        name="function_anonymous"
+        matInput
+        [fsFormFunction]="anonymousFunctionException"
+        />
+        <mat-hint>The same anonymous pattern can be applied to the function promise example</mat-hint>
+    </mat-form-field>
+
+    <fieldset>
+      <legend>Actions</legend>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </fieldset>
+  </div>
+</form>

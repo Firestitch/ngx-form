@@ -1,5 +1,5 @@
 import { Directive, OnChanges, Input, AfterViewChecked,
-         ElementRef, ViewContainerRef, Renderer2 } from '@angular/core';
+         ElementRef, Renderer2 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { FsFormCommon } from './../services/fsformcommon.service';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
@@ -14,95 +14,82 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
  @Input() fsFormPhoneMessage = 'Invalid phone number.';
  @Input() fsFormNumericMessage = 'Value should be numeric.';
  @Input() fsFormIntegerMessage = 'Value should be an integer.';
- @Input() fsFormMinMessage = 'Should not be less than $(1).';
- @Input() fsFormMaxMessage = 'Should not be bigger than $(1).';
+ @Input() fsFormMinMessage = 'Value should not be less than $(1).';
+ @Input() fsFormMaxMessage = 'Value should not be bigger than $(1).';
  @Input() fsFormMinlengthMessage = 'Should not be shorter than $(1) characters.';
  @Input() fsFormMaxlengthMessage = 'Should not be longer than $(1) characters.';
  @Input() fsFormCompareMessage = 'Inputs do not match.';
  @Input() fsFormPatternMessage = 'Value should match pattern $(1)';
-
+ @Input() fsFormDateRangeMessage = 'Invalid date range.';
  @Input() fsFormErrorsOrder = [];
-
- protected fsFormCommon: FsFormCommon;
- protected elRef: ElementRef;
- protected renderer: Renderer2;
- protected controlRef: NgControl;
- protected viewContainer: ViewContainerRef;
 
  protected statusChanges$;
 
  constructor(
-     ElementRef: ElementRef,
-     Renderer2: Renderer2,
-     NgControl: NgControl,
-     ViewContainerRef: ViewContainerRef,
-     FsFormCommon: FsFormCommon) {
+     protected elementRef: ElementRef,
+     protected renderer2: Renderer2,
+     protected ngControl: NgControl,
+     protected fsFormCommon: FsFormCommon) {
 
-     this.fsFormCommon = FsFormCommon;
-     this.elRef = ElementRef;
-     this.renderer = Renderer2;
-     this.controlRef = NgControl;
-     this.viewContainer = ViewContainerRef;
-
-     this.statusChanges$ = this.controlRef.control.statusChanges.subscribe(res => {
-         FsFormCommon.renderErrors(this, this.controlRef, this.renderer, this.elRef);
+     this.statusChanges$ = this.ngControl.control.statusChanges.subscribe(res => {
+        fsFormCommon.renderErrors(this, this.ngControl, this.renderer2, elementRef);
      });
 
-     this.controlRef.control['fsValidators'] = this.controlRef.control['fsValidators'] || [];
-     this.controlRef.control['fsAsyncValidators'] = this.controlRef.control['fsAsyncValidators'] || [];
+     this.ngControl.control['fsValidators'] = this.ngControl.control['fsValidators'] || [];
+     this.ngControl.control['fsAsyncValidators'] = this.ngControl.control['fsAsyncValidators'] || [];
  }
 
  ngOnDestroy() {
      this.statusChanges$.unsubscribe();
  }
 
- // If the  inputs are not visible (display: none) then don't include the input in the validation
+ // If the inputs are not visible (display: none) then don't include the input in the validation
  ngAfterViewChecked() {
 
-     const element = this.elRef;
+     const element = this.elementRef;
      // If not visible
      if ( element.nativeElement.offsetParent === null) {
-         this.controlRef.control.clearValidators();
-         this.controlRef.control.clearAsyncValidators();
-     }else {
+         this.ngControl.control.clearValidators();
+         this.ngControl.control.clearAsyncValidators();
+     } else {
          // Hack. If element visible, has no validatio but exist some validation rules -
          // updating validators and triggering change event (For some reason inputs assign
          // new rules only oinit and on change events
          if (
-             (this.controlRef.control['fsValidators'].length && !this.controlRef.control.validator) ||
-             (this.controlRef.control['fsAsyncValidators'].length && !this.controlRef.control.asyncValidator)
+             (this.ngControl.control['fsValidators'].length && !this.ngControl.control.validator) ||
+             (this.ngControl.control['fsAsyncValidators'].length && !this.ngControl.control.asyncValidator)
          ) {
 
              this.updateValidators();
              setTimeout(() => {
-                 this.controlRef.control.setValue(this.controlRef.control.value);
+                 this.ngControl.control.setValue(this.ngControl.control.value);
              });
          }
      }
  }
 
  updateValidators() {
-     this.controlRef.control.setValidators(this.controlRef.control['fsValidators']);
-     this.controlRef.control.setAsyncValidators(this.controlRef.control['fsAsyncValidators']);
-     this.controlRef.control.updateValueAndValidity();
+     this.ngControl.control.setValidators(this.ngControl.control['fsValidators']);
+     this.ngControl.control.setAsyncValidators(this.ngControl.control['fsAsyncValidators']);
+     this.ngControl.control.updateValueAndValidity();
  }
 
  addValidator(validator) {
-     this.controlRef.control['fsValidators'].push(validator);
+     this.ngControl.control['fsValidators'].push(validator);
      this.updateValidators();
  }
 
  removeValidator(validator) {
-     const index = this.fsFormCommon.searchIndex(this.controlRef.control['fsValidators'], validator);
+     const index = this.fsFormCommon.searchIndex(this.ngControl.control['fsValidators'], validator);
 
      if (index !== -1) {
-         this.controlRef.control['fsValidators'].splice(index, 1);
+         this.ngControl.control['fsValidators'].splice(index, 1);
          this.updateValidators();
      }
  }
 
  addAsyncValidator(validator) {
-     this.controlRef.control['fsAsyncValidators'].push(validator);
-     this.controlRef.control.setAsyncValidators(this.controlRef.control['fsAsyncValidators']);
+     this.ngControl.control['fsAsyncValidators'].push(validator);
+     this.ngControl.control.setAsyncValidators(this.ngControl.control['fsAsyncValidators']);
  }
 }

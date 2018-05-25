@@ -11,20 +11,31 @@ export class FsFormCommon {
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
             const errors = this.getErrors(instance, controlRef);
-            const parentNode = elRef.nativeElement.parentNode;
-            const isGroup = ['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) !== -1;
+            const isCheckRadioGroup = ['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) >= 0;
 
-            if (isGroup) {
+            // searching for a container if we are at input element (.mat-input-wrapper or .mat-form-field-wrapper)
+            let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
+            if (isCheckRadioGroup) {
+              elContainer = elRef.nativeElement;
+            }
+
+            const wrapper = elContainer.querySelector('.mat-form-field-subscript-wrapper');
+
+            if (wrapper) {
+
+              if (isEmpty(errors)) {
+                return renderer.setStyle(wrapper, 'display', 'none');
+              } else {
+                renderer.setStyle(wrapper, 'display', 'block');
+              }
+            }
+
+            // For checkbox and radio button groups we have to manually add these wrappers
+            if (isCheckRadioGroup) {
 
                 elRef.nativeElement.name = elRef.nativeElement.getAttribute('name');
-                const wrapper = elRef.nativeElement.querySelector('.mat-input-subscript-wrapper');
 
-                if (isEmpty(errors)) {
-                  if (wrapper) {
-                    wrapper.parentNode.removeChild(wrapper);
-                  }
-
-                } else if (!wrapper) {
+                if (!wrapper) {
                   const wraperContainer = renderer.createElement('div');
                   renderer.addClass(wraperContainer, 'mat-input-subscript-wrapper');
                   renderer.addClass(wraperContainer, 'mat-form-field-subscript-wrapper');
@@ -43,7 +54,7 @@ export class FsFormCommon {
                 if (!errors[errKey]) {
                     continue;
                 }
-
+                
                 const errorElement = renderer.createElement('mat-error');
                 renderer.addClass(errorElement, 'mat-error')
                 renderer.setProperty(errorElement, 'id', 'mat-error-' + errKey)
@@ -61,19 +72,13 @@ export class FsFormCommon {
                 renderer.appendChild(errorContainer, errorElement);
             }
 
-            // searching for a container if we are at input element
-            let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
-            if (isGroup) {
-              elContainer = elRef.nativeElement;
-            }
-
             // I feel like this area needs some attention.
-            let errorPlaceholder = this.findClass(elContainer, 'mat-form-field-subscript-wrapper');
+            let errorPlaceholder = elContainer.querySelector('.mat-form-field-subscript-wrapper');
 
             if (errorPlaceholder) {
                 errorPlaceholder.innerHTML = '';
                 errorPlaceholder.appendChild(errorContainer);
-            }else {
+            } else {
                 errorPlaceholder = renderer.createElement('div');
                 renderer.addClass(errorPlaceholder, 'mat-form-field-subscript-wrapper');
                 renderer.appendChild(errorPlaceholder, errorContainer);

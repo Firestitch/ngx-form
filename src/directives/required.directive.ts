@@ -11,7 +11,7 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
   ngOnChanges() {
       if (this.fsFormRequired !== false) {
           super.addValidator(Validators.required);
-      }else {
+      } else {
           super.removeValidator(Validators.required);
       }
   }

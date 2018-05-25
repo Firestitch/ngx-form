@@ -12,4 +12,5 @@ export * from './integer.directive';
 export * from './numeric.directive';
 export * from './pattern.directive';
 export * from './function.directive';
+export * from './daterange.directive';
 

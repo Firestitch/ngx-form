@@ -1,12 +1,13 @@
 <form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
   <div fxLayout="column">
-   <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Value >= 3 and <=8"
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input placeholder="Value >= 3 and <=8"
         [(ngModel)]="minMaxInput"
         name="minMaxInput"
         matInput
         [fsFormRequired]="required"
         fsFormMin="3"
+        fsFormMax="8"
         fsFormMax="8"
         fsFormRequiredMessage="This is custom required message"
         />
@@ -21,7 +22,7 @@
     </fs-radio-group>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-        <input  placeholder="5 to 10 characters in length"
+        <input placeholder="5 to 10 characters in length"
           [(ngModel)]="lengthInput"
           name="lengthInput"
           matInput
@@ -33,7 +34,7 @@
 
     <div fxLayout="row" [hidden]="hidden" *ngIf="render">
       <mat-form-field>
-          <input  placeholder="Password"
+          <input placeholder="Password"
             #passwordInput
             name="password"
             [(ngModel)]="password"
@@ -42,7 +43,7 @@
             />
         </mat-form-field>
       <mat-form-field>
-        <input  placeholder="Password Confirm"
+        <input placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="password_confirm"
           [fsFormRequired]="required"
@@ -53,7 +54,7 @@
     </div>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Integer"
+      <input placeholder="Integer"
         [(ngModel)]="integer"
         name="integer_input"
         matInput
@@ -62,7 +63,7 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Email"
+      <input placeholder="Email"
         [(ngModel)]="email"
         name="email_input"
         matInput
@@ -71,7 +72,7 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Phone"
+      <input placeholder="Phone"
         [(ngModel)]="phone"
         name="phone_input"
         matInput
@@ -80,7 +81,7 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Numeric"
+      <input placeholder="Numeric"
         [(ngModel)]="numeric"
         name="numeric_input"
         matInput
@@ -89,31 +90,34 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Pattern"
+      <input placeholder="Pattern"
         [(ngModel)]="pattern"
         name="pattern_input"
         matInput
-        fsFormPattern="\+?[0-9]{3}-?([0-9]{7}|[0-9]-[0-9]{2}-[0-9]{2}-[0-9]{2}|[0-9]{3}-[0-9]{2}-[0-9]-[0-9])"
+        fsFormPattern="[0-9]{2,}"
         />
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input  placeholder="Function Validation"
-        [(ngModel)]="function_promise"
-        name="function_promise_input"
-        matInput
-        [fsFormRequired]="required"
-        [fsFormFunction]="functionPromise"
-        />
+      <input matInput fsDatePicker [fsFormRequired]="required" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input matInput fsDatepicker [fsFormRequired]="required" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
-    </mat-form-field>
-
-    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="required" name="checkbox" [hidden]="hidden" *ngIf="render">
+    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="required" label="Checkbox Group" name="checkbox" [hidden]="hidden" *ngIf="render">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
-    </fs-checkbox-group>
+    </fs-checkbox-group> 
+
+    <mat-form-field fxFlex>
+      <input matInput 
+        fsDatePickerRange
+        fsFormDateRange="true"
+        [(ngModel)]="daterange"
+        name="daterange"
+      [(ngModelStart)]="start_date"
+      [(ngModelEnd)]="end_date"
+      [presets]="presets"
+      view="datetime" name="datetimerangepicker" placeholder="Date Time Range">
+    </mat-form-field>
+      
 
     <fieldset>
       <legend>Actions</legend>

@@ -9,12 +9,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModule } from './app/material.module';
 import { FsExampleModule } from '@firestitch/example';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FsDatepickerModule } from '@firestitch/datepicker';
+import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
 import { FirstExampleComponent } from './app/components/first-example/first-example.component';
 import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
 import { BroadcastExampleComponent } from './app/components/broadcast-example/broadcast-example.component';
+import { FunctionComponent } from './app/components/function/function.component';
 
 @NgModule({
   bootstrap: [ AppComponent ],
@@ -25,7 +26,7 @@ import { BroadcastExampleComponent } from './app/components/broadcast-example/br
     AppMaterialModule,
     FormsModule,
     FsExampleModule,
-    FsDatepickerModule,
+    FsDatePickerModule,
     FsCheckboxGroupModule,
     FsRadioGroupModule,
     FlexLayoutModule
@@ -36,7 +37,8 @@ import { BroadcastExampleComponent } from './app/components/broadcast-example/br
     AppComponent,
     FirstExampleComponent,
     EmitExampleComponent,
-    BroadcastExampleComponent
+    BroadcastExampleComponent,
+    FunctionComponent
   ],
   providers: [
   ],

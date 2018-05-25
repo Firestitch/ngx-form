@@ -9,7 +9,7 @@ export class FsFormCompareDirective extends FsControlDirective implements OnInit
   @Input() fsFormCompare;
 
   validator = () => {
-    if (this.fsFormCompare.value === this.elRef.nativeElement.value) {
+    if (this.fsFormCompare.value === this.elementRef.nativeElement.value) {
         return null;
     } else {
         return { compare: true };
@@ -20,13 +20,13 @@ export class FsFormCompareDirective extends FsControlDirective implements OnInit
     super.addValidator(this.validator);
 
     this.fsFormCompare.addEventListener('keyup', () => {
-      this.controlRef.control.updateValueAndValidity();
+      this.ngControl.control.updateValueAndValidity();
     }, false);
   }
 
   ngOnDestroy() {
     this.fsFormCompare.removeEventListener('keyup', () => {
-      this.controlRef.control.updateValueAndValidity();
+      this.ngControl.control.updateValueAndValidity();
     }, false);
   }
 }

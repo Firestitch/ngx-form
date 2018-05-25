@@ -19,7 +19,8 @@ import {
   FsFormIntegerDirective,
   FsFormNumericDirective,
   FsFormPatternDirective,
-  FsFormFunctionDirective
+  FsFormFunctionDirective,
+  FsFormDateRangeDirective
 } from './directives';
 
 @NgModule({
@@ -40,7 +41,8 @@ import {
     FsFormIntegerDirective,
     FsFormNumericDirective,
     FsFormPatternDirective,
-    FsFormFunctionDirective
+    FsFormFunctionDirective,
+    FsFormDateRangeDirective
   ],
   entryComponents: [
   ],
@@ -58,7 +60,8 @@ import {
     FsFormIntegerDirective,
     FsFormNumericDirective,
     FsFormPatternDirective,
-    FsFormFunctionDirective
+    FsFormFunctionDirective,
+    FsFormDateRangeDirective
   ],
   providers: [
     FsFormCommon,

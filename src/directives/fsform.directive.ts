@@ -14,9 +14,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
   @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
 
-  constructor(
-      private fsForm: FsForm
-  ) {}
+  constructor(private fsForm: FsForm) {}
 
   ngOnInit() {
 
