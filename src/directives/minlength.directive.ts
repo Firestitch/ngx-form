@@ -9,6 +9,6 @@ export class FsFormMinLengthDirective extends FsControlDirective implements OnIn
   @Input() fsFormMinLength;
 
   ngOnInit() {
-      super.addValidator(Validators.minLength(this.fsFormMinLength));
+    super.addValidator(Validators.minLength(this.fsFormMinLength));
   }
 }

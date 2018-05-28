@@ -9,6 +9,6 @@ export class FsFormMaxLengthDirective extends FsControlDirective implements OnIn
   @Input() fsFormMaxLength;
 
   ngOnInit() {
-      super.addValidator(Validators.maxLength(this.fsFormMaxLength));
+    super.addValidator(Validators.maxLength(this.fsFormMaxLength));
   }
 }

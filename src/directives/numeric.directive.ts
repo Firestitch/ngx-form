@@ -9,7 +9,7 @@ export class FsFormNumericDirective extends FsControlDirective implements OnInit
   @Input() fsFormNumeric;
 
   ngOnInit() {
-    if (this.fsFormNumeric) {
+    if (this.isEnabled(this.fsFormNumeric)) {
       super.addValidator((control: AbstractControl): { [key: string]: boolean } => {
         if (this.fsFormCommon.isNumeric(control.value)) {
             return null;

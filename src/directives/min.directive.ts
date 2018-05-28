@@ -8,6 +8,6 @@ import { FsControlDirective } from './fscontrol.directive';
 export class FsFormMinDirective extends FsControlDirective implements OnInit {
   @Input() fsFormMin;
   ngOnInit() {
-      super.addValidator(Validators.min(this.fsFormMin));
+    super.addValidator(Validators.min(this.fsFormMin));
   }
 }

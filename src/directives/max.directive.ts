@@ -10,6 +10,6 @@ export class FsFormMaxDirective extends FsControlDirective implements OnInit {
   @Input() public fsFormMax;
 
   ngOnInit() {
-      super.addValidator(Validators.max(this.fsFormMax));
+    super.addValidator(Validators.max(this.fsFormMax));
   }
 }

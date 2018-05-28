@@ -16,17 +16,20 @@ export class FsFormDateRangeDirective extends FsControlDirective implements OnCh
       const validator = (formControl) => {
 
         if (isObject(formControl.value)) {
-                const start = formControl.value.start;
-                const end = formControl.value.end;
-                
-                if(moment.isMoment(start) && moment.isMoment(end) && start.isValid()  && end.isValid()) {
-                    return null;
-                }           
+
+            const start = formControl.value.start;
+            const end = formControl.value.end;
+
+            if ((!start && !end) ||
+                (moment.isMoment(start) && moment.isMoment(end) && start.isValid()  && end.isValid())) {
+                return null;
             }
-            return { dateRange: true };
+          }
+
+          return { dateRange: true };
         }
 
-      if (this.fsFormDateRange) {
+      if (this.isEnabled(this.fsFormDateRange)) {
           super.addValidator(validator);
       } else {
           super.removeValidator(validator);

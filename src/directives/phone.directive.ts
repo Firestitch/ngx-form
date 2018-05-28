@@ -11,13 +11,13 @@ export class FsFormPhoneDirective extends FsControlDirective implements OnChange
   ngOnChanges() {
 
       const validator = () => {
-          if (this.fsFormCommon.phone(this.elementRef.nativeElement.value)) {
-              return null;
-          }
-          return { phone: true };
+        if (this.fsFormCommon.phone(this.elementRef.nativeElement.value)) {
+            return null;
+        }
+        return { phone: true };
       };
 
-      if (this.fsFormPhone) {
+      if (this.isEnabled(this.fsFormPhone)) {
           super.addValidator(validator);
       }else {
           super.removeValidator(validator);

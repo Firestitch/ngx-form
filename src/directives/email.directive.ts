@@ -17,7 +17,7 @@ export class FsFormEmailDirective extends FsControlDirective implements OnChange
           return { email: true };
       };
 
-      if (this.fsFormEmail) {
+      if (this.isEnabled(this.fsFormEmail)) {
           super.addValidator(validator);
       } else {
           super.removeValidator(validator);

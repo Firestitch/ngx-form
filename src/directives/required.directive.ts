@@ -9,10 +9,10 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
   @Input() fsFormRequired: boolean;
 
   ngOnChanges() {
-      if (this.fsFormRequired !== false) {
-          super.addValidator(Validators.required);
-      } else {
-          super.removeValidator(Validators.required);
-      }
+    if (this.isEnabled(this.fsFormRequired)) {
+        super.addValidator(Validators.required);
+    } else {
+        super.removeValidator(Validators.required);
+    }
   }
 }

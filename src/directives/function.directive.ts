@@ -11,19 +11,19 @@ export class FsFormFunctionDirective extends FsControlDirective implements OnIni
   ngOnInit() {
 
       super.addAsyncValidator(() => {
-          
+
           return new Promise((resolve, reject) => {
             try {
-              const result = this.fsFormFunction(this.ngControl);           
+              const result = this.fsFormFunction(this.ngControl);
               if (result instanceof Promise) {
                 result.then(() => {
                   return resolve(null);
                 })
                 .catch((err) => {
                   return resolve({ validationError: err });
-                });                
+                });
               }
-            } catch(e) {
+            } catch (e) {
               resolve({ validationError: e });
             }
           });

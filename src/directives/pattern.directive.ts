@@ -9,6 +9,6 @@ export class FsFormPatternDirective extends FsControlDirective implements OnInit
   @Input() fsFormPattern: RegExp;
 
   ngOnInit() {
-      super.addValidator(Validators.pattern(this.fsFormPattern));
+    super.addValidator(Validators.pattern(this.fsFormPattern));
   }
 }
