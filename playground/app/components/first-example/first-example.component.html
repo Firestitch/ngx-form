@@ -110,6 +110,7 @@
       <input matInput
         fsDatePickerRange
         fsFormDateRange
+        [fsFormRequired]="required"
         [(ngModel)]="daterange"
         [(ngModelStart)]="start_date"
         [(ngModelEnd)]="end_date"
