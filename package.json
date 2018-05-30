@@ -117,7 +117,8 @@
     "lodash": "^4.17.5",
     "@firestitch/common": "^0.2.24",
     "@firestitch/message": "^0.1.18",
-    "ngx-toastr": "^8.7.3"
+    "ngx-toastr": "^8.7.3",
+    "filemanager-webpack-plugin": "^1.0.26"
   },
   "engines": {
     "node": ">=6.0.0"
