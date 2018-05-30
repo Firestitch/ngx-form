@@ -22,6 +22,8 @@ export class FsFormFunctionDirective extends FsControlDirective implements OnIni
                 .catch((err) => {
                   return resolve({ validationError: err });
                 });
+              } else {
+                return resolve(null);
               }
             } catch (e) {
               resolve({ validationError: e });

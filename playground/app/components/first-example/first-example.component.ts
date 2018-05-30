@@ -1,5 +1,7 @@
 import { NgModule, Component } from '@angular/core';
 import { FsForm } from './../../../../src';
+import { FsMessage } from '@firestitch/message';
+
 
 @Component({
   selector: 'first-example',
@@ -11,7 +13,6 @@ export class FirstExampleComponent {
   public required = true;
   public hidden = false;
   public render = true;
-  public status = 'Not Submitted';
   public lengthInput = '';
   public datepicker = null;
   public checkbox: object[] = [];
@@ -23,18 +24,17 @@ export class FirstExampleComponent {
     { name: 'Item 4', id: 4 }
   ]; 
   
-  constructor(private fsForm: FsForm) {}
+  constructor(private fsMessage: FsMessage, private fsForm: FsForm) {}
 
   submitting() {
-    this.status = 'Submitting...';
+    this.fsMessage.info('Submitting validation', { mode: 'toast' });
   }
 
   save() {
-    this.status = 'Valid';
-    console.log('Called Save');
+    this.fsMessage.success('Validation successful');
   }
 
   invalid(form) {
-    this.status = 'Invalid';
+    this.fsMessage.error('Validation invalid', { mode: 'toast' });
   }
 }

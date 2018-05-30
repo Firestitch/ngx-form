@@ -1,4 +1,4 @@
-<form (fsForm)="save()">
+<form (fsForm)="save()" #form="ngForm">
   <div fxLayout="column">
     <mat-form-field>
       <input placeholder="Function Promise Validation"
@@ -28,6 +28,27 @@
         <mat-hint>The same anonymous pattern can be applied to the function promise example</mat-hint>
     </mat-form-field>
 
+    <fs-radio-group
+      [(ngModel)]="radioFunctionModel"
+      label="Radio Button Group Custom Validation"
+      orientation="vertical"
+      name="radio_function"
+      [fsFormFunction]="radioFunction">
+        <mat-radio-button [value]="'weeks'">
+            After
+            <mat-form-field>
+              <input [(ngModel)]="radioFunctionWeeks" name="radioFunctionWeeks" matInput (change)="radioFunctionChange()"/>
+            </mat-form-field>
+            Weeks
+        </mat-radio-button>
+        <mat-radio-button [value]="'date'">
+          On
+          <mat-form-field>
+            <input matInput fsDatePicker [(ngModel)]="radioFunctionDate" name="radioFunctionDate" (change)="radioFunctionChange()">
+          </mat-form-field>
+        </mat-radio-button>
+    </fs-radio-group>
+    
     <fieldset>
       <legend>Actions</legend>
       <button mat-raised-button color="primary" type="submit">Submit</button>

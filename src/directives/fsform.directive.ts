@@ -34,18 +34,25 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
         for (const key in this.ngForm.controls) {
 
-            if (!this.ngForm.controls[key]) {
-                continue;
-            }
-
-            const control =  this.ngForm.controls[key];
+          const control = this.ngForm.controls[key];
+          if (control) {
             control.markAsDirty();
             control.markAsTouched();
+          }
+        }
+
+        for (const key in this.ngForm.controls) {
+
+          const control = this.ngForm.controls[key];
+
+          if (control) {
+
             control.updateValueAndValidity();
 
             if (control.asyncValidator) {
               validations.push(control.asyncValidator().toPromise());
             }
+          }
         }
 
         Promise.all(validations)
@@ -66,6 +73,8 @@ export class FsFormDirective implements OnInit, OnDestroy {
                 this.submit.emit(this.ngForm);
               }
             }
+        }).catch((e) => {
+          this.submitting = false;
         });
       });
     }

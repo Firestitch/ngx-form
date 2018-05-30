@@ -11,15 +11,24 @@ export class FsFormCommon {
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
             const errors = this.getErrors(instance, controlRef);
-            const isCheckRadioGroup = ['FS-CHECKBOX-GROUP', 'FS-RADIO-GROUP'].indexOf(elRef.nativeElement.tagName) >= 0;
+            const isRadioGroup = elRef.nativeElement.tagName==='FS-RADIO-GROUP';
+            const isCheckGroup = elRef.nativeElement.tagName==='FS-CHECKBOX-GROUP';
 
             // searching for a container if we are at input element (.mat-input-wrapper or .mat-form-field-wrapper)
             let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
-            if (isCheckRadioGroup) {
+            if (isRadioGroup || isCheckGroup) {
               elContainer = elRef.nativeElement;
             }
 
-            const wrapper = elContainer.querySelector('.mat-form-field-subscript-wrapper');
+            let wrapperClass = 'mat-form-field-subscript-wrapper';
+
+            if (isRadioGroup) {
+              wrapperClass = 'mat-radio-button-group-subscript-wrapper';
+            } else if (isCheckGroup) {
+              wrapperClass = 'mat-checkbox-group-subscript-wrapper';
+            }
+            
+            let wrapper = elContainer.querySelector('.' + wrapperClass);
 
             if (wrapper) {
 
@@ -30,31 +39,39 @@ export class FsFormCommon {
               }
             }
 
-            // For checkbox and radio button groups we have to manually add these wrappers
-            if (isCheckRadioGroup) {
-
-                elRef.nativeElement.name = elRef.nativeElement.getAttribute('name');
-
-                if (!wrapper) {
-                  const wraperContainer = renderer.createElement('div');
-                  renderer.addClass(wraperContainer, 'mat-input-subscript-wrapper');
-                  renderer.addClass(wraperContainer, 'mat-form-field-subscript-wrapper');
-                  renderer.appendChild(elRef.nativeElement, wraperContainer);
-                }
-            }
-
             // not the most elegant way to compile errors, but i couldnt get a better one working.
             // right now its depepndant on styles/DOM we have in existing angular-material, which is not right
             const errorContainer = renderer.createElement('div');
             renderer.addClass(errorContainer, 'ng-trigger');
-            renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');
+            renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');            
+
+            // For checkbox and radio button groups we have to manually add these wrappers
+            if (isRadioGroup || isCheckGroup) {
+
+                elRef.nativeElement.name = elRef.nativeElement.getAttribute('name');
+
+                if (!wrapper) {
+                  wrapper = renderer.createElement('div');
+                  
+                  renderer.addClass(wrapper, 'mat-form-field-subscript-wrapper');
+                  renderer.addClass(wrapper, wrapperClass);
+                  renderer.appendChild(elRef.nativeElement, wrapper);
+                }
+            } else {
+              if (!wrapper) {
+                wrapper = renderer.createElement('div');
+                renderer.addClass(wrapper, 'mat-form-field-subscript-wrapper');
+                renderer.appendChild(wrapper, errorContainer);
+                elRef.nativeElement.appendChild(wrapper);
+              }
+            }
 
             for (const errKey in errors) {
 
                 if (!errors[errKey]) {
                     continue;
                 }
-                
+
                 const errorElement = renderer.createElement('mat-error');
                 renderer.addClass(errorElement, 'mat-error')
                 renderer.setProperty(errorElement, 'id', 'mat-error-' + errKey)
@@ -72,18 +89,8 @@ export class FsFormCommon {
                 renderer.appendChild(errorContainer, errorElement);
             }
 
-            // I feel like this area needs some attention.
-            let errorPlaceholder = elContainer.querySelector('.mat-form-field-subscript-wrapper');
-
-            if (errorPlaceholder) {
-                errorPlaceholder.innerHTML = '';
-                errorPlaceholder.appendChild(errorContainer);
-            } else {
-                errorPlaceholder = renderer.createElement('div');
-                renderer.addClass(errorPlaceholder, 'mat-form-field-subscript-wrapper');
-                renderer.appendChild(errorPlaceholder, errorContainer);
-                elRef.nativeElement.appendChild(errorPlaceholder);
-            }
+            wrapper.innerHTML = '';
+            wrapper.appendChild(errorContainer);        
         }
     }
 
@@ -117,34 +124,6 @@ export class FsFormCommon {
             message = message.replace(/\$\(\d\)/, args[key]);
         }
         return message;
-    }
-
-    findClass(element, className) {
-        var foundElement = null, found;
-        function recurse(element, className, found) {
-            for (var i = 0; i < element.childNodes.length && !found; i++) {
-                var el = element.childNodes[i];
-                let classes;
-                if (typeof el.className == 'string') {
-                    classes = el.className != undefined ? el.className.split(" ") : [];
-                } else  {
-                  classes = [];
-                }
-                for (var j = 0, jl = classes.length; j < jl; j++) {
-                    if (classes[j] == className) {
-                        found = true;
-                        foundElement = element.childNodes[i];
-                        break;
-                    }
-                }
-                if (found) {
-                    break;
-                }
-                recurse(element.childNodes[i], className, found);
-            }
-        }
-        recurse(element, className, false);
-        return foundElement;
     }
 
     capitalizeFirstLetter(str) {

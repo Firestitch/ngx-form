@@ -1,4 +1,4 @@
-import './../tools/assets/playground.scss';
+import './styles.scss';
 
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { FsFormModule } from '../src';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModule } from './app/material.module';
 import { FsExampleModule } from '@firestitch/example';
+import { FsMessageModule } from '@firestitch/message';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
@@ -29,7 +30,8 @@ import { FunctionComponent } from './app/components/function/function.component'
     FsDatePickerModule,
     FsCheckboxGroupModule,
     FsRadioGroupModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FsMessageModule
   ],
   entryComponents: [
   ],

@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "description": "@firestitch/form",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/fs-form"
@@ -115,7 +115,9 @@
     "replace": "^0.3.0",
     "replace-in-file": "^3.4.0",
     "lodash": "^4.17.5",
-    "@firestitch/common": "^0.2.24"
+    "@firestitch/common": "^0.2.24",
+    "@firestitch/message": "^0.1.18",
+    "ngx-toastr": "^8.7.3"
   },
   "engines": {
     "node": ">=6.0.0"
