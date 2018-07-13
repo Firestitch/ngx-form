@@ -13,6 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
+import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 import { FirstExampleComponent } from './app/components/first-example/first-example.component';
 import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
 import { BroadcastExampleComponent } from './app/components/broadcast-example/broadcast-example.component';
@@ -31,7 +32,8 @@ import { FunctionComponent } from './app/components/function/function.component'
     FsCheckboxGroupModule,
     FsRadioGroupModule,
     FlexLayoutModule,
-    FsMessageModule
+    FsMessageModule,
+    FsAutocompleteChipsModule
   ],
   entryComponents: [
   ],

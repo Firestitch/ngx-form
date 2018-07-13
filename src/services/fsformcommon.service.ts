@@ -11,12 +11,14 @@ export class FsFormCommon {
     renderErrors(instance, controlRef, renderer, elRef) {
         if (controlRef.dirty) {
             const errors = this.getErrors(instance, controlRef);
-            const isRadioGroup = elRef.nativeElement.tagName==='FS-RADIO-GROUP';
-            const isCheckGroup = elRef.nativeElement.tagName==='FS-CHECKBOX-GROUP';
+            const isRadioGroup = elRef.nativeElement.tagName === 'FS-RADIO-GROUP';
+            const isCheckGroup = elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP';
+            const isAutocompleteChips = elRef.nativeElement.tagName === 'FS-AUTOCOMPLETE-CHIPS';
 
             // searching for a container if we are at input element (.mat-input-wrapper or .mat-form-field-wrapper)
             let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
-            if (isRadioGroup || isCheckGroup) {
+
+            if (isRadioGroup || isCheckGroup || isAutocompleteChips) {
               elContainer = elRef.nativeElement;
             }
 
@@ -27,7 +29,7 @@ export class FsFormCommon {
             } else if (isCheckGroup) {
               wrapperClass = 'mat-checkbox-group-subscript-wrapper';
             }
-            
+
             let wrapper = elContainer.querySelector('.' + wrapperClass);
 
             if (wrapper) {
@@ -43,7 +45,7 @@ export class FsFormCommon {
             // right now its depepndant on styles/DOM we have in existing angular-material, which is not right
             const errorContainer = renderer.createElement('div');
             renderer.addClass(errorContainer, 'ng-trigger');
-            renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');            
+            renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');
 
             // For checkbox and radio button groups we have to manually add these wrappers
             if (isRadioGroup || isCheckGroup) {
@@ -52,7 +54,7 @@ export class FsFormCommon {
 
                 if (!wrapper) {
                   wrapper = renderer.createElement('div');
-                  
+
                   renderer.addClass(wrapper, 'mat-form-field-subscript-wrapper');
                   renderer.addClass(wrapper, wrapperClass);
                   renderer.appendChild(elRef.nativeElement, wrapper);
@@ -90,7 +92,7 @@ export class FsFormCommon {
             }
 
             wrapper.innerHTML = '';
-            wrapper.appendChild(errorContainer);        
+            wrapper.appendChild(errorContainer);
         }
     }
 

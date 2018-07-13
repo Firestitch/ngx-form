@@ -21,6 +21,20 @@
       <mat-radio-button [value]="1">1</mat-radio-button>
     </fs-radio-group>
 
+    <fs-autocomplete-chips
+      [hidden]="hidden" *ngIf="render"
+      [(ngModel)]="chips"
+      [fetch]="fetchChips"
+      placeholder="Autocomplete Chips"
+      removable="true"
+      draggable="true"
+      [fsFormRequired]="required"
+      name="chips">
+        <ng-template let-data="item" fs-autocomplete-chip>
+          {{ data.name }}
+        </ng-template>
+    </fs-autocomplete-chips>
+
     <mat-form-field [hidden]="hidden" *ngIf="render">
         <input placeholder="5 to 10 characters in length"
           [(ngModel)]="lengthInput"
