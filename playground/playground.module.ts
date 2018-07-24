@@ -18,6 +18,8 @@ import { FirstExampleComponent } from './app/components/first-example/first-exam
 import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
 import { BroadcastExampleComponent } from './app/components/broadcast-example/broadcast-example.component';
 import { FunctionComponent } from './app/components/function/function.component';
+import { NestedComponent } from './app/components/nested/nested.component';
+import { NestedFormComponent } from './app/components/nested-form/nested-form.component';
 
 @NgModule({
   bootstrap: [ AppComponent ],
@@ -42,7 +44,9 @@ import { FunctionComponent } from './app/components/function/function.component'
     FirstExampleComponent,
     EmitExampleComponent,
     BroadcastExampleComponent,
-    FunctionComponent
+    FunctionComponent,
+    NestedComponent,
+    NestedFormComponent
   ],
   providers: [
   ],

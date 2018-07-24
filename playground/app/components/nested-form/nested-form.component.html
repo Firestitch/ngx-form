@@ -1,0 +1,14 @@
+<form>
+  <mat-form-field>
+    <input placeholder="Value >= 3 and <=8"
+      [(ngModel)]="minMaxInput"
+      name="minMaxInput"
+      matInput
+      [fsFormRequired]="required"
+      fsFormMin="3"
+      fsFormMax="8"
+      fsFormMax="8"
+      fsFormRequiredMessage="This is custom required message"
+      />
+  </mat-form-field>
+</form>

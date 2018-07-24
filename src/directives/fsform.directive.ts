@@ -20,6 +20,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
     if (this.ngForm) {
       this.ngForm.ngSubmit.subscribe(event => {
+
         if (event) {
           event.preventDefault();
         }
