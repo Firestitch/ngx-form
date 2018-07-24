@@ -11,7 +11,7 @@ export class NestedComponent {
   constructor(private fsMessage: FsMessage) {}
 
   save() {
-    debugger;
+    this.fsMessage.success('Successfully submitted');
   }
 }
 

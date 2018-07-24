@@ -1,12 +1,10 @@
-import { NgModule, Component, ViewChild } from '@angular/core';
-import { FsMessage } from '@firestitch/message';
+import { Component } from '@angular/core';
+import { ControlContainer, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'nested-form',
-  templateUrl: 'nested-form.component.html'
+  templateUrl: 'nested-form.component.html',
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 export class NestedFormComponent {
-
-  constructor(private fsMessage: FsMessage) {}
-
 }
