@@ -6,6 +6,7 @@ export * from './min.directive';
 export * from './minlength.directive';
 export * from './maxlength.directive';
 export * from './email.directive';
+export * from './emails.directive';
 export * from './phone.directive';
 export * from './compare.directive';
 export * from './integer.directive';

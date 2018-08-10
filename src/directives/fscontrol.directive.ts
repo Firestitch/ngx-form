@@ -11,6 +11,7 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
 
   @Input() fsFormRequiredMessage = 'This field is required.';
   @Input() fsFormEmailMessage = 'This is not a valid email address.';
+  @Input() fsFormEmailsMessage = 'Input valid email addresses, comma separated.';
   @Input() fsFormPhoneMessage = 'Invalid phone number.';
   @Input() fsFormNumericMessage = 'Value should be numeric.';
   @Input() fsFormIntegerMessage = 'Value should be an integer.';
@@ -92,6 +93,15 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
       this.ngControl.control['fsAsyncValidators'].push(validator);
       this.ngControl.control.setAsyncValidators(this.ngControl.control['fsAsyncValidators']);
   }
+
+  removeAsyncValidator(validator) {
+    const index = this.fsFormCommon.searchIndex(this.ngControl.control['fsAsyncValidators'], validator);
+
+    if (index !== -1) {
+        this.ngControl.control['fsAsyncValidators'].splice(index, 1);
+        this.updateValidators();
+    }
+}
 
   isEnabled(value) {
     return value || value === '';
