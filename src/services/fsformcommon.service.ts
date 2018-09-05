@@ -6,6 +6,8 @@ import { toString, isInteger, isNumber, isString, isEmpty, isFinite, filter } fr
 @Injectable()
 export class FsFormCommon {
 
+    private readonly errorMessagesContainerClassName = 'ng-trigger-transitionMessages';
+
     constructor() {}
 
     renderErrors(instance, controlRef, renderer, elRef) {
@@ -30,14 +32,20 @@ export class FsFormCommon {
               wrapperClass = 'mat-checkbox-group-subscript-wrapper';
             }
 
-            let wrapper = elContainer.querySelector('.' + wrapperClass);
+            let wrapper = elContainer.querySelector(`.${wrapperClass}`);
 
             if (wrapper) {
 
+              const hint = this.getHint(wrapper);
+
+              this.setErrorsStyle(renderer, wrapper, 'display', isEmpty(errors) ? 'none' : 'block');
+
+              if (hint) {
+                renderer.setStyle(hint, 'display', isEmpty(errors) ? 'block' : 'none');
+              }
+
               if (isEmpty(errors)) {
-                return renderer.setStyle(wrapper, 'display', 'none');
-              } else {
-                renderer.setStyle(wrapper, 'display', 'block');
+                return;
               }
             }
 
@@ -45,7 +53,7 @@ export class FsFormCommon {
             // right now its depepndant on styles/DOM we have in existing angular-material, which is not right
             const errorContainer = renderer.createElement('div');
             renderer.addClass(errorContainer, 'ng-trigger');
-            renderer.addClass(errorContainer, 'ng-trigger-transitionMessages');
+            renderer.addClass(errorContainer, this.errorMessagesContainerClassName);
 
             // For checkbox and radio button groups we have to manually add these wrappers
             if (isRadioGroup || isCheckGroup) {
@@ -75,9 +83,10 @@ export class FsFormCommon {
                 }
 
                 const errorElement = renderer.createElement('mat-error');
+                let errorText: string = null;
+
                 renderer.addClass(errorElement, 'mat-error')
                 renderer.setProperty(errorElement, 'id', 'mat-error-' + errKey)
-                let errorText;
 
                 const messageVariable = `fsForm${this.capitalizeFirstLetter(errKey)}Message`;
 
@@ -91,9 +100,49 @@ export class FsFormCommon {
                 renderer.appendChild(errorContainer, errorElement);
             }
 
-            wrapper.innerHTML = '';
+            this.clearWrapperErrors(wrapper);
             wrapper.appendChild(errorContainer);
         }
+    }
+
+    private clearWrapperErrors(wrapper) {
+      const errorContainers = wrapper.getElementsByClassName(this.errorMessagesContainerClassName);
+
+      if (!errorContainers.length) {
+        return;
+      }
+
+      for (var i = 0; i < errorContainers.length; i++) {
+        if (Array.from(errorContainers[i].classList).indexOf('mat-input-hint-wrapper') === -1) {
+          errorContainers[i].parentNode.removeChild(errorContainers[i]);
+        }
+      }
+    }
+
+    private setErrorsStyle(renderer, wrapper, style, value) {
+      const errorContainers = wrapper.getElementsByClassName(this.errorMessagesContainerClassName);
+
+      if (!errorContainers.length) {
+        return;
+      }
+
+      for (var i = 0; i < errorContainers.length; i++) {
+        if (Array.from(errorContainers[i].classList).indexOf('mat-input-hint-wrapper') === -1) {
+          renderer.setStyle(errorContainers[i], style, value);
+        }
+      }
+    }
+
+    private getHint(wrapper) {
+
+      if (!wrapper) {
+        return null;
+      }
+
+      const hintContainer = wrapper.getElementsByClassName('mat-input-hint-wrapper') ?
+        wrapper.getElementsByClassName('mat-input-hint-wrapper')[0] : null;
+
+      return hintContainer ? hintContainer.getElementsByClassName('mat-hint')[0] : null;
     }
 
     getErrors(instance, controlRef) {
