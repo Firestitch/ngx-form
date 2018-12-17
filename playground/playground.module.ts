@@ -13,6 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
+import { FsAccountPickerModule } from '@firestitch/account-picker';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 import { FirstExampleComponent } from './app/components/first-example/first-example.component';
 import { EmitExampleComponent } from './app/components/emit-example/emit-example.component';
@@ -35,6 +36,7 @@ import { NestedFormComponent } from './app/components/nested-form/nested-form.co
     FsRadioGroupModule,
     FlexLayoutModule,
     FsMessageModule,
+    FsAccountPickerModule,
     FsAutocompleteChipsModule
   ],
   entryComponents: [

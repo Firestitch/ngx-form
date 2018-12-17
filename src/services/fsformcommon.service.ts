@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+
 import { phone } from '@firestitch/common/validate/phone';
 import { email } from '@firestitch/common/validate/email';
+
 import { toString, isInteger, isNumber, isString, isEmpty, isFinite, filter } from 'lodash';
+
 
 @Injectable()
 export class FsFormCommon {
@@ -16,11 +19,12 @@ export class FsFormCommon {
             const isRadioGroup = elRef.nativeElement.tagName === 'FS-RADIO-GROUP';
             const isCheckGroup = elRef.nativeElement.tagName === 'FS-CHECKBOX-GROUP';
             const isAutocompleteChips = elRef.nativeElement.tagName === 'FS-AUTOCOMPLETE-CHIPS';
+            const isAccountPicker = elRef.nativeElement.tagName === 'FS-ACCOUNT-PICKER';
 
             // searching for a container if we are at input element (.mat-input-wrapper or .mat-form-field-wrapper)
             let elContainer = elRef.nativeElement.parentNode.parentNode.parentNode;
 
-            if (isRadioGroup || isCheckGroup || isAutocompleteChips) {
+            if (isRadioGroup || isCheckGroup || isAutocompleteChips || isAccountPicker) {
               elContainer = elRef.nativeElement;
             }
 

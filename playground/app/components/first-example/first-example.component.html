@@ -13,13 +13,22 @@
         <mat-hint>Hint hint hint!</mat-hint>
     </mat-form-field>
 
-    <fs-radio-group [(ngModel)]="radioRequired" label="Required" name="radio_required" [fsFormRequired]="required" fxLayout="column">
+    <fs-radio-group *ngIf="render" [(ngModel)]="radioRequired" label="Required" name="radio_required" [fsFormRequired]="required" fxLayout="column">
       <mat-radio-button [value]="5">5</mat-radio-button>
       <mat-radio-button [value]="4">4</mat-radio-button>
       <mat-radio-button [value]="3">3</mat-radio-button>
       <mat-radio-button [value]="2">2</mat-radio-button>
       <mat-radio-button [value]="1">1</mat-radio-button>
     </fs-radio-group>
+
+    <fs-account-picker *ngIf="render" [search]="searchAccounts" label="Account Picker" [(ngModel)]="selectedAccounts" [fsFormRequired]="required" name="selected_accounts">
+      <ng-template fs-account-picker-result let-account="data">
+        <div *ngIf="account.id" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+          <span>{{ account.name }}</span>
+        </div>
+        <div *ngIf="!account.id">{{ account.email }}</div>
+      </ng-template>
+    </fs-account-picker>
 
     <fs-autocomplete-chips
       [hidden]="hidden" *ngIf="render"

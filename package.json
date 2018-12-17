@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "description": "@firestitch/form",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/fs-form"
@@ -48,6 +48,7 @@
     "@firestitch/autocomplete-chips": "^0.1.2",
     "@firestitch/example": "^0.3.0",
     "@firestitch/iframe": "^0.1.5",
+    "@firestitch/account-picker": "^0.2.2",
     "iscroll": "^5.2.0",
     "moment-timezone": "^0.5.14",
     "moment-range": "^3.1.1",
