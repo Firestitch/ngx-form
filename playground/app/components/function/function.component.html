@@ -2,25 +2,25 @@
   <div fxLayout="column">
     <mat-form-field>
       <input placeholder="Function Promise Validation"
-        [(ngModel)]="function_promise"
+        [(ngModel)]="functionPromise"
         name="function_promise"
         matInput
-        [fsFormFunction]="functionPromise"
+        [fsFormFunction]="functionPromiseFn"
         />
     </mat-form-field>
 
     <mat-form-field>
       <input placeholder="Function Exception Validation"
-        [(ngModel)]="function_exception"
+        [(ngModel)]="functionException"
         name="function_exception"
         matInput
-        [fsFormFunction]="functionException"
+        [fsFormFunction]="functionExceptionFn"
         />
     </mat-form-field>
 
     <mat-form-field>
       <input placeholder="Anonymous Function Exception Validation"
-        [(ngModel)]="function_anonymous"
+        [(ngModel)]="functionAnonymous"
         name="function_anonymous"
         matInput
         [fsFormFunction]="anonymousFunctionException"

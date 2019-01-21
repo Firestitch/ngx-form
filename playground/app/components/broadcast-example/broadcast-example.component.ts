@@ -1,6 +1,6 @@
-import { NgModule, Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { FsForm } from './../../../../src';
+import { Component, OnInit } from '@angular/core';
+import { FsForm } from '@firestitch/form';
+
 
 @Component({
   selector: 'broadcast-example',
@@ -8,7 +8,9 @@ import { FsForm } from './../../../../src';
 })
 export class BroadcastExampleComponent implements OnInit {
 
-  status = 'Not Submitted';
+  public status = 'Not Submitted';
+  public name = null;
+  public form = null;
 
   constructor(private fsForm: FsForm) {  }
 

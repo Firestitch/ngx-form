@@ -1,4 +1,4 @@
-import { NgModule, Component, ViewEncapsulation, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'emit-example',
@@ -6,7 +6,10 @@ import { NgModule, Component, ViewEncapsulation, OnInit, ViewChild } from '@angu
 })
 export class EmitExampleComponent implements OnInit {
   @ViewChild('form') form;
+
   status = 'Not Submitted';
+  minMaxInput = null;
+  required = null;
 
   constructor() {  }
 
@@ -20,11 +23,11 @@ export class EmitExampleComponent implements OnInit {
     this.status = 'Valid';
   }
 
-  invalid(form) {
+  invalid() {
     this.status = 'Invalid';
   }
 
-  emitSubmit(form) {
+  emitSubmit() {
     this.form.ngSubmit.emit();
   }
 

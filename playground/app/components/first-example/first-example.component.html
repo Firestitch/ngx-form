@@ -68,7 +68,7 @@
       <mat-form-field>
         <input placeholder="Password Confirm"
           name="password_confirm"
-          [(ngModel)]="password_confirm"
+          [(ngModel)]="passwordConfirm"
           [fsFormRequired]="required"
           [fsFormCompare]="passwordInput"
           matInput
@@ -144,8 +144,8 @@
         fsFormDateRange
         [fsFormRequired]="required"
         [(ngModel)]="daterange"
-        [(ngModelStart)]="start_date"
-        [(ngModelEnd)]="end_date"
+        [(ngModelStart)]="startDate"
+        [(ngModelEnd)]="endDate"
         view="datetime"
         name="datetimerangepicker"
         placeholder="Date Time Range">

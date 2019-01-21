@@ -1,4 +1,4 @@
-import { NgModule, Component, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 
 @Component({
@@ -17,8 +17,11 @@ export class FunctionComponent {
   public radioFunctionModel = null;
   public radioFunctionWeeks = '';
   public radioFunctionDate = null;
+  public functionPromise = null;
+  public functionException = null;
+  public functionAnonymous = null;
 
-  public functionPromise = ((formControl) => {
+  public functionPromiseFn = ((formControl) => {
 
     return new Promise((resolve, reject) => {
 
@@ -35,7 +38,7 @@ export class FunctionComponent {
   }).bind(this);
   
 
-  public functionException = ((formControl) => {
+  public functionExceptionFn = ((formControl) => {
 
     if (String(formControl.value).length <= this.minLength) {
       throw 'The length must be greater then 3 characters';

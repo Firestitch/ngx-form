@@ -1,11 +1,10 @@
-import { NgModule, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
-import { filter } from '@firestitch/common/array';
+import { FsForm } from '@firestitch/form';
+import { filter } from '@firestitch/common';
 
-import { Observable } from 'rxjs/Observable';
-
-import { FsForm } from './../../../../src';
+import { of } from 'rxjs';
 
 
 @Component({
@@ -21,7 +20,20 @@ export class FirstExampleComponent {
   public lengthInput = '';
   public datepicker = null;
   public checkbox: object[] = [];
+  public password = null;
+  public passwordConfirm = null;
+  public emails = null;
+  public phone = null;
+  public numeric = null;
+  public daterange = null;
+  public startDate = null;
+  public endDate = null;
+  public pattern = null;
+  public email = null;
+  public integer = null;
   public chips = [];
+  public minMaxInput = null;
+  public radioRequired = null;
 
   public items = [
     { name: 'Item 1', id: 1 },
@@ -44,16 +56,16 @@ export class FirstExampleComponent {
       item.avatar = 'https://randomuser.me/api/portraits/men/' + Math.floor((Math.random() * 99) + 1) + '.jpg';
     });
 
-    return Observable.of(filter(accounts, item => {
+    return of(filter(accounts, item => {
       return item.email.toLowerCase().match(new RegExp(query.keyword.toLowerCase()));
     }));
-  }
+  };
 
   constructor(private fsMessage: FsMessage, private fsForm: FsForm) {}
 
   public fetchChips = keyword => {
-    return Observable.of(this.items);
-  }
+    return of(this.items);
+  };
 
   submitting() {
     this.fsMessage.info('Submitting validation', { mode: 'toast' });
@@ -63,7 +75,7 @@ export class FirstExampleComponent {
     this.fsMessage.success('Validation successful');
   }
 
-  invalid(form) {
+  invalid() {
     this.fsMessage.error('Validation invalid', { mode: 'toast' });
   }
 

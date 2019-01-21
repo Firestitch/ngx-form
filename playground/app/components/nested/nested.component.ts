@@ -1,4 +1,4 @@
-import { NgModule, Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 
 @Component({
@@ -8,6 +8,7 @@ import { FsMessage } from '@firestitch/message';
 })
 export class NestedComponent {
 
+  public firstname = null;
   constructor(private fsMessage: FsMessage) {}
 
   save() {

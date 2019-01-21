@@ -7,4 +7,6 @@ import { ControlContainer, NgForm } from '@angular/forms';
   viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 export class NestedFormComponent {
+
+  public lastname;
 }
