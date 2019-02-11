@@ -1,5 +1,6 @@
 {
   "name": "@firestitch/form",
+  "title": "Form Validation",
   "description": "@firestitch/form",
   "version": "1.2.1",
   "repository": {
@@ -48,10 +49,10 @@
     "@firestitch/checkboxgroup": "^0.2.0",
     "@firestitch/common": "^0.5.1",
     "@firestitch/datepicker": "^0.5.1",
-    "@firestitch/example": "^0.5.2",
+    "@firestitch/example": "^0.6.0",
     "@firestitch/iframe": "^0.2.0",
     "@firestitch/message": "^0.2.0",
-    "@firestitch/radiogroup": "^0.2.0",
+    "@firestitch/radiogroup": "^0.3.0",
     "codelyzer": "^4.5.0",
     "cpx": "^1.5.0",
     "hammerjs": "^2.0.8",
