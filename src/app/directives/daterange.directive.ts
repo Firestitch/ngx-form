@@ -1,6 +1,6 @@
 import { Directive, Input, OnChanges } from '@angular/core';
 import { isObject } from 'lodash-es';
-import * as _moment from 'moment-timezone';
+import * as _moment from 'moment';
 const moment = _moment;
 
 import { FsControlDirective } from './fscontrol.directive';
