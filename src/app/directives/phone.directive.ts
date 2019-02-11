@@ -1,16 +1,19 @@
 import { Directive, Input, OnChanges } from '@angular/core';
+
 import { FsControlDirective } from './fscontrol.directive';
+
 
 @Directive({
   selector: '[fsFormPhone]'
 })
 export class FsFormPhoneDirective extends FsControlDirective implements OnChanges {
-  @Input() fsFormPhone;
 
-  ngOnChanges() {
+  @Input() public fsFormPhone;
+
+  public ngOnChanges() {
 
       const validator = () => {
-        if (this.fsFormCommon.phone(this.elementRef.nativeElement.value)) {
+        if (!this.elementRef.nativeElement.value || this.fsFormCommon.phone(this.elementRef.nativeElement.value)) {
             return null;
         }
         return { phone: true };
@@ -18,7 +21,7 @@ export class FsFormPhoneDirective extends FsControlDirective implements OnChange
 
       if (this.isEnabled(this.fsFormPhone)) {
           super.addValidator(validator);
-      }else {
+      } else {
           super.removeValidator(validator);
       }
   }
