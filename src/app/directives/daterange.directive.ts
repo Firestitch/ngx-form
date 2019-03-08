@@ -1,9 +1,8 @@
 import { Directive, Input, OnChanges } from '@angular/core';
 import { isObject } from 'lodash-es';
-import * as _moment from 'moment';
-const moment = _moment;
 
 import { FsControlDirective } from './fscontrol.directive';
+import { isValid } from 'date-fns';
 
 
 @Directive({
@@ -25,8 +24,7 @@ export class FsFormDateRangeDirective extends FsControlDirective implements OnCh
             const start = formControl.value.start;
             const end = formControl.value.end;
 
-            if ((!start && !end) ||
-                (moment.isMoment(start) && moment.isMoment(end) && start.isValid()  && end.isValid())) {
+            if ((!start && !end) || (isValid(start) && isValid(end))) {
                 return null;
             }
           }
