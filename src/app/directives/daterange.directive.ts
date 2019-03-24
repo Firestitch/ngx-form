@@ -1,4 +1,4 @@
-import { Directive, Input, OnChanges } from '@angular/core';
+import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 import { isObject } from 'lodash-es';
 
 import { FsControlDirective } from './fscontrol.directive';
@@ -8,35 +8,32 @@ import { isValid } from 'date-fns';
 @Directive({
   selector: '[fsFormDateRange]'
 })
-export class FsFormDateRangeDirective extends FsControlDirective implements OnChanges {
+export class FsFormDateRangeDirective extends FsControlDirective implements OnInit {
   @Input() fsFormDateRange;
 
-  ngOnChanges() {
+  ngOnInit() {
 
-      const validator = (formControl) => {
+    super.addValidator((control) => {
 
-        if (!formControl.value) {
-            return null;
-        }
-
-        if (isObject(formControl.value)) {
-
-            const start = formControl.value.start;
-            const end = formControl.value.end;
-
-            if ((!start && !end) || (isValid(start) && isValid(end))) {
-                return null;
-            }
-          }
-
-          return { dateRange: true };
-        }
-
-      if (this.isEnabled(this.fsFormDateRange)) {
-          super.addValidator(validator);
-      } else {
-          super.removeValidator(validator);
+      if (!this.isEnabled(this.fsFormDateRange)) {
+        return null;
       }
-  }
 
+      if (!control.value) {
+          return null;
+      }
+
+      if (isObject(control.value)) {
+
+          const start = control.value.start;
+          const end = control.value.end;
+
+          if ((!start && !end) || (isValid(start) && isValid(end))) {
+              return null;
+          }
+        }
+
+        return { dateRange: true };
+    });
+  }
 }

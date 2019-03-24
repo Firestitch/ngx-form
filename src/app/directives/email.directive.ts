@@ -1,25 +1,21 @@
-import { Directive, Input, OnChanges } from '@angular/core';
+import { Directive, Input, OnInit } from '@angular/core';
 import { FsControlDirective } from './fscontrol.directive';
+import { AbstractControl } from '@angular/forms';
 
 @Directive({
   selector: '[fsFormEmail]'
 })
-export class FsFormEmailDirective extends FsControlDirective implements OnChanges {
+export class FsFormEmailDirective extends FsControlDirective implements OnInit {
   @Input() fsFormEmail;
 
-  ngOnChanges() {
+  ngOnInit() {
 
-      const validator = () => {
-          if (!this.elementRef.nativeElement.value || this.fsFormCommon.email(this.elementRef.nativeElement.value)) {
-              return null;
-          }
-          return { email: true };
-      };
-
-      if (this.isEnabled(this.fsFormEmail)) {
-          super.addValidator(validator);
-      } else {
-          super.removeValidator(validator);
+    super.addValidator((control: AbstractControl) => {
+      if (!this.isEnabled(this.fsFormEmail) || !control.value || this.fsFormCommon.email(control.value)) {
+        return null;
       }
+
+      return { email: true };
+    });
   }
 }

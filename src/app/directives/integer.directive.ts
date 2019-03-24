@@ -9,14 +9,12 @@ export class FsFormIntegerDirective extends FsControlDirective implements OnInit
   @Input() fsFormInteger;
 
   ngOnInit() {
-    if (this.isEnabled(this.fsFormInteger)) {
-      super.addValidator((control: AbstractControl): { [key: string]: boolean } => {
-          if (this.fsFormCommon.isInt(control.value)) {
-              return null;
-          } else {
-              return { integer: true }
-          }
-      });
-    }
+    super.addValidator((control: AbstractControl): { [key: string]: boolean } => {
+        if (!this.isEnabled(this.fsFormInteger) || this.fsFormCommon.isInt(control.value)) {
+            return null;
+        } else {
+            return { integer: true }
+        }
+    });
   }
 }

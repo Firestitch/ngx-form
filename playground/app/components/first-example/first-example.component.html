@@ -5,30 +5,21 @@
         [(ngModel)]="minMaxInput"
         name="minMaxInput"
         matInput
-        [fsFormRequired]="required"
+        [required]="required"
         fsFormMin="3"
         fsFormMax="8"
-        fsFormRequiredMessage="This is custom required message"
+        requiredMessage="This is custom required message"
         />
         <mat-hint>Hint hint hint!</mat-hint>
     </mat-form-field>
 
-    <fs-radio-group *ngIf="render" [(ngModel)]="radioRequired" label="Required" name="radio_required" [fsFormRequired]="required" fxLayout="column">
+    <fs-radio-group *ngIf="render" [(ngModel)]="radioRequired" label="Required" name="radio_required" [required]="required" fxLayout="column">
       <mat-radio-button [value]="5">5</mat-radio-button>
       <mat-radio-button [value]="4">4</mat-radio-button>
       <mat-radio-button [value]="3">3</mat-radio-button>
       <mat-radio-button [value]="2">2</mat-radio-button>
       <mat-radio-button [value]="1">1</mat-radio-button>
     </fs-radio-group>
-
-    <fs-account-picker *ngIf="render" [search]="searchAccounts" label="Account Picker" [(ngModel)]="selectedAccounts" [fsFormRequired]="required" name="selected_accounts">
-      <ng-template fs-account-picker-result let-account="data">
-        <div *ngIf="account.id" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-          <span>{{ account.name }}</span>
-        </div>
-        <div *ngIf="!account.id">{{ account.email }}</div>
-      </ng-template>
-    </fs-account-picker>
 
     <fs-autocomplete-chips
       [hidden]="hidden" *ngIf="render"
@@ -37,7 +28,7 @@
       placeholder="Autocomplete Chips"
       removable="true"
       draggable="true"
-      [fsFormRequired]="required"
+      [required]="required"
       name="chips">
         <ng-template let-data="item" fs-autocomplete-chip>
           {{ data.name }}
@@ -49,7 +40,7 @@
           [(ngModel)]="lengthInput"
           name="lengthInput"
           matInput
-          [fsFormRequired]="required"
+          [required]="required"
           fsFormMinLength="5"
           fsFormMaxLength="10"
           />
@@ -61,7 +52,7 @@
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            [fsFormRequired]="required"
+            [required]="required"
             matInput
             />
         </mat-form-field>
@@ -69,7 +60,7 @@
         <input placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="passwordConfirm"
-          [fsFormRequired]="required"
+          [required]="required"
           [fsFormCompare]="passwordInput"
           matInput
           />
@@ -91,15 +82,7 @@
         name="email_input"
         matInput
         fsFormEmail
-        />
-    </mat-form-field>
-
-    <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input placeholder="Emails"
-        [(ngModel)]="emails"
-        name="emails_input"
-        matInput
-        [fsFormEmails]="required"
+        [required]="required"
         />
     </mat-form-field>
 
@@ -108,6 +91,7 @@
         [(ngModel)]="phone"
         name="phone_input"
         matInput
+        fsPhone
         fsFormPhone
         />
     </mat-form-field>
@@ -131,10 +115,10 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input matInput fsDatePicker [fsFormRequired]="required" [(ngModel)]="datepicker" readonly name="datepicker" placeholder="Date">
+      <input matInput fsDatePicker [required]="required" [(ngModel)]="datepicker" name="datepicker" placeholder="Date">
     </mat-form-field>
 
-    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="required" label="Checkbox Group" name="checkbox" [hidden]="hidden" *ngIf="render">
+    <fs-checkbox-group matInput [(ngModel)]="checkbox" [required]="required" label="Checkbox Group" name="checkbox" [hidden]="hidden" *ngIf="render">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
@@ -142,7 +126,7 @@
       <input matInput
         fsDatePickerRange
         fsFormDateRange
-        [fsFormRequired]="required"
+        [required]="required"
         [(ngModel)]="daterange"
         [(ngModelStart)]="startDate"
         [(ngModelEnd)]="endDate"
@@ -151,12 +135,11 @@
         placeholder="Date Time Range">
     </mat-form-field>
 
-    <fieldset>
-      <legend>Actions</legend>
+    <div fxLayout="row" fxLayoutGap="5px">
       <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="hidden = !(!!hidden)">{{hidden ? 'Show' : 'Hide'}} Inputs</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>
-    </fieldset>
+    </div>
   </div>
 </form>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FsFormModule } from '@firestitch/form';
@@ -11,7 +12,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
-import { FsAccountPickerModule } from '@firestitch/account-picker';
+import { FsPhoneModule } from '@firestitch/phone';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 
 import { ToastrModule } from 'ngx-toastr';
@@ -23,7 +24,9 @@ import { EmitExampleComponent } from './components/emit-example/emit-example.com
 import { BroadcastExampleComponent } from './components/broadcast-example/broadcast-example.component';
 import { FunctionComponent } from './components/function/function.component';
 import { NestedComponent } from './components/nested/nested.component';
-import { NestedFormComponent } from './components/nested-form/nested-form.component';
+import { NestedLevel1Component } from './components/nested-level-1/nested-level-1.component';
+import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
+import { ExamplesComponent } from './components/examples';
 
 
 @NgModule({
@@ -41,10 +44,11 @@ import { NestedFormComponent } from './components/nested-form/nested-form.compon
     FsCheckboxGroupModule,
     FsRadioGroupModule,
     FlexLayoutModule,
-    FsAccountPickerModule,
+    FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),
-  ],
-  entryComponents: [
+    RouterModule.forRoot([
+      { path: '', component: ExamplesComponent },
+    ]),
   ],
   declarations: [
     AppComponent,
@@ -53,10 +57,10 @@ import { NestedFormComponent } from './components/nested-form/nested-form.compon
     BroadcastExampleComponent,
     FunctionComponent,
     NestedComponent,
-    NestedFormComponent
-  ],
-  providers: [
-  ],
+    NestedLevel1Component,
+    NestedLevel2Component,
+    ExamplesComponent
+  ]
 })
 export class PlaygroundModule {
 }

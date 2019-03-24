@@ -6,7 +6,7 @@ import { FsForm } from './services/fsform.service';
 
 import { FsFormDirective } from './directives/fsform.directive';
 import { FsControlDirective } from './directives/fscontrol.directive';
-import { FsFormRequiredDirective } from './directives/required.directive';
+import { FsFormRequiredDirective } from './directives/fs-required.directive';
 import { FsFormMinDirective } from './directives/min.directive';
 import { FsFormMaxDirective } from './directives/max.directive';
 import { FsFormMinLengthDirective } from './directives/minlength.directive';
@@ -20,11 +20,19 @@ import { FsFormNumericDirective } from './directives/numeric.directive';
 import { FsFormPatternDirective } from './directives/pattern.directive';
 import { FsFormFunctionDirective} from './directives/function.directive';
 import { FsFormDateRangeDirective } from './directives/daterange.directive';
+import { FormRequiredDirective } from './directives/required.directive';
+import { NestedLevel3Component } from './components/nested-level-3/nested-level-3.component';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatFormFieldModule, MatInputModule } from '@angular/material';
+import { NestedLevel4Component } from './components/nested-level-4/nested-level-4.component';
 
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   exports: [
     FsFormDirective,
@@ -42,7 +50,10 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
     FsFormNumericDirective,
     FsFormPatternDirective,
     FsFormFunctionDirective,
-    FsFormDateRangeDirective
+    FsFormDateRangeDirective,
+    FormRequiredDirective,
+    NestedLevel3Component,
+    NestedLevel4Component
   ],
   entryComponents: [
   ],
@@ -62,7 +73,10 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
     FsFormNumericDirective,
     FsFormPatternDirective,
     FsFormFunctionDirective,
-    FsFormDateRangeDirective
+    FsFormDateRangeDirective,
+    FormRequiredDirective,
+    NestedLevel3Component,
+    NestedLevel4Component
   ],
   providers: [
     FsFormCommon,

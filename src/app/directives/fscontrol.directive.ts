@@ -1,14 +1,14 @@
 import { Directive, Input, AfterViewChecked,
          ElementRef, Renderer2 } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnDestroy, AfterContentInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { FsFormCommon } from './../services/fsformcommon.service';
 
 
 @Directive({
  selector: '[fsControl]'
 })
-export class FsControlDirective implements AfterViewChecked, OnDestroy {
+export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   @Input() fsFormRequiredMessage = 'This field is required.';
   @Input() fsFormEmailMessage = 'This is not a valid email address.';
@@ -46,7 +46,7 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
   }
 
   // If the inputs are not visible (display: none) then don't include the input in the validation
-  ngAfterViewChecked() {
+  ngAfterContentInit() {
 
       const element = this.elementRef;
       // If not visible
@@ -105,6 +105,6 @@ export class FsControlDirective implements AfterViewChecked, OnDestroy {
 }
 
   isEnabled(value) {
-    return value || value === '';
+    return value !== false && value !== 'false';
   }
 }

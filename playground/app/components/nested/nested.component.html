@@ -1,14 +1,17 @@
 <form (fsForm)="save()">
-    <mat-form-field>
-        <input placeholder="Firstname"
-          [(ngModel)]="firstname"
-          name="firstname"
-          matInput
-          fsFormRequired="true"
-          />
-      </mat-form-field>
+   <mat-form-field>
+    <input placeholder="Firstname"
+      [(ngModel)]="firstname"
+      name="firstname"
+      matInput
+      fsFormRequired="true"/>
+  </mat-form-field>
+  <br>
 
-  <nested-form></nested-form>
+  <nested-level-1></nested-level-1>
+
+  <br>
+  <nested-level-3></nested-level-3>
   <br>
   <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>

@@ -3,13 +3,13 @@ import { Validators } from '@angular/forms';
 import { FsControlDirective } from './fscontrol.directive';
 
 @Directive({
-  selector: '[required]'
+  selector: '[fsFormRequired]'
 })
-export class FormRequiredDirective extends FsControlDirective implements OnChanges {
-  @Input() required: boolean;
+export class FsFormRequiredDirective extends FsControlDirective implements OnChanges {
+  @Input() fsFormRequired: boolean;
 
   ngOnChanges() {
-    if (this.isEnabled(this.required)) {
+    if (this.isEnabled(this.fsFormRequired)) {
         super.addValidator(Validators.required);
     } else {
         super.removeValidator(Validators.required);

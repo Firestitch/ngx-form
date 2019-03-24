@@ -1,2 +1,4 @@
 @import './../tools/assets/playground.scss';
 @import '~@firestitch/message/styles.scss';
+@import '~@firestitch/datepicker/styles';
+@include fs-date-picker($mat-blue);
