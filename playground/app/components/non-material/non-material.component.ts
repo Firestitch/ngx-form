@@ -1,9 +1,9 @@
-import { Component, SkipSelf } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
+import { Component } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 
 @Component({
   selector: 'non-material',
+  styleUrls: ['non-material.component.scss'],
   templateUrl: 'non-material.component.html'
 })
 export class NonMaterialComponent {

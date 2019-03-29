@@ -5,7 +5,6 @@ import { FsFormCommon } from './../services/fsformcommon.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { values, keys, filter, capitalize } from 'lodash-es';
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 
 
 @Directive({
@@ -13,9 +12,9 @@ import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 })
 export class FsControlDirective implements AfterContentInit, OnDestroy {
 
-  @Input() fieldWrapperClass = 'mat-form-field';
-  @Input() messageWrapperClass = 'mat-form-field-subscript-wrapper';
-  @Input() hintWrapperClass = 'mat-form-field-hint-wrapper';
+  @Input() fieldWrapperClass = '';
+  @Input() messageWrapperClass = '';
+  @Input() hintWrapperClass = '';
   @Input() fsFormRequiredMessage = 'This field is required';
   @Input() fsFormEmailMessage = 'This is not a valid email address';
   @Input() fsFormEmailsMessage = 'Input valid email addresses, comma separated';

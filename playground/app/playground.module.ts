@@ -28,6 +28,7 @@ import { NestedComponent } from './components/nested/nested.component';
 import { NestedLevel1Component } from './components/nested-level-1/nested-level-1.component';
 import { ExamplesComponent } from './components/examples';
 import { NonMaterialComponent } from './components/non-material/non-material.component';
+import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { NonMaterialComponent } from './components/non-material/non-material.com
     FunctionComponent,
     NestedComponent,
     NestedLevel1Component,
+    NestedLevel2Component,
     ExamplesComponent,
     NonMaterialComponent
   ]

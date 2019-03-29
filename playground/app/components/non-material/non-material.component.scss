@@ -1,0 +1,14 @@
+.form-group {
+  position: relative;
+  margin-bottom: 1.25em;
+
+  .label {
+    font-size: 70%;
+  }
+
+  .fs-form-message-wrapper {
+    position: absolute;
+    bottom: -16px;
+    top: unset;
+  }
+}
