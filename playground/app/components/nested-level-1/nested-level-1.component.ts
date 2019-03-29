@@ -8,5 +8,5 @@ import { ControlContainer, NgForm } from '@angular/forms';
 })
 export class NestedLevel1Component {
 
-  public name;
+  public name1;
 }
