@@ -1,11 +1,11 @@
-import { Directive, Input, OnInit, OnDestroy } from '@angular/core';
-import { FsControlDirective } from './fscontrol.directive';
+import { Directive, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
   selector: '[fsFormCompare]'
 })
-export class FsFormCompareDirective extends FsControlDirective implements OnInit, OnDestroy {
+export class FsFormCompareDirective extends FsControlDirective implements AfterViewInit, OnDestroy {
   @Input() fsFormCompare;
 
   validator = () => {
@@ -16,7 +16,7 @@ export class FsFormCompareDirective extends FsControlDirective implements OnInit
     }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     super.addValidator(this.validator);
 
     this.fsFormCompare.addEventListener('keyup', () => {

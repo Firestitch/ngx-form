@@ -1,14 +1,14 @@
-import { Directive, Input, OnInit } from '@angular/core';
+import { Directive, Input, AfterViewInit } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { FsControlDirective } from './fscontrol.directive';
+import { FsControlDirective } from './control.directive';
 
 @Directive({
   selector: '[fsFormPattern]'
 })
-export class FsFormPatternDirective extends FsControlDirective implements OnInit {
+export class FsFormPatternDirective extends FsControlDirective implements AfterViewInit {
   @Input() fsFormPattern: RegExp;
 
-  ngOnInit() {
-    super.addValidator(Validators.pattern(this.fsFormPattern));
+  ngAfterViewInit() {
+    this.addValidator(Validators.pattern(this.fsFormPattern));
   }
 }

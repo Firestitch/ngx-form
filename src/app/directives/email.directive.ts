@@ -1,17 +1,19 @@
-import { Directive, Input, OnInit } from '@angular/core';
-import { FsControlDirective } from './fscontrol.directive';
+import { Directive, Input, AfterViewInit } from '@angular/core';
+import { FsControlDirective } from './control.directive';
 import { AbstractControl } from '@angular/forms';
+import { email } from '@firestitch/common';
+
 
 @Directive({
   selector: '[fsFormEmail]'
 })
-export class FsFormEmailDirective extends FsControlDirective implements OnInit {
+export class FsFormEmailDirective extends FsControlDirective implements AfterViewInit {
   @Input() fsFormEmail;
 
-  ngOnInit() {
+  ngAfterViewInit() {
 
-    super.addValidator((control: AbstractControl) => {
-      if (!this.isEnabled(this.fsFormEmail) || !control.value || this.fsFormCommon.email(control.value)) {
+    this.addValidator((control: AbstractControl) => {
+      if (!this.isEnabled(this.fsFormEmail) || !control.value || email(control.value)) {
         return null;
       }
 

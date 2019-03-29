@@ -1,19 +1,31 @@
-import { Directive, OnInit, Output, EventEmitter, ContentChild } from '@angular/core';
+import { Directive, OnInit, Output, EventEmitter, ContentChild, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
-import { FsForm } from './../services/fsform.service';
+import { values } from 'lodash-es';
+import { FsForm } from '../services/fsform.service';
+import { FsFormCommon } from '../services/fsformcommon.service';
+
 
 @Directive({
-    selector: '[fsForm]'
+  selector: '[fsForm]',
+  providers: [ FsFormCommon ]
 })
 export class FsFormDirective implements OnInit, OnDestroy {
 
-  public submitting = false;
   @ContentChild(NgForm) ngForm;
+  @Input() fieldWrapperClass = 'mat-form-field';
+  @Input() messageWrapperClass = 'mat-form-field-subscript-wrapper';
+  @Input() hintWrapperClass = 'mat-form-field-hint-wrapper';
+
   @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
 
-  constructor(private fsForm: FsForm) {}
+  public submitting = false;
+
+  constructor(private fsForm: FsForm,
+              private fsFormCommon: FsFormCommon) {
+    fsFormCommon.fsFormDirective = this;
+  }
 
   ngOnInit() {
 
@@ -32,28 +44,18 @@ export class FsFormDirective implements OnInit, OnDestroy {
         this.fsForm.broadcast('submit', this.ngForm);
         const validations = [];
 
-        for (const key in this.ngForm.controls) {
+        values(this.ngForm.controls).forEach(control => {
+          control.markAsDirty();
+          control.markAsTouched();
+        });
 
-          const control = this.ngForm.controls[key];
-          if (control) {
-            control.markAsDirty();
-            control.markAsTouched();
-          }
-        }
-
-        for (const key in this.ngForm.controls) {
-
-          const control = this.ngForm.controls[key];
-
-          if (control) {
-
+        values(this.ngForm.controls).forEach(control => {
             control.updateValueAndValidity();
 
             if (control.asyncValidator) {
               validations.push(control.asyncValidator().toPromise());
             }
-          }
-        }
+        });
 
         Promise.all(validations)
         .then(() => {
@@ -81,6 +83,6 @@ export class FsFormDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-      this.ngForm.ngSubmit.unsubscribe();
+    this.ngForm.ngSubmit.unsubscribe();
   }
 }

@@ -1,12 +1,13 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { FsFormCommon } from './services/fsformcommon.service';
 import { FsForm } from './services/fsform.service';
 
-import { FsFormDirective } from './directives/fsform.directive';
-import { FsControlDirective } from './directives/fscontrol.directive';
-import { FsFormRequiredDirective } from './directives/fs-required.directive';
+import { FsFormDirective } from './directives/form.directive';
+import { FsControlDirective } from './directives/control.directive';
+import { FsFormRequiredDirective } from './directives/required.directive';
 import { FsFormMinDirective } from './directives/min.directive';
 import { FsFormMaxDirective } from './directives/max.directive';
 import { FsFormMinLengthDirective } from './directives/minlength.directive';
@@ -20,19 +21,12 @@ import { FsFormNumericDirective } from './directives/numeric.directive';
 import { FsFormPatternDirective } from './directives/pattern.directive';
 import { FsFormFunctionDirective} from './directives/function.directive';
 import { FsFormDateRangeDirective } from './directives/daterange.directive';
-import { FormRequiredDirective } from './directives/required.directive';
-import { NestedLevel3Component } from './components/nested-level-3/nested-level-3.component';
-import { FormsModule } from '@angular/forms';
-import { MatFormField, MatFormFieldModule, MatInputModule } from '@angular/material';
-import { NestedLevel4Component } from './components/nested-level-4/nested-level-4.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule
+    FormsModule
   ],
   exports: [
     FsFormDirective,
@@ -50,10 +44,7 @@ import { NestedLevel4Component } from './components/nested-level-4/nested-level-
     FsFormNumericDirective,
     FsFormPatternDirective,
     FsFormFunctionDirective,
-    FsFormDateRangeDirective,
-    FormRequiredDirective,
-    NestedLevel3Component,
-    NestedLevel4Component
+    FsFormDateRangeDirective
   ],
   entryComponents: [
   ],
@@ -73,13 +64,9 @@ import { NestedLevel4Component } from './components/nested-level-4/nested-level-
     FsFormNumericDirective,
     FsFormPatternDirective,
     FsFormFunctionDirective,
-    FsFormDateRangeDirective,
-    FormRequiredDirective,
-    NestedLevel3Component,
-    NestedLevel4Component
+    FsFormDateRangeDirective
   ],
   providers: [
-    FsFormCommon,
     FsForm
   ],
 })
@@ -88,7 +75,6 @@ export class FsFormModule {
     return {
       ngModule: FsFormModule,
       providers: [
-        FsFormCommon,
         FsForm
       ]
     };

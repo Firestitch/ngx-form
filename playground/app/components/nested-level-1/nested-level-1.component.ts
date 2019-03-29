@@ -1,14 +1,10 @@
 import { Component, SkipSelf } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
+import { ControlContainer, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'nested-level-1',
   templateUrl: 'nested-level-1.component.html',
-  viewProviders: [{
-    provide: ControlContainer,
-    useFactory: (container: ControlContainer) => container,
-    deps: [[new SkipSelf(), ControlContainer]],
-  }]
+  viewProviders: [ { provide: ControlContainer, useExisting: NgForm } ]
 })
 export class NestedLevel1Component {
 

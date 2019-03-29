@@ -1,19 +1,19 @@
-import { Directive, Input, OnChanges, OnInit } from '@angular/core';
+import { Directive, Input, AfterViewInit } from '@angular/core';
 import { isObject } from 'lodash-es';
 
-import { FsControlDirective } from './fscontrol.directive';
+import { FsControlDirective } from './control.directive';
 import { isValid } from 'date-fns';
 
 
 @Directive({
   selector: '[fsFormDateRange]'
 })
-export class FsFormDateRangeDirective extends FsControlDirective implements OnInit {
+export class FsFormDateRangeDirective extends FsControlDirective implements AfterViewInit {
   @Input() fsFormDateRange;
 
-  ngOnInit() {
+  ngAfterViewInit() {
 
-    super.addValidator((control) => {
+    this.addValidator((control) => {
 
       if (!this.isEnabled(this.fsFormDateRange)) {
         return null;

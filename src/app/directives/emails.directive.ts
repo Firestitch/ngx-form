@@ -1,6 +1,7 @@
 import { Directive, Input, OnChanges } from '@angular/core';
 
-import { FsControlDirective } from './fscontrol.directive';
+import { FsControlDirective } from './control.directive';
+import { email } from '@firestitch/common';
 
 
 @Directive({
@@ -17,7 +18,7 @@ export class FsFormEmailsDirective extends FsControlDirective implements OnChang
             const model = this.ngControl.control.value || '';
 
             for (const value of model.split(',')) {
-              if (!this.fsFormCommon.email(value)) {
+              if (!email(value)) {
                 resolve({ emails: true });
               }
             };

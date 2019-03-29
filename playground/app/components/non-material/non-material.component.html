@@ -1,0 +1,10 @@
+
+<form (fsForm)="save()" controlContainerClass="form-group" messageContainerClass="errors">
+  <fieldset class="form-group">
+    <legend>Phone</legend>
+    <input type="text" name="phone" fsFormRequired fsFormPhone [(ngModel)]="phone">
+    <div class="errors"></div>
+  </fieldset>
+  <br>
+  <button mat-raised-button color="primary">Submit</button>
+</form>

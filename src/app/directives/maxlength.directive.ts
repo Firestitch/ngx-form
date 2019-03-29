@@ -1,14 +1,14 @@
-import { Directive, Input, OnInit } from '@angular/core';
+import { Directive, Input, AfterViewInit } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { FsControlDirective } from './fscontrol.directive';
+import { FsControlDirective } from './control.directive';
 
 @Directive({
   selector: '[fsFormMaxLength]'
 })
-export class FsFormMaxLengthDirective extends FsControlDirective implements OnInit {
-  @Input() fsFormMaxLength;
+export class FsFormMaxLengthDirective extends FsControlDirective implements AfterViewInit {
+  @Input() fsFormMaxLength: number;
 
-  ngOnInit() {
-    super.addValidator(Validators.maxLength(this.fsFormMaxLength));
+  ngAfterViewInit() {
+    this.addValidator(Validators.maxLength(this.fsFormMaxLength));
   }
 }

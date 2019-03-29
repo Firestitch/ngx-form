@@ -1,18 +1,18 @@
-import { Directive, OnChanges, Input } from '@angular/core';
+import { Directive, Input, AfterViewInit } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { FsControlDirective } from './fscontrol.directive';
+import { FsControlDirective } from './control.directive';
 
 @Directive({
-  selector: '[required]'
+  selector: '[fsFormRequired]'
 })
-export class FormRequiredDirective extends FsControlDirective implements OnChanges {
-  @Input() required: boolean;
+export class FsFormRequiredDirective extends FsControlDirective implements AfterViewInit {
+  @Input() fsFormRequired: boolean;
 
-  ngOnChanges() {
-    if (this.isEnabled(this.required)) {
-        super.addValidator(Validators.required);
+  ngAfterViewInit() {
+    if (this.isEnabled(this.fsFormRequired)) {
+        this.addValidator(Validators.required);
     } else {
-        super.removeValidator(Validators.required);
+        this.removeValidator(Validators.required);
     }
   }
 }

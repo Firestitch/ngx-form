@@ -1,16 +1,16 @@
-import { Directive, Input, OnInit } from '@angular/core';
-import { FsControlDirective } from './fscontrol.directive';
+import { Directive, Input, AfterViewInit } from '@angular/core';
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
   selector: '[fsFormFunction]'
 })
-export class FsFormFunctionDirective extends FsControlDirective implements OnInit {
+export class FsFormFunctionDirective extends FsControlDirective implements AfterViewInit {
   @Input() fsFormFunction;
 
-  ngOnInit() {
+  ngAfterViewInit() {
 
-      super.addAsyncValidator(() => {
+      this.addAsyncValidator(() => {
 
           return new Promise((resolve, reject) => {
             try {

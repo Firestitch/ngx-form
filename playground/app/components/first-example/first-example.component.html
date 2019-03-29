@@ -1,34 +1,40 @@
-<form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
+  <form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
   <div fxLayout="column">
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input placeholder="Value >= 3 and <=8"
+      <input
+        placeholder="Value >= 10 and <=100"
         [(ngModel)]="minMaxInput"
         name="minMaxInput"
         matInput
-        [required]="required"
-        fsFormMin="3"
-        fsFormMax="8"
-        requiredMessage="This is custom required message"
-        />
+        [fsFormRequired]="required"
+        fsFormMin="10"
+        fsFormMax="100"
+        fsFormRequiredMessage="This is custom required message"/>
         <mat-hint>Hint hint hint!</mat-hint>
     </mat-form-field>
 
-    <fs-radio-group *ngIf="render" [(ngModel)]="radioRequired" label="Required" name="radio_required" [required]="required" fxLayout="column">
-      <mat-radio-button [value]="5">5</mat-radio-button>
-      <mat-radio-button [value]="4">4</mat-radio-button>
-      <mat-radio-button [value]="3">3</mat-radio-button>
-      <mat-radio-button [value]="2">2</mat-radio-button>
-      <mat-radio-button [value]="1">1</mat-radio-button>
+    <fs-radio-group
+      *ngIf="render"
+      [(ngModel)]="radioRequired"
+      label="Required"
+      name="radio_required"
+      [fsFormRequired]="required">
+        <mat-radio-button [value]="5">5</mat-radio-button>
+        <mat-radio-button [value]="4">4</mat-radio-button>
+        <mat-radio-button [value]="3">3</mat-radio-button>
+        <mat-radio-button [value]="2">2</mat-radio-button>
+        <mat-radio-button [value]="1">1</mat-radio-button>
     </fs-radio-group>
 
     <fs-autocomplete-chips
-      [hidden]="hidden" *ngIf="render"
+      [hidden]="hidden"
+      *ngIf="render"
       [(ngModel)]="chips"
       [fetch]="fetchChips"
       placeholder="Autocomplete Chips"
       removable="true"
       draggable="true"
-      [required]="required"
+      [fsFormRequired]="required"
       name="chips">
         <ng-template let-data="item" fs-autocomplete-chip>
           {{ data.name }}
@@ -40,7 +46,7 @@
           [(ngModel)]="lengthInput"
           name="lengthInput"
           matInput
-          [required]="required"
+          [fsFormRequired]="required"
           fsFormMinLength="5"
           fsFormMaxLength="10"
           />
@@ -52,7 +58,7 @@
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            [required]="required"
+            [fsFormRequired]="required"
             matInput
             />
         </mat-form-field>
@@ -60,7 +66,7 @@
         <input placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="passwordConfirm"
-          [required]="required"
+          [fsFormRequired]="required"
           [fsFormCompare]="passwordInput"
           matInput
           />
@@ -82,7 +88,7 @@
         name="email_input"
         matInput
         fsFormEmail
-        [required]="required"
+        [fsFormRequired]="required"
         />
     </mat-form-field>
 
@@ -115,10 +121,10 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input matInput fsDatePicker [required]="required" [(ngModel)]="datepicker" name="datepicker" placeholder="Date">
+      <input matInput fsDatePicker [fsFormRequired]="required" [(ngModel)]="datepicker" name="datepicker" placeholder="Date">
     </mat-form-field>
 
-    <fs-checkbox-group matInput [(ngModel)]="checkbox" [required]="required" label="Checkbox Group" name="checkbox" [hidden]="hidden" *ngIf="render">
+    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="required" label="Checkbox Group" name="checkbox" [hidden]="hidden" *ngIf="render">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
@@ -126,7 +132,7 @@
       <input matInput
         fsDatePickerRange
         fsFormDateRange
-        [required]="required"
+        [fsFormRequired]="required"
         [(ngModel)]="daterange"
         [(ngModelStart)]="startDate"
         [(ngModelEnd)]="endDate"

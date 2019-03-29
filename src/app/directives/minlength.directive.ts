@@ -1,14 +1,14 @@
-import { Directive, Input, OnInit } from '@angular/core';
+import { Directive, Input, AfterViewInit } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { FsControlDirective } from './fscontrol.directive';
+import { FsControlDirective } from './control.directive';
 
 @Directive({
   selector: '[fsFormMinLength]'
 })
-export class FsFormMinLengthDirective extends FsControlDirective implements OnInit {
-  @Input() fsFormMinLength;
+export class FsFormMinLengthDirective extends FsControlDirective implements AfterViewInit {
+  @Input() fsFormMinLength: number;
 
-  ngOnInit() {
-    super.addValidator(Validators.minLength(this.fsFormMinLength));
+  ngAfterViewInit() {
+    this.addValidator(Validators.minLength(this.fsFormMinLength));
   }
 }

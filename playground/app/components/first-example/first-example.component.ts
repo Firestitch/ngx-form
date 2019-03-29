@@ -34,6 +34,7 @@ export class FirstExampleComponent {
   public chips = [];
   public minMaxInput = null;
   public radioRequired = null;
+  public skeleton;
 
   public items = [
     { name: 'Item 1', id: 1 },
@@ -61,7 +62,12 @@ export class FirstExampleComponent {
     }));
   };
 
-  constructor(private fsMessage: FsMessage, private fsForm: FsForm) {}
+  constructor(private fsMessage: FsMessage, private fsForm: FsForm) {
+
+    setTimeout(() => {
+      this.skeleton = true;
+    },2000)
+  }
 
   public fetchChips = keyword => {
     return of(this.items);

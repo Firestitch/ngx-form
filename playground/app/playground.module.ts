@@ -11,6 +11,7 @@ import { FsMessageModule } from '@firestitch/message';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
+import { FsSkeletonModule } from '@firestitch/skeleton';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
 import { FsPhoneModule } from '@firestitch/phone';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
@@ -25,8 +26,8 @@ import { BroadcastExampleComponent } from './components/broadcast-example/broadc
 import { FunctionComponent } from './components/function/function.component';
 import { NestedComponent } from './components/nested/nested.component';
 import { NestedLevel1Component } from './components/nested-level-1/nested-level-1.component';
-import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
 import { ExamplesComponent } from './components/examples';
+import { NonMaterialComponent } from './components/non-material/non-material.component';
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { ExamplesComponent } from './components/examples';
     BrowserAnimationsModule,
     AppMaterialModule,
     FormsModule,
+    FsSkeletonModule,
     FsExampleModule.forRoot(),
     FsMessageModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
@@ -58,8 +60,8 @@ import { ExamplesComponent } from './components/examples';
     FunctionComponent,
     NestedComponent,
     NestedLevel1Component,
-    NestedLevel2Component,
-    ExamplesComponent
+    ExamplesComponent,
+    NonMaterialComponent
   ]
 })
 export class PlaygroundModule {
