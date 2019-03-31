@@ -4,6 +4,8 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { values } from 'lodash-es';
 import { FsForm } from '../services/fsform.service';
 import { FsFormCommon } from '../services/fsformcommon.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Directive({
@@ -21,6 +23,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
   @Output() invalid: EventEmitter<any> = new EventEmitter();
 
   public submitting = false;
+  private destroy$ = new Subject();
 
   constructor(private fsForm: FsForm,
               private fsFormCommon: FsFormCommon) {
@@ -30,7 +33,11 @@ export class FsFormDirective implements OnInit, OnDestroy {
   ngOnInit() {
 
     if (this.ngForm) {
-      this.ngForm.ngSubmit.subscribe(event => {
+      this.ngForm.ngSubmit
+      .pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe(event => {
 
         if (event) {
           event.preventDefault();
@@ -83,6 +90,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngForm.ngSubmit.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -82,17 +82,51 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  getMessageWrapperClass() {
-    return this.messageWrapperClass ? this.messageWrapperClass : this.fsFormCommon.fsFormDirective.messageWrapperClass;
+  getMessageWrapperClasses() {
+
+    const cls = ['.fs-form-message-wrapper'];
+
+    if (this.messageWrapperClass) {
+      cls.push(`.${this.messageWrapperClass}`);
+
+    } else if ( this.fsFormCommon &&
+                this.fsFormCommon.fsFormDirective &&
+                this.fsFormCommon.fsFormDirective.messageWrapperClass) {
+      cls.push(`.${this.fsFormCommon.fsFormDirective.messageWrapperClass}`);
+    }
+
+    return cls;
   }
 
-  getHintWrapperClass() {
-    return this.hintWrapperClass ? this.hintWrapperClass : this.fsFormCommon.fsFormDirective.hintWrapperClass;
+  getHintWrapperClasses() {
+
+    const cls = ['.fs-form-hint-wrapper'];
+
+    if (this.hintWrapperClass) {
+      cls.push(`.${this.hintWrapperClass}`);
+
+    } else if ( this.fsFormCommon &&
+                this.fsFormCommon.fsFormDirective &&
+                this.fsFormCommon.fsFormDirective.hintWrapperClass) {
+      cls.push(`.${this.fsFormCommon.fsFormDirective.hintWrapperClass}`);
+    }
+
+    return cls;
   }
 
   getFieldWrapperClass() {
-    return this.fieldWrapperClass ? this.fieldWrapperClass : this.fsFormCommon.fsFormDirective.fieldWrapperClass;
+
+    if (this.fieldWrapperClass) {
+      return this.fieldWrapperClass;
+    }
+
+    if (this.fsFormCommon && this.fsFormCommon.fsFormDirective) {
+      return this.fsFormCommon.fsFormDirective.fieldWrapperClass;
+    }
+
+    return '';
   }
+
 
   /*
     <mat-form-field class="mat-form-field">  <-- Field Wrapper. Look for parents from the native element with the matching fieldWrapperClass. If not found defaults to native element.
@@ -118,15 +152,15 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
         wrapper = this.elementRef.nativeElement;
       }
 
-      const messageWrapper = wrapper.querySelector(`.fs-form-message-wrapper,.${this.getMessageWrapperClass()}`);
+      const messageWrapper = wrapper.querySelector(this.getMessageWrapperClasses().join(','));
 
       if (!messageWrapper) {
-        throw 'Failed to locate fs-form-message-wrapper';
+        return console.warn('Failed to locate fs-form-message-wrapper');
       }
 
       renderer.addClass(messageWrapper, 'mat-form-field-subscript-wrapper');
 
-      const hint = messageWrapper.querySelector(`.fs-form-hint-wrapper,.${this.getHintWrapperClass()}`);
+      const hint = messageWrapper.querySelector(this.getHintWrapperClasses().join(','));
 
       if (hint) {
         renderer.setStyle(hint, 'display', error ? 'none' : 'block');
