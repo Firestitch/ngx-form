@@ -1,10 +1,11 @@
-import { Input, ElementRef, Renderer2, Directive } from '@angular/core';
+import { Input, ElementRef, Renderer2, Directive, forwardRef } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
 import { FsFormCommon } from './../services/fsformcommon.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { values, keys, filter, capitalize } from 'lodash-es';
+import { FsFormDirective } from './form.directive';
 
 
 @Directive({
@@ -31,12 +32,12 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   protected destroy$ = new Subject();
   public errors = [];
+  public formDirective: FsFormDirective;
 
   constructor(
       protected elementRef: ElementRef,
       protected renderer2: Renderer2,
-      protected ngControl: NgControl,
-      protected fsFormCommon: FsFormCommon) {
+      protected ngControl: NgControl) {
     this.ngControl.control['fsValidators'] = this.ngControl.control['fsValidators'] || [];
     this.ngControl.control['fsAsyncValidators'] = this.ngControl.control['fsAsyncValidators'] || [];
   }
@@ -68,7 +69,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
       // Hack. If element visible, has no validation but exist some validation rules -
       // updating validators and triggering change event (For some reason inputs assign
-      // new rules only oinit and on change events
+      // new rules only oninit and on change events.  <-- no idea of whats going on here
       if (
           (this.ngControl.control['fsValidators'].length && !this.ngControl.control.validator) ||
           (this.ngControl.control['fsAsyncValidators'].length && !this.ngControl.control.asyncValidator)
@@ -83,15 +84,15 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   getMessageWrapperClass() {
-    return this.messageWrapperClass ? this.messageWrapperClass : this.fsFormCommon.fsFormDirective.messageWrapperClass;
+    return this.messageWrapperClass ? this.messageWrapperClass : this.formDirective.messageWrapperClass;
   }
 
   getHintWrapperClass() {
-    return this.hintWrapperClass ? this.hintWrapperClass : this.fsFormCommon.fsFormDirective.hintWrapperClass;
+    return this.hintWrapperClass ? this.hintWrapperClass : this.formDirective.hintWrapperClass;
   }
 
   getFieldWrapperClass() {
-    return this.fieldWrapperClass ? this.fieldWrapperClass : this.fsFormCommon.fsFormDirective.fieldWrapperClass;
+    return this.fieldWrapperClass ? this.fieldWrapperClass : this.formDirective.fieldWrapperClass;
   }
 
   /*

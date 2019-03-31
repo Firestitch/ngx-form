@@ -1,4 +1,4 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
+import { Directive, Input, AfterViewInit, forwardRef } from '@angular/core';
 import { FsControlDirective } from './control.directive';
 import { AbstractControl } from '@angular/forms';
 import { email } from '@firestitch/common';

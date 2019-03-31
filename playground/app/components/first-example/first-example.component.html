@@ -15,8 +15,9 @@
 
     <fs-radio-group
       *ngIf="render"
+      [hidden]="hidden"
       [(ngModel)]="radioRequired"
-      label="Required"
+      label="Radio Group"
       name="radio_required"
       [fsFormRequired]="required">
         <mat-radio-button [value]="5">5</mat-radio-button>
@@ -128,8 +129,12 @@
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
-    <mat-form-field fxFlex>
-      <input matInput
+    <mat-form-field
+      *ngIf="render"
+      [hidden]="hidden"
+      fxFlex>
+      <input
+        matInput
         fsDatePickerRange
         fsFormDateRange
         [fsFormRequired]="required"
