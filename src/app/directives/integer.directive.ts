@@ -1,6 +1,8 @@
 import { Directive, Input, AfterViewInit } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+
 import { FsControlDirective } from './control.directive';
+
 
 @Directive({
   selector: '[fsFormInteger]'
@@ -11,7 +13,7 @@ export class FsFormIntegerDirective extends FsControlDirective implements AfterV
   ngAfterViewInit() {
     this.addValidator((control: AbstractControl): { [key: string]: boolean } => {
 
-        if (!this.isEnabled(this.fsFormInteger) || this.isInteger(control.value)) {
+        if (!this.isEnabled(this.fsFormInteger) || !control.value || this.isInteger(control.value)) {
             return null;
         } else {
             return { integer: true }
