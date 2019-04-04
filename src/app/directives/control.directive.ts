@@ -4,7 +4,7 @@ import { OnDestroy, AfterContentInit } from '@angular/core';
 import { FsFormCommon } from './../services/fsformcommon.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { values, keys, capitalize, remove } from 'lodash-es';
+import { values, keys, capitalize, remove, isArray } from 'lodash-es';
 
 
 @Directive({
@@ -46,7 +46,6 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // If the inputs are not visible (display: none) then don't include the input in the validation
   ngAfterContentInit() {
 
     this.ngControl.control.statusChanges
@@ -57,29 +56,13 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       this.renderErrors();
     });
 
-    const element = this.elementRef;
-
-    // If not visible
-    if ( element.nativeElement.offsetParent === null) {
-      this.ngControl.control.clearValidators();
-      this.ngControl.control.clearAsyncValidators();
-
-    } else {
-
-      // Hack. If element visible, has no validation but exist some validation rules -
-      // updating validators and triggering change event (For some reason inputs assign
-      // new rules only oinit and on change events
-      // if (
-      //     (this.ngControl.control['fsValidators'].length && !this.ngControl.control.validator) ||
-      //     (this.ngControl.control['fsAsyncValidators'].length && !this.ngControl.control.asyncValidator)
-      // ) {
-
+    setTimeout(() => {
+      if (this.ngControl.control.value && !isArray(this.ngControl.control.value)) {
+        this.ngControl.control.markAsTouched();
+        this.ngControl.control.markAsDirty();
         this.updateValidators();
-        setTimeout(() => {
-            this.ngControl.control.setValue(this.ngControl.control.value);
-        });
-      //}
-    }
+      }
+    });
   }
 
   getMessageWrapperClasses() {
