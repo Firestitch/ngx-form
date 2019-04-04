@@ -4,7 +4,7 @@ import { OnDestroy, AfterContentInit } from '@angular/core';
 import { FsFormCommon } from './../services/fsformcommon.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { values, keys, filter, capitalize } from 'lodash-es';
+import { values, keys, capitalize, remove } from 'lodash-es';
 
 
 @Directive({
@@ -37,9 +37,9 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       protected renderer2: Renderer2,
       protected ngControl: NgControl,
       protected fsFormCommon: FsFormCommon) {
-    this.ngControl.control['fsValidators'] = this.ngControl.control['fsValidators'] || [];
-    this.ngControl.control['fsAsyncValidators'] = this.ngControl.control['fsAsyncValidators'] || [];
-  }
+        (<any>this.ngControl.control).fsValidators = (<any>this.ngControl.control).fsValidators || [];
+        (<any>this.ngControl.control).fsAsyncValidators = (<any>this.ngControl.control).asyncValidators || [];
+      }
 
   ngOnDestroy() {
     this.destroy$.next();
@@ -69,16 +69,16 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       // Hack. If element visible, has no validation but exist some validation rules -
       // updating validators and triggering change event (For some reason inputs assign
       // new rules only oinit and on change events
-      if (
-          (this.ngControl.control['fsValidators'].length && !this.ngControl.control.validator) ||
-          (this.ngControl.control['fsAsyncValidators'].length && !this.ngControl.control.asyncValidator)
-      ) {
+      // if (
+      //     (this.ngControl.control['fsValidators'].length && !this.ngControl.control.validator) ||
+      //     (this.ngControl.control['fsAsyncValidators'].length && !this.ngControl.control.asyncValidator)
+      // ) {
 
         this.updateValidators();
         setTimeout(() => {
             this.ngControl.control.setValue(this.ngControl.control.value);
         });
-      }
+      //}
     }
   }
 
@@ -246,52 +246,52 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     return { name: name, message: message };
   }
 
-  updateValidators() {
-    this.ngControl.control.setValidators(this.ngControl.control['fsValidators']);
-    this.ngControl.control.setAsyncValidators(this.ngControl.control['fsAsyncValidators']);
-    this.ngControl.control.updateValueAndValidity();
-  }
-
-  addValidator(validator) {
+  public addValidator(validator) {
 
     // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
     // Expression has changed after it was checked. Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
     setTimeout(() => {
-      this.ngControl.control['fsValidators'].push(validator);
-      this.updateValidators();
+      this.getValidators().push(validator);
+        this.updateValidators();
+      });
+  }
+
+  public addAsyncValidator(validator) {
+    setTimeout(() => {
+      this.getAsyncValidators().push(validator);
+      this.ngControl.control.setAsyncValidators(this.getAsyncValidators());
     });
   }
 
-  removeValidator(validator) {
-    const index = this.searchIndex(this.ngControl.control['fsValidators'], validator);
-
-    if (index !== -1) {
-      this.ngControl.control['fsValidators'].splice(index, 1);
-      this.updateValidators();
-    }
+  private getValidators() {
+    return (<any>this.ngControl.control).fsValidators || [];
   }
 
-  searchIndex(data, item) {
-    return filter(data, value => {
-      return JSON.stringify(value) === JSON.stringify(item);
+  private getAsyncValidators() {
+    return (<any>this.ngControl.control).fsAsyncValidators || [];
+  }
+
+  public removeValidator(validator) {
+    remove(this.getValidators(), (item) => {
+      return item === validator;
     });
+    this.updateValidators();
   }
 
-  addAsyncValidator(validator) {
-    this.ngControl.control['fsAsyncValidators'].push(validator);
-    this.ngControl.control.setAsyncValidators(this.ngControl.control['fsAsyncValidators']);
+  public removeAsyncValidator(validator) {
+    remove(this.getAsyncValidators(), (item) => {
+      return item === validator;
+    });
+    this.updateValidators();
   }
 
-  removeAsyncValidator(validator) {
-    const index = this.searchIndex(this.ngControl.control['fsAsyncValidators'], validator);
-
-    if (index !== -1) {
-      this.ngControl.control['fsAsyncValidators'].splice(index, 1);
-      this.updateValidators();
-    }
-  }
-
-  isEnabled(value) {
+  public isEnabled(value) {
     return value !== false && value !== 'false';
+  }
+
+  private updateValidators() {
+    this.ngControl.control.setValidators(this.getValidators());
+    this.ngControl.control.setAsyncValidators(this.getAsyncValidators());
+    this.ngControl.control.updateValueAndValidity();
   }
 }

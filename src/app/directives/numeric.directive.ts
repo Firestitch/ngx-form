@@ -1,23 +1,19 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { Directive, Input, OnChanges } from '@angular/core';
 import { FsControlDirective } from './control.directive';
-import { isNumeric } from '@firestitch/common';
+import { validatorNumeric } from '../validators/numeric';
+
 
 @Directive({
   selector: '[fsFormNumeric]'
 })
-export class FsFormNumericDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormNumericDirective extends FsControlDirective implements OnChanges {
   @Input() fsFormNumeric;
 
-  ngAfterViewInit() {
+  ngOnChanges() {
     if (this.isEnabled(this.fsFormNumeric)) {
-      this.addValidator((control: AbstractControl): { [key: string]: boolean } => {
-        if (isNumeric(control.value)) {
-            return null;
-        } else {
-            return { numeric: true }
-        }
-      });
+      this.addValidator(validatorNumeric);
+    } else {
+      this.removeValidator(validatorNumeric);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
+import { Directive, Input, AfterViewInit, OnChanges } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
 import { AbstractControl } from '@angular/forms';
@@ -8,19 +8,24 @@ import { phone } from '@firestitch/common';
 @Directive({
   selector: '[fsFormPhone]'
 })
-export class FsFormPhoneDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormPhoneDirective extends FsControlDirective implements OnChanges {
 
   @Input() public fsFormPhone;
 
-  public ngAfterViewInit() {
+  private phoneValidator = (control: AbstractControl) => {
 
-    this.addValidator((control: AbstractControl) => {
+    if (!control.value || phone(control.value)) {
+        return null;
+    }
 
-      if (!this.isEnabled(this.fsFormPhone) || !control.value || phone(control.value)) {
-          return null;
-      }
+    return { phone: true };
+  }
 
-      return { phone: true };
-    });
+  public ngOnChanges() {
+    if (this.isEnabled(this.fsFormPhone)) {
+      this.addValidator(this.phoneValidator);
+    } else {
+      this.removeValidator(this.phoneValidator)
+    }
   }
 }

@@ -8,7 +8,7 @@ import { FsControlDirective } from './control.directive';
 export class FsFormCompareDirective extends FsControlDirective implements AfterViewInit, OnDestroy {
   @Input() fsFormCompare;
 
-  validator = () => {
+  private validator = () => {
     if (this.fsFormCompare.value === this.elementRef.nativeElement.value) {
         return null;
     } else {

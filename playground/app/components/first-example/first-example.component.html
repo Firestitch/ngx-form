@@ -1,24 +1,13 @@
   <form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
   <div fxLayout="column">
-    <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input
-        placeholder="Value >= 10 and <=100"
-        [(ngModel)]="minMaxInput"
-        name="minMaxInput"
-        matInput
-        [fsFormRequired]="required"
-        fsFormMin="10"
-        fsFormMax="100"
-        fsFormRequiredMessage="This is custom required message"/>
-        <mat-hint>Hint hint hint!</mat-hint>
-    </mat-form-field>
 
     <fs-radio-group
       *ngIf="render"
       [(ngModel)]="radioRequired"
       label="Required"
       name="radio_required"
-      [fsFormRequired]="required">
+      [fsFormRequired]="required && validations"
+      fsFormRequiredMessage="Custom: Please select at least one option">
         <mat-radio-button [value]="5">5</mat-radio-button>
         <mat-radio-button [value]="4">4</mat-radio-button>
         <mat-radio-button [value]="3">3</mat-radio-button>
@@ -34,23 +23,12 @@
       placeholder="Autocomplete Chips"
       removable="true"
       draggable="true"
-      [fsFormRequired]="required"
+      [fsFormRequired]="required && validations"
       name="chips">
         <ng-template let-data="item" fs-autocomplete-chip>
           {{ data.name }}
         </ng-template>
     </fs-autocomplete-chips>
-
-    <mat-form-field [hidden]="hidden" *ngIf="render">
-        <input placeholder="5 to 10 characters in length"
-          [(ngModel)]="lengthInput"
-          name="lengthInput"
-          matInput
-          [fsFormRequired]="required"
-          fsFormMinLength="5"
-          fsFormMaxLength="10"
-          />
-    </mat-form-field>
 
     <div fxLayout="row" [hidden]="hidden" *ngIf="render">
       <mat-form-field>
@@ -58,7 +36,7 @@
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            [fsFormRequired]="required"
+            [fsFormRequired]="required && validations"
             matInput
             />
         </mat-form-field>
@@ -66,7 +44,7 @@
         <input placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="passwordConfirm"
-          [fsFormRequired]="required"
+          [fsFormRequired]="required && validations"
           [fsFormCompare]="passwordInput"
           matInput
           />
@@ -78,7 +56,7 @@
         [(ngModel)]="integer"
         name="integer_input"
         matInput
-        fsFormInteger
+        [fsFormInteger]="validations"
         />
     </mat-form-field>
 
@@ -87,8 +65,8 @@
         [(ngModel)]="email"
         name="email_input"
         matInput
-        fsFormEmail
-        [fsFormRequired]="required"
+        [fsFormEmail]="validations"
+        [fsFormRequired]="required && validations"
         />
     </mat-form-field>
 
@@ -97,8 +75,8 @@
         [(ngModel)]="phone"
         name="phone_input"
         matInput
+        [fsFormPhone]="validations"
         fsPhone
-        fsFormPhone
         />
     </mat-form-field>
 
@@ -107,7 +85,43 @@
         [(ngModel)]="numeric"
         name="numeric_input"
         matInput
-        fsFormNumeric
+        [fsFormNumeric]="validations"
+        />
+    </mat-form-field>
+
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input
+        placeholder="Min"
+        [(ngModel)]="minInput"
+        name="minInput"
+        matInput
+        fsFormMin="10"/>
+    </mat-form-field>
+
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input
+        placeholder="Max"
+        [(ngModel)]="maxInput"
+        name="maxInput"
+        matInput
+        fsFormMax="100"/>
+    </mat-form-field>
+
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input placeholder="Min Length"
+        [(ngModel)]="minLengthInput"
+        name="minLengthInput"
+        matInput
+        fsFormMinLength="5"
+        />
+    </mat-form-field>
+
+    <mat-form-field [hidden]="hidden" *ngIf="render">
+      <input placeholder="Max Length"
+        [(ngModel)]="maxLengthInput"
+        name="maxLengthInput"
+        matInput
+        fsFormMaxLength="10"
         />
     </mat-form-field>
 
@@ -121,10 +135,23 @@
     </mat-form-field>
 
     <mat-form-field [hidden]="hidden" *ngIf="render">
-      <input matInput fsDatePicker [fsFormRequired]="required" [(ngModel)]="datepicker" name="datepicker" placeholder="Date">
+      <input
+        matInput
+        fsDatePicker
+        [fsFormRequired]="required && validations"
+        [(ngModel)]="datepicker"
+        name="datepicker"
+        placeholder="Date">
     </mat-form-field>
 
-    <fs-checkbox-group matInput [(ngModel)]="checkbox" [fsFormRequired]="required" label="Checkbox Group" name="checkbox" [hidden]="hidden" *ngIf="render">
+    <fs-checkbox-group
+      matInput
+      [(ngModel)]="checkbox"
+      [fsFormRequired]="required && validations"
+      label="Checkbox Group"
+      name="checkbox"
+      [hidden]="hidden"
+      *ngIf="render">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
@@ -132,7 +159,7 @@
       <input matInput
         fsDatePickerRange
         fsFormDateRange
-        [fsFormRequired]="required"
+        [fsFormRequired]="required && validations"
         [(ngModel)]="daterange"
         [(ngModelStart)]="startDate"
         [(ngModelEnd)]="endDate"
@@ -144,6 +171,7 @@
     <div fxLayout="row" fxLayoutGap="5px">
       <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
+      <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="hidden = !(!!hidden)">{{hidden ? 'Show' : 'Hide'}} Inputs</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>
     </div>

@@ -17,6 +17,7 @@ export class FirstExampleComponent {
   public required = true;
   public hidden = false;
   public render = true;
+  public validations = true;
   public lengthInput = '';
   public datepicker = null;
   public checkbox: object[] = [];
