@@ -1,4 +1,4 @@
-import { Directive, OnInit, Output, EventEmitter, ContentChild, Input } from '@angular/core';
+import { OnInit, Output, EventEmitter, ContentChild, Input, Component, ViewEncapsulation, HostBinding } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { values } from 'lodash-es';
@@ -8,19 +8,27 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 
-@Directive({
+@Component({
   selector: '[fsForm]',
-  providers: [ FsFormCommon ]
+  template: `<ng-content></ng-content>`,
+  styles: [`.fs-form-label-required:after { content: " *"; display: contents }
+            .fs-form .ng-invalid.ng-dirty .fs-form-label { color: #f44336 }
+            .fs-form .mat-placeholder-required { display: none }`],
+  providers: [ FsFormCommon ],
+  encapsulation: ViewEncapsulation.None
 })
 export class FsFormDirective implements OnInit, OnDestroy {
 
   @ContentChild(NgForm) ngForm;
   @Input() fieldWrapperClass = 'mat-form-field';
-  @Input() messageWrapperClass = 'mat-form-field-subscript-wrapper';
-  @Input() hintWrapperClass = 'mat-form-field-hint-wrapper';
+  @Input() messageWrapperSelector = '.mat-form-field-subscript-wrapper';
+  @Input() hintWrapperSelector = '.mat-form-field-hint-wrapper';
+  @Input() labelSelector = '.mat-form-field-label';
 
   @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
+
+  @HostBinding('class.fs-form') fsformClass = true;
 
   public submitting = false;
   private destroy$ = new Subject();

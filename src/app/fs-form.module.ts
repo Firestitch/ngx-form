@@ -2,7 +2,6 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { FsFormCommon } from './services/fsformcommon.service';
 import { FsForm } from './services/fsform.service';
 
 import { FsFormDirective } from './directives/form.directive';
@@ -28,7 +27,7 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
     CommonModule,
     FormsModule
   ],
-  exports: [
+  declarations: [
     FsFormDirective,
     FsControlDirective,
     FsFormRequiredDirective,
@@ -46,9 +45,7 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
     FsFormFunctionDirective,
     FsFormDateRangeDirective
   ],
-  entryComponents: [
-  ],
-  declarations: [
+  exports: [
     FsFormDirective,
     FsControlDirective,
     FsFormRequiredDirective,

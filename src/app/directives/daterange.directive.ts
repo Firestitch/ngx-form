@@ -1,6 +1,5 @@
-import { Directive, Input, AfterViewInit, OnChanges } from '@angular/core';
+import { Directive, Input, OnChanges } from '@angular/core';
 import { isObject } from 'lodash-es';
-
 import { FsControlDirective } from './control.directive';
 import { isValid } from 'date-fns';
 

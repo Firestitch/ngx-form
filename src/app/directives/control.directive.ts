@@ -1,4 +1,4 @@
-import { Input, ElementRef, Renderer2, Directive } from '@angular/core';
+import { Input, ElementRef, Renderer2, Directive, Injector, Optional } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
 import { FsFormCommon } from './../services/fsformcommon.service';
@@ -13,8 +13,9 @@ import { values, keys, capitalize, remove, isArray } from 'lodash-es';
 export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   @Input() fieldWrapperClass = '';
-  @Input() messageWrapperClass = '';
-  @Input() hintWrapperClass = '';
+  @Input() messageWrapperSelector = '';
+  @Input() hintWrapperSelector = '';
+  @Input() labelSelector = '';
   @Input() fsFormRequiredMessage = 'This field is required';
   @Input() fsFormEmailMessage = 'This is not a valid email address';
   @Input() fsFormEmailsMessage = 'Input valid email addresses, comma separated';
@@ -36,7 +37,8 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       protected elementRef: ElementRef,
       protected renderer2: Renderer2,
       protected ngControl: NgControl,
-      protected fsFormCommon: FsFormCommon) {
+      protected injector: Injector,
+      @Optional() protected fsFormCommon: FsFormCommon) {
         (<any>this.ngControl.control).fsValidators = (<any>this.ngControl.control).fsValidators || [];
         (<any>this.ngControl.control).fsAsyncValidators = (<any>this.ngControl.control).asyncValidators || [];
       }
@@ -53,7 +55,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
         takeUntil(this.destroy$)
     )
     .subscribe(res => {
-      this.renderErrors();
+      this.render();
     });
 
     setTimeout(() => {
@@ -65,39 +67,39 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     });
   }
 
-  getMessageWrapperClasses() {
+  protected getMessageWrapperSelectors() {
 
     const cls = ['.fs-form-message-wrapper'];
 
-    if (this.messageWrapperClass) {
-      cls.push(`.${this.messageWrapperClass}`);
+    if (this.messageWrapperSelector) {
+      cls.push(this.messageWrapperSelector);
 
     } else if ( this.fsFormCommon &&
                 this.fsFormCommon.fsFormDirective &&
-                this.fsFormCommon.fsFormDirective.messageWrapperClass) {
-      cls.push(`.${this.fsFormCommon.fsFormDirective.messageWrapperClass}`);
+                this.fsFormCommon.fsFormDirective.messageWrapperSelector) {
+      cls.push(this.fsFormCommon.fsFormDirective.messageWrapperSelector);
     }
 
     return cls;
   }
 
-  getHintWrapperClasses() {
+  protected getHintWrapperSelectors() {
 
     const cls = ['.fs-form-hint-wrapper'];
 
-    if (this.hintWrapperClass) {
-      cls.push(`.${this.hintWrapperClass}`);
+    if (this.hintWrapperSelector) {
+      cls.push(this.hintWrapperSelector);
 
     } else if ( this.fsFormCommon &&
                 this.fsFormCommon.fsFormDirective &&
-                this.fsFormCommon.fsFormDirective.hintWrapperClass) {
-      cls.push(`.${this.fsFormCommon.fsFormDirective.hintWrapperClass}`);
+                this.fsFormCommon.fsFormDirective.hintWrapperSelector) {
+      cls.push(this.fsFormCommon.fsFormDirective.hintWrapperSelector);
     }
 
     return cls;
   }
 
-  getFieldWrapperClass() {
+  protected getFieldWrapperClass() {
 
     if (this.fieldWrapperClass) {
       return this.fieldWrapperClass;
@@ -110,40 +112,66 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     return '';
   }
 
+  protected getlabelSelectors() {
+
+    const cls = ['.fs-form-label'];
+
+    if (this.labelSelector) {
+      cls.push(this.labelSelector);
+
+    } else if ( this.fsFormCommon &&
+                this.fsFormCommon.fsFormDirective &&
+                this.fsFormCommon.fsFormDirective.hintWrapperSelector) {
+      cls.push(this.fsFormCommon.fsFormDirective.labelSelector);
+    }
+
+    return cls;
+  }
+
+  protected getFieldWrapperElement() {
+
+    const wrapper = this.getFieldWrapper(this.elementRef.nativeElement);
+
+    if (wrapper) {
+      return wrapper;
+    }
+
+    return this.elementRef.nativeElement;
+  }
 
   /*
     <mat-form-field class="mat-form-field">  <-- Field Wrapper. Look for parents from the native element with the matching fieldWrapperClass. If not found defaults to native element.
       <input>
-      <div class="fs-form-message-wrapper"> <-- Message Wrapper. Look for the element with class .fs-form-message-wrapper or messageWrapperClass
+      <div class="fs-form-message-wrapper"> <-- Message Wrapper. Look for the element with class .fs-form-message-wrapper or messageWrapperSelector
         <div class="fs-form-message-wrapper"></div>
-        <div class="fs-form-hint-wrapper"></div> <-- Hint Wrapper. Look for the element with class .fs-form-hint-wrapper or hintWrapperClass
+        <div class="fs-form-hint-wrapper"></div> <-- Hint Wrapper. Look for the element with class .fs-form-hint-wrapper or hintWrapperSelector
       </div>
     </mat-form-field>
   */
 
-  renderErrors() {
-
-    const renderer = this.renderer2;
+  protected render() {
 
     if (this.ngControl.dirty) {
 
+      const renderer = this.renderer2;
+      const wrapper = this.getFieldWrapperElement();
       const error = this.getError(this, this.ngControl);
 
-      let wrapper = this.getFieldWrapper(this.elementRef.nativeElement);
-
-      if (!wrapper) {
-        wrapper = this.elementRef.nativeElement;
-      }
-
-      const messageWrapper = wrapper.querySelector(this.getMessageWrapperClasses().join(','));
+      const messageWrapper = wrapper.querySelector(this.getMessageWrapperSelectors().join(','));
 
       if (!messageWrapper) {
         return console.warn('Failed to locate fs-form-message-wrapper');
       }
 
+      const labelWrapper = wrapper.querySelector(this.getlabelSelectors().join(','));
+
+      if (labelWrapper) {
+        this.renderer2.addClass(labelWrapper, 'fs-form-label');
+      }
+
       renderer.addClass(messageWrapper, 'mat-form-field-subscript-wrapper');
 
-      const hint = messageWrapper.querySelector(this.getHintWrapperClasses().join(','));
+      const hint = messageWrapper.querySelector(this.getHintWrapperSelectors().join(','));
 
       if (hint) {
         renderer.setStyle(hint, 'display', error ? 'none' : 'block');
@@ -181,7 +209,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  private getFieldWrapper(node, count = 0) {
+  protected getFieldWrapper(node, count = 0) {
 
     if (count > 10) {
       return null;
@@ -194,14 +222,14 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     return this.getFieldWrapper(node.parentNode, ++count);
   }
 
-  private clearWrapperErrors(wrapper) {
+  protected clearWrapperErrors(wrapper) {
     const errorWrapper = wrapper.querySelector('.fs-form-error-wrapper');
     if (errorWrapper) {
       errorWrapper.remove();
     }
   }
 
-  private parseErrorMessage(message, args): string {
+  protected parseErrorMessage(message, args): string {
 
     values(args).forEach(name => {
         message = message.replace(/\$\(\d\)/, name);
@@ -210,7 +238,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     return message;
   }
 
-  private getError(instance, controlRef): { name: string, message: string } {
+  protected getError(instance, controlRef): { name: string, message: string } {
 
     const name = keys(controlRef.control.errors)[0];
 
@@ -269,6 +297,11 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   public isEnabled(value) {
+
+    if (!this.fsFormCommon || !this.fsFormCommon.fsFormDirective) {
+      return false;
+    }
+
     return value !== false && value !== 'false';
   }
 

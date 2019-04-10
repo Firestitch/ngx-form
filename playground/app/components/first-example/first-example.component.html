@@ -1,4 +1,4 @@
-  <form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
+<form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
   <div fxLayout="column">
 
     <fs-radio-group
@@ -6,8 +6,9 @@
       [(ngModel)]="radioRequired"
       label="Required"
       name="radio_required"
-      [fsFormRequired]="required && validations"
-      fsFormRequiredMessage="Custom: Please select at least one option">
+      labelSelector="fs-label"
+      [required]="required && validations"
+      requiredMessage="Custom: Please select at least one option">
         <mat-radio-button [value]="5">5</mat-radio-button>
         <mat-radio-button [value]="4">4</mat-radio-button>
         <mat-radio-button [value]="3">3</mat-radio-button>
@@ -16,27 +17,26 @@
     </fs-radio-group>
 
     <fs-autocomplete-chips
-      [hidden]="hidden"
       *ngIf="render"
       [(ngModel)]="chips"
       [fetch]="fetchChips"
       placeholder="Autocomplete Chips"
       removable="true"
       draggable="true"
-      [fsFormRequired]="required && validations"
+      [required]="required && validations"
       name="chips">
         <ng-template let-data="item" fs-autocomplete-chip>
           {{ data.name }}
         </ng-template>
     </fs-autocomplete-chips>
 
-    <div fxLayout="row" [hidden]="hidden" *ngIf="render">
+    <div fxLayout="row" *ngIf="render">
       <mat-form-field>
           <input placeholder="Password"
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            [fsFormRequired]="required && validations"
+            [required]="required && validations"
             matInput
             />
         </mat-form-field>
@@ -44,14 +44,14 @@
         <input placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="passwordConfirm"
-          [fsFormRequired]="required && validations"
+          [required]="required && validations"
           [fsFormCompare]="passwordInput"
           matInput
           />
       </mat-form-field>
     </div>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Integer"
         [(ngModel)]="integer"
         name="integer_input"
@@ -60,7 +60,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Email"
         [(ngModel)]="email"
         name="email_input"
@@ -70,7 +70,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Phone"
         [(ngModel)]="phone"
         name="phone_input"
@@ -80,7 +80,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Numeric"
         [(ngModel)]="numeric"
         name="numeric_input"
@@ -89,7 +89,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input
         placeholder="Min"
         [(ngModel)]="minInput"
@@ -98,7 +98,7 @@
         fsFormMin="10"/>
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input
         placeholder="Max"
         [(ngModel)]="maxInput"
@@ -107,7 +107,7 @@
         fsFormMax="100"/>
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Min Length"
         [(ngModel)]="minLengthInput"
         name="minLengthInput"
@@ -116,7 +116,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Max Length"
         [(ngModel)]="maxLengthInput"
         name="maxLengthInput"
@@ -125,7 +125,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input placeholder="Pattern"
         [(ngModel)]="pattern"
         name="pattern_input"
@@ -134,7 +134,7 @@
         />
     </mat-form-field>
 
-    <mat-form-field [hidden]="hidden" *ngIf="render">
+    <mat-form-field *ngIf="render">
       <input
         matInput
         fsDatePicker
@@ -147,19 +147,18 @@
     <fs-checkbox-group
       matInput
       [(ngModel)]="checkbox"
-      [fsFormRequired]="required && validations"
+      [required]="required && validations"
       label="Checkbox Group"
       name="checkbox"
-      [hidden]="hidden"
       *ngIf="render">
       <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
     </fs-checkbox-group>
 
-    <mat-form-field fxFlex>
+    <mat-form-field *ngIf="render">
       <input matInput
         fsDatePickerRange
         fsFormDateRange
-        [fsFormRequired]="required && validations"
+        [required]="required && validations"
         [(ngModel)]="daterange"
         [(ngModelStart)]="startDate"
         [(ngModelEnd)]="endDate"
@@ -172,7 +171,6 @@
       <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>
-      <button mat-raised-button color="primary" type="button" (click)="hidden = !(!!hidden)">{{hidden ? 'Show' : 'Hide'}} Inputs</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>
     </div>
   </div>
