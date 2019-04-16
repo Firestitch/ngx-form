@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { FsControlDirective } from './control.directive';
 
 @Directive({
-  selector: '[fsFormRequired],[required]'
+  selector: '[fsFormRequired],[ngModel][required]'
 })
 export class FsFormRequiredDirective extends FsControlDirective {
 
@@ -29,10 +29,10 @@ export class FsFormRequiredDirective extends FsControlDirective {
 
   protected render() {
 
-    const wrapper = this.getFieldWrapperElement();
-
+    const wrapper = this.getWrapperElement();
     const labelWrapper = wrapper.querySelector(this.getlabelSelectors().join(','));
 
+    // Adding class fs-form-label-requried adds the * to the label
     if (labelWrapper) {
       if (this.required) {
         this.renderer2.addClass(labelWrapper, 'fs-form-label-required');

@@ -1,9 +1,9 @@
-import { OnInit, Output, EventEmitter, ContentChild, Input, Component, ViewEncapsulation, HostBinding } from '@angular/core';
+import { OnInit, Output, EventEmitter, ContentChild, Input,
+         Component, ViewEncapsulation, HostBinding } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { values } from 'lodash-es';
 import { FsForm } from '../services/fsform.service';
-import { FsFormCommon } from '../services/fsformcommon.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -13,18 +13,17 @@ import { takeUntil } from 'rxjs/operators';
   template: `<ng-content></ng-content>`,
   styles: [`.fs-form-label-required:after { content: " *"; display: contents }
             .fs-form .ng-invalid.ng-dirty .fs-form-label { color: #f44336 }
+            .fs-form .fs-form-message { margin-top: 0.54166667em }
             .fs-form .mat-placeholder-required { display: none }`],
-  providers: [ FsFormCommon ],
   encapsulation: ViewEncapsulation.None
 })
 export class FsFormDirective implements OnInit, OnDestroy {
 
   @ContentChild(NgForm) ngForm;
-  @Input() fieldWrapperClass = 'mat-form-field';
-  @Input() messageWrapperSelector = '.mat-form-field-subscript-wrapper';
-  @Input() hintWrapperSelector = '.mat-form-field-hint-wrapper';
+  @Input() wrapperSelector = '.mat-form-field';
+  @Input() messageSelector = '.mat-form-field-subscript-wrapper';
+  @Input() hintSelector = '.mat-form-field-hint-wrapper';
   @Input() labelSelector = '.mat-form-field-label';
-
   @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
 
@@ -33,10 +32,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
   public submitting = false;
   private destroy$ = new Subject();
 
-  constructor(private fsForm: FsForm,
-              private fsFormCommon: FsFormCommon) {
-    fsFormCommon.fsFormDirective = this;
-  }
+  constructor(private fsForm: FsForm) {}
 
   ngOnInit() {
 

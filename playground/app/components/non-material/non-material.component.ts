@@ -8,7 +8,8 @@ import { FsMessage } from '@firestitch/message';
 })
 export class NonMaterialComponent {
 
-  public phone;
+  public phone1;
+  public phone2;
   constructor(private fsMessage: FsMessage) {}
 
 

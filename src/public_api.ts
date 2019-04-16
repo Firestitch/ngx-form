@@ -7,7 +7,6 @@ export { FsFormModule } from './app/fs-form.module';
 
 // Services
 export { FsForm } from './app/services/fsform.service';
-export { FsFormCommon } from './app/services/fsformcommon.service';
 
 // Directives
 export { FsFormDirective } from './app/directives/form.directive';

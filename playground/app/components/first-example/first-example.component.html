@@ -6,15 +6,19 @@
       [(ngModel)]="radioRequired"
       label="Required"
       name="radio_required"
-      labelSelector="fs-label"
       [required]="required && validations"
       requiredMessage="Custom: Please select at least one option">
-        <mat-radio-button [value]="5">5</mat-radio-button>
-        <mat-radio-button [value]="4">4</mat-radio-button>
-        <mat-radio-button [value]="3">3</mat-radio-button>
-        <mat-radio-button [value]="2">2</mat-radio-button>
-        <mat-radio-button [value]="1">1</mat-radio-button>
+        <mat-radio-button *ngFor="let item of items" [value]="item.id">{{item.name}}</mat-radio-button>
     </fs-radio-group>
+
+    <fs-checkbox-group
+      [(ngModel)]="checkbox"
+      name="checkbox"
+      [required]="required && validations"
+      label="Checkboxes">
+        <mat-checkbox *ngFor="let item of items" [value]="item">{{item.name}}</mat-checkbox>
+        <mat-hint>Hint hint hint!!!</mat-hint>
+    </fs-checkbox-group>
 
     <fs-autocomplete-chips
       *ngIf="render"
@@ -143,16 +147,6 @@
         name="datepicker"
         placeholder="Date">
     </mat-form-field>
-
-    <fs-checkbox-group
-      matInput
-      [(ngModel)]="checkbox"
-      [required]="required && validations"
-      label="Checkbox Group"
-      name="checkbox"
-      *ngIf="render">
-      <mat-checkbox *ngFor="let item of items" [value]="item">{{ item.name }}</mat-checkbox>
-    </fs-checkbox-group>
 
     <mat-form-field *ngIf="render">
       <input matInput

@@ -1,14 +1,22 @@
-.form-group {
+.form-group,
+.fs-form-wrapper {
   position: relative;
   margin-bottom: 1.25em;
 
-  .label {
+  &.ng-invalid {
+    color: #f44336;
+  }
+
+  .label,
+  .fs-form-label {
     font-size: 70%;
   }
 
-  .fs-form-message-wrapper {
+  .messages,
+  .fs-form-message {
     position: absolute;
     bottom: -16px;
     top: unset;
+    font-size: 70%;
   }
 }

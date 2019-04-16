@@ -1,10 +1,10 @@
-import { Input, ElementRef, Renderer2, Directive, Injector, Optional } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { Input, ElementRef, Renderer2, Directive, Injector, Optional, Inject } from '@angular/core';
+import { NgControl, AbstractControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
-import { FsFormCommon } from './../services/fsformcommon.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { values, keys, capitalize, remove, isArray } from 'lodash-es';
+import { FsFormDirective } from '../directives/form.directive';
 
 
 @Directive({
@@ -12,9 +12,9 @@ import { values, keys, capitalize, remove, isArray } from 'lodash-es';
 })
 export class FsControlDirective implements AfterContentInit, OnDestroy {
 
-  @Input() fieldWrapperClass = '';
-  @Input() messageWrapperSelector = '';
-  @Input() hintWrapperSelector = '';
+  @Input() wrapperSelector = '';
+  @Input() messageSelector = '';
+  @Input() hintSelector = '';
   @Input() labelSelector = '';
   @Input() fsFormRequiredMessage = 'This field is required';
   @Input() fsFormEmailMessage = 'This is not a valid email address';
@@ -30,54 +30,69 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   @Input() fsFormPatternMessage = 'Value should match pattern $(1)';
   @Input() fsFormDateRangeMessage = 'Invalid date range';
 
-  protected destroy$ = new Subject();
   public errors = [];
+
+  protected _destroy$ = new Subject();
+  protected _control: AbstractControl;
 
   constructor(
       protected elementRef: ElementRef,
       protected renderer2: Renderer2,
-      protected ngControl: NgControl,
       protected injector: Injector,
-      @Optional() protected fsFormCommon: FsFormCommon) {
-        (<any>this.ngControl.control).fsValidators = (<any>this.ngControl.control).fsValidators || [];
-        (<any>this.ngControl.control).fsAsyncValidators = (<any>this.ngControl.control).asyncValidators || [];
-      }
+      @Optional() protected ngControl: NgControl,
+      @Optional() @Inject(FsFormDirective) private formDirective: FsFormDirective) {
+
+        if (ngControl) {
+          this._control = ngControl.control;
+          (<any>this._control).fsValidators = (<any>this._control).fsValidators || [];
+          (<any>this._control).fsAsyncValidators = (<any>this._control).asyncValidators || [];
+
+        } else {
+          console.error('The element does not have a valid ngModel', this.elementRef.nativeElement);
+        }
+  }
 
   ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 
   ngAfterContentInit() {
+    if (this._control && this.formDirective) {
+      /*
+        Ensure that statusChanges has one subscription per control. Multiple can happen
+        when multiple fsForm validation directives are applied to the same element
+      */
+      if (!(<any>this._control).statusChangesSubscribe) {
 
-    this.ngControl.control.statusChanges
-    .pipe(
-        takeUntil(this.destroy$)
-    )
-    .subscribe(res => {
-      this.render();
-    });
+        this._control.statusChanges
+        .pipe(
+            takeUntil(this._destroy$)
+        )
+        .subscribe(this.render.bind(this));
 
-    setTimeout(() => {
-      if (this.ngControl.control.value && !isArray(this.ngControl.control.value)) {
-        this.ngControl.control.markAsTouched();
-        this.ngControl.control.markAsDirty();
-        this.updateValidators();
+        (<any>this._control).statusChangesSubscribe = true;
       }
-    });
+
+      setTimeout(() => {
+        if (this._control.value && !isArray(this._control.value)) {
+          this._control.markAsTouched();
+          this._control.markAsDirty();
+          this.updateValidators();
+        }
+      });
+    }
   }
 
-  protected getMessageWrapperSelectors() {
+  protected getMessageSelectors() {
 
-    const cls = ['.fs-form-message-wrapper'];
+    const cls = ['.fs-form-message'];
 
-    if (this.messageWrapperSelector) {
-      cls.push(this.messageWrapperSelector);
+    if (this.messageSelector) {
+      cls.push(this.messageSelector);
 
-    } else if ( this.fsFormCommon &&
-                this.fsFormCommon.fsFormDirective &&
-                this.fsFormCommon.fsFormDirective.messageWrapperSelector) {
-      cls.push(this.fsFormCommon.fsFormDirective.messageWrapperSelector);
+    } else if (this.formDirective.messageSelector) {
+      cls.push(this.formDirective.messageSelector);
     }
 
     return cls;
@@ -85,31 +100,29 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   protected getHintWrapperSelectors() {
 
-    const cls = ['.fs-form-hint-wrapper'];
+    const cls = ['.fs-form-hint'];
 
-    if (this.hintWrapperSelector) {
-      cls.push(this.hintWrapperSelector);
+    if (this.hintSelector) {
+      cls.push(this.hintSelector);
 
-    } else if ( this.fsFormCommon &&
-                this.fsFormCommon.fsFormDirective &&
-                this.fsFormCommon.fsFormDirective.hintWrapperSelector) {
-      cls.push(this.fsFormCommon.fsFormDirective.hintWrapperSelector);
+    } else if (this.formDirective.hintSelector) {
+      cls.push(this.formDirective.hintSelector);
     }
 
     return cls;
   }
 
-  protected getFieldWrapperClass() {
+  protected getWrapperSelectors() {
 
-    if (this.fieldWrapperClass) {
-      return this.fieldWrapperClass;
+    const cls = ['.fs-form-wrapper'];
+
+    if (this.wrapperSelector) {
+      cls.push(this.wrapperSelector);
+    } else if (this.formDirective) {
+      cls.push(this.formDirective.wrapperSelector);
     }
 
-    if (this.fsFormCommon && this.fsFormCommon.fsFormDirective) {
-      return this.fsFormCommon.fsFormDirective.fieldWrapperClass;
-    }
-
-    return '';
+    return cls;
   }
 
   protected getlabelSelectors() {
@@ -119,18 +132,16 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     if (this.labelSelector) {
       cls.push(this.labelSelector);
 
-    } else if ( this.fsFormCommon &&
-                this.fsFormCommon.fsFormDirective &&
-                this.fsFormCommon.fsFormDirective.hintWrapperSelector) {
-      cls.push(this.fsFormCommon.fsFormDirective.labelSelector);
+    } else if (this.formDirective.labelSelector) {
+      cls.push(this.formDirective.labelSelector);
     }
 
     return cls;
   }
 
-  protected getFieldWrapperElement() {
+  protected getWrapperElement() {
 
-    const wrapper = this.getFieldWrapper(this.elementRef.nativeElement);
+    const wrapper = this.getWrapper(this.elementRef.nativeElement);
 
     if (wrapper) {
       return wrapper;
@@ -140,27 +151,27 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   /*
-    <mat-form-field class="mat-form-field">  <-- Field Wrapper. Look for parents from the native element with the matching fieldWrapperClass. If not found defaults to native element.
+    <mat-form-field class="mat-form-field">  <-- Field Wrapper Class. Look for parents from the native element with the matching wrapperSelector. If not found defaults to native element.
       <input>
-      <div class="fs-form-message-wrapper"> <-- Message Wrapper. Look for the element with class .fs-form-message-wrapper or messageWrapperSelector
-        <div class="fs-form-message-wrapper"></div>
-        <div class="fs-form-hint-wrapper"></div> <-- Hint Wrapper. Look for the element with class .fs-form-hint-wrapper or hintWrapperSelector
+      <div class="fs-form-message"> <-- Message Selector. Look for the element with class .fs-form-message or messageSelector
+        <div class="fs-form-message"></div>
+        <div class="fs-form-hint"></div> <-- Hint Selector. Look for the element with class .fs-form-hint or hintSelector
       </div>
     </mat-form-field>
   */
 
   protected render() {
 
-    if (this.ngControl.dirty) {
+    if (this.ngControl && this.ngControl.dirty) {
 
       const renderer = this.renderer2;
-      const wrapper = this.getFieldWrapperElement();
+      const wrapper = this.getWrapperElement();
       const error = this.getError(this, this.ngControl);
 
-      const messageWrapper = wrapper.querySelector(this.getMessageWrapperSelectors().join(','));
+      const messageWrapper = wrapper.querySelector(this.getMessageSelectors().join(','));
 
       if (!messageWrapper) {
-        return console.warn('Failed to locate fs-form-message-wrapper');
+        return console.warn('Failed to locate fs-form-message', this.elementRef.nativeElement);
       }
 
       const labelWrapper = wrapper.querySelector(this.getlabelSelectors().join(','));
@@ -169,30 +180,30 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
         this.renderer2.addClass(labelWrapper, 'fs-form-label');
       }
 
-      renderer.addClass(messageWrapper, 'mat-form-field-subscript-wrapper');
+      renderer.addClass(messageWrapper, 'fs-form-message');
 
       const hint = messageWrapper.querySelector(this.getHintWrapperSelectors().join(','));
 
       if (hint) {
         renderer.setStyle(hint, 'display', error ? 'none' : 'block');
+        renderer.addClass(hint, 'fs-form-hint');
       }
 
-      if (!error) {
-        this.clearWrapperErrors(messageWrapper);
+      let errorWrapper = wrapper.querySelector('.fs-form-error');
+      if (errorWrapper) {
+        errorWrapper.remove();
       }
+
+      wrapper.classList.remove('ng-invalid');
 
       if (!error) {
         return;
       }
 
-      this.clearWrapperErrors(messageWrapper);
+      wrapper.classList.add('ng-invalid');
 
-      let errorWrapper = messageWrapper.querySelector(`.fs-form-error-wrapper`);
-
-      if (!errorWrapper) {
-        errorWrapper = renderer.createElement('div');
-        renderer.addClass(errorWrapper, 'fs-form-error-wrapper');
-      }
+      errorWrapper = renderer.createElement('div');
+      renderer.addClass(errorWrapper, 'fs-form-error');
 
       const errorElement = renderer.createElement('div');
       let errorText: string = null;
@@ -209,24 +220,17 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     }
   }
 
-  protected getFieldWrapper(node, count = 0) {
+  protected getWrapper(node, count = 0) {
 
-    if (count > 10) {
+    if (!node || count > 10) {
       return null;
     }
 
-    if (node.classList.contains(this.getFieldWrapperClass())) {
+    if (node.parentNode && node.parentNode.querySelector(this.getWrapperSelectors().join(','))) {
       return node;
     }
 
-    return this.getFieldWrapper(node.parentNode, ++count);
-  }
-
-  protected clearWrapperErrors(wrapper) {
-    const errorWrapper = wrapper.querySelector('.fs-form-error-wrapper');
-    if (errorWrapper) {
-      errorWrapper.remove();
-    }
+    return this.getWrapper(node.parentNode, ++count);
   }
 
   protected parseErrorMessage(message, args): string {
@@ -259,27 +263,36 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   public addValidator(validator) {
 
-    // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
-    // Expression has changed after it was checked. Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
-    setTimeout(() => {
+    if (this._control) {
+      // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
+      // Expression has changed after it was checked.
+      // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
+      setTimeout(() => {
       this.getValidators().push(validator);
         this.updateValidators();
       });
+    }
   }
 
   public addAsyncValidator(validator) {
-    setTimeout(() => {
-      this.getAsyncValidators().push(validator);
-      this.ngControl.control.setAsyncValidators(this.getAsyncValidators());
-    });
+
+    if (this._control) {
+      // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
+      // Expression has changed after it was checked.
+      // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
+      setTimeout(() => {
+        this.getAsyncValidators().push(validator);
+        this._control.setAsyncValidators(this.getAsyncValidators());
+      });
+    }
   }
 
   private getValidators() {
-    return (<any>this.ngControl.control).fsValidators || [];
+    return (<any>this._control).fsValidators || [];
   }
 
   private getAsyncValidators() {
-    return (<any>this.ngControl.control).fsAsyncValidators || [];
+    return (<any>this._control).fsAsyncValidators || [];
   }
 
   public removeValidator(validator) {
@@ -290,6 +303,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   public removeAsyncValidator(validator) {
+
     remove(this.getAsyncValidators(), (item) => {
       return item === validator;
     });
@@ -298,7 +312,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   public isEnabled(value) {
 
-    if (!this.fsFormCommon || !this.fsFormCommon.fsFormDirective) {
+    if (!this.formDirective) {
       return false;
     }
 
@@ -306,8 +320,8 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   private updateValidators() {
-    this.ngControl.control.setValidators(this.getValidators());
-    this.ngControl.control.setAsyncValidators(this.getAsyncValidators());
-    this.ngControl.control.updateValueAndValidity();
+    this._control.setValidators(this.getValidators());
+    this._control.setAsyncValidators(this.getAsyncValidators());
+    this._control.updateValueAndValidity();
   }
 }
