@@ -25,12 +25,10 @@
       [(ngModel)]="chips"
       [fetch]="fetchChips"
       placeholder="Autocomplete Chips"
-      removable="true"
-      draggable="true"
       [required]="required && validations"
       name="chips">
-        <ng-template let-data="item" fs-autocomplete-chip>
-          {{ data.name }}
+        <ng-template fsAutocompleteObject let-object="object">
+          {{ object.name }}
         </ng-template>
     </fs-autocomplete-chips>
 
