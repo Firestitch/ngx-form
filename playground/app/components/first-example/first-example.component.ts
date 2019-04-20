@@ -25,6 +25,7 @@ export class FirstExampleComponent {
   public passwordConfirm = null;
   public emails = null;
   public phone = null;
+  public url = null;
   public numeric = null;
   public daterange = null;
   public startDate = null;

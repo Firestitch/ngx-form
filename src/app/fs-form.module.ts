@@ -20,6 +20,7 @@ import { FsFormNumericDirective } from './directives/numeric.directive';
 import { FsFormPatternDirective } from './directives/pattern.directive';
 import { FsFormFunctionDirective} from './directives/function.directive';
 import { FsFormDateRangeDirective } from './directives/daterange.directive';
+import { FsFormUrlDirective } from './directives/url.directive';
 
 
 @NgModule({
@@ -43,7 +44,8 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
     FsFormNumericDirective,
     FsFormPatternDirective,
     FsFormFunctionDirective,
-    FsFormDateRangeDirective
+    FsFormDateRangeDirective,
+    FsFormUrlDirective,
   ],
   exports: [
     FsFormDirective,
@@ -61,7 +63,8 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
     FsFormNumericDirective,
     FsFormPatternDirective,
     FsFormFunctionDirective,
-    FsFormDateRangeDirective
+    FsFormDateRangeDirective,
+    FsFormUrlDirective,
   ],
   providers: [
     FsForm

@@ -16,7 +16,7 @@ export class FsFormEmailDirective extends FsControlDirective implements OnChange
     }
 
     return { email: true };
-  }
+  };
 
   ngOnChanges() {
     if (this.isEnabled(this.fsFormEmail)) {

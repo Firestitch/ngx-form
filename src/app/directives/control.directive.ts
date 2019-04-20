@@ -29,6 +29,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   @Input() fsFormCompareMessage = 'Inputs do not match';
   @Input() fsFormPatternMessage = 'Value should match pattern $(1)';
   @Input() fsFormDateRangeMessage = 'Invalid date range';
+  @Input() fsFormUrlMessage = 'This is not a valid url';
 
   public errors = [];
 

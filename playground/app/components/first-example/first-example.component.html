@@ -83,6 +83,16 @@
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
+      <input placeholder="Url"
+        [(ngModel)]="url"
+        name="url_input"
+        matInput
+        [fsFormUrl]="validations"
+        [fsFormRequired]="required && validations"
+      />
+    </mat-form-field>
+
+    <mat-form-field *ngIf="render">
       <input placeholder="Numeric"
         [(ngModel)]="numeric"
         name="numeric_input"
