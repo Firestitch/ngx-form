@@ -317,7 +317,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       return false;
     }
 
-    return value !== false && value !== 'false';
+    return value !== 'false' && (value || value === '');
   }
 
   private updateValidators() {
