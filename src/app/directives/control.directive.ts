@@ -60,6 +60,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   ngAfterContentInit() {
     if (this._control && this.formDirective) {
+
       /*
         Ensure that statusChanges has one subscription per control. Multiple can happen
         when multiple fsForm validation directives are applied to the same element
@@ -75,13 +76,35 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
         (<any>this._control).statusChangesSubscribe = true;
       }
 
-      setTimeout(() => {
-        if (this._control.value && !isArray(this._control.value)) {
-          this._control.markAsTouched();
-          this._control.markAsDirty();
-          this.updateValidators();
-        }
-      });
+      //Experimental autofill listener. Doesnt work on iOS Chrome
+      // if (!this.elementRef.nativeElement.autofillMonitorSubscribe) {
+      //   this.elementRef.nativeElement.autofillMonitorSubscribe = true;
+      //   this.autofill.monitor(this.elementRef)
+      //   .subscribe((e: any) => {
+      //     //console.log(e.isAutofilled, e.target.name,  e.target.value);
+      //     if (this._control.value && !isArray(this._control.value)) {
+      //       this._control.markAsTouched();
+      //       this._control.markAsDirty();
+      //       this.updateValidators();
+      //     }
+      //   });
+      // }
+
+      //setTimeout(() => {
+        // Autocomplete workaround. Delay 100ms then check the actual input if
+        // the value is different then what the inital control value was. This
+        // determines if autocomplete was activated and update the control value.
+        // const value = this.elementRef.nativeElement.value;
+        // if (value && this._control.value !== value) {
+        //   this._control.setValue(value);
+        // }
+
+        // if (this._control.value && !isArray(this._control.value)) {
+        //   this._control.markAsTouched();
+        //   this._control.markAsDirty();
+        //   this.updateValidators();
+        // }
+      //}, 100);
     }
   }
 

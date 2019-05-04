@@ -65,10 +65,9 @@
     <mat-form-field *ngIf="render">
       <input placeholder="Email"
         [(ngModel)]="email"
-        name="email_input"
+        name="email"
         matInput
         [fsFormEmail]="validations"
-        [fsFormRequired]="required && validations"
         />
     </mat-form-field>
 
