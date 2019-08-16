@@ -1,7 +1,6 @@
 import { OnInit, Output, EventEmitter, ContentChild, Input,
-         Component, ViewEncapsulation, HostBinding } from '@angular/core';
+         Component, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { values } from 'lodash-es';
 import { FsForm } from '../services/fsform.service';
 import { Subject } from 'rxjs';
