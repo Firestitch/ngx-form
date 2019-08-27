@@ -30,14 +30,17 @@ export class FsFormRequiredDirective extends FsControlDirective {
   protected render() {
 
     const wrapper = this.getWrapperElement();
-    const labelWrapper = wrapper.querySelector(this.getlabelSelectors().join(','));
 
-    // Adding class fs-form-label-requried adds the * to the label
-    if (labelWrapper) {
-      if (this.required) {
-        this.renderer2.addClass(labelWrapper, 'fs-form-label-required');
-      } else {
-        this.renderer2.removeClass(labelWrapper, 'fs-form-label-required');
+    if (wrapper && this.getlabelSelector()) {
+      const labelWrapper = wrapper.querySelector(this.getlabelSelector());
+
+      // Adding class fs-form-label-requried adds the * to the label
+      if (labelWrapper) {
+        if (this.required) {
+          this.renderer2.addClass(labelWrapper, 'fs-form-label-required');
+        } else {
+          this.renderer2.removeClass(labelWrapper, 'fs-form-label-required');
+        }
       }
     }
 

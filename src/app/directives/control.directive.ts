@@ -12,10 +12,14 @@ import { FsFormDirective } from '../directives/form.directive';
 })
 export class FsControlDirective implements AfterContentInit, OnDestroy {
 
-  @Input() wrapperSelector = '';
-  @Input() messageSelector = '';
-  @Input() hintSelector = '';
-  @Input() labelSelector = '';
+  @Input() wrapperSelector: string | false;
+  @Input() messageSelector: string | false;
+  @Input() hintSelector: string | false;
+  @Input() labelSelector: string | false;
+  @Input() appendMessageClass = 'fs-form-message';
+  @Input() appendLabelClass = 'fs-form-label';
+  @Input() appendErrorClass = 'fs-form-error';
+  @Input() appendHintClass = 'fs-form-hint';
   @Input() fsFormRequiredMessage = 'This field is required';
   @Input() fsFormEmailMessage = 'This is not a valid email address';
   @Input() fsFormEmailsMessage = 'Input valid email addresses, comma separated';
@@ -75,92 +79,63 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
         (<any>this._control).statusChangesSubscribe = true;
       }
-
-      //Experimental autofill listener. Doesnt work on iOS Chrome
-      // if (!this.elementRef.nativeElement.autofillMonitorSubscribe) {
-      //   this.elementRef.nativeElement.autofillMonitorSubscribe = true;
-      //   this.autofill.monitor(this.elementRef)
-      //   .subscribe((e: any) => {
-      //     //console.log(e.isAutofilled, e.target.name,  e.target.value);
-      //     if (this._control.value && !isArray(this._control.value)) {
-      //       this._control.markAsTouched();
-      //       this._control.markAsDirty();
-      //       this.updateValidators();
-      //     }
-      //   });
-      // }
-
-      //setTimeout(() => {
-        // Autocomplete workaround. Delay 100ms then check the actual input if
-        // the value is different then what the inital control value was. This
-        // determines if autocomplete was activated and update the control value.
-        // const value = this.elementRef.nativeElement.value;
-        // if (value && this._control.value !== value) {
-        //   this._control.setValue(value);
-        // }
-
-        // if (this._control.value && !isArray(this._control.value)) {
-        //   this._control.markAsTouched();
-        //   this._control.markAsDirty();
-        //   this.updateValidators();
-        // }
-      //}, 100);
     }
   }
 
-  protected getMessageSelectors() {
+  protected getMessageSelector(): string {
 
-    const cls = ['.fs-form-message'];
+    if (this.messageSelector === false) {
+      return '';
+    }
 
     if (this.messageSelector) {
-      cls.push(this.messageSelector);
+      return this.messageSelector;
 
     } else if (this.formDirective.messageSelector) {
-      cls.push(this.formDirective.messageSelector);
+      return this.formDirective.messageSelector;
     }
-
-    return cls;
   }
 
-  protected getHintWrapperSelectors() {
+  protected getHintWrapperSelector(): string {
 
-    const cls = ['.fs-form-hint'];
+    if (this.hintSelector === false) {
+      return '';
+    }
 
     if (this.hintSelector) {
-      cls.push(this.hintSelector);
+      return this.hintSelector;
 
     } else if (this.formDirective.hintSelector) {
-      cls.push(this.formDirective.hintSelector);
+      return this.formDirective.hintSelector;
     }
-
-    return cls;
   }
 
-  protected getWrapperSelectors() {
+  protected getWrapperSelector(): string {
 
-    const cls = ['.fs-form-wrapper'];
+    if (this.wrapperSelector === false) {
+      return '';
+    }
 
     if (this.wrapperSelector) {
-      cls.push(this.wrapperSelector);
-    } else if (this.formDirective) {
-      cls.push(this.formDirective.wrapperSelector);
-    }
+      return this.wrapperSelector;
 
-    return cls;
+    } else if (this.formDirective) {
+      return this.formDirective.wrapperSelector;
+    }
   }
 
-  protected getlabelSelectors() {
+  protected getlabelSelector(): string {
 
-    const cls = ['.fs-form-label'];
-
-    if (this.labelSelector) {
-      cls.push(this.labelSelector);
-
-    } else if (this.formDirective.labelSelector) {
-      cls.push(this.formDirective.labelSelector);
+    if (this.labelSelector === false) {
+      return '';
     }
 
-    return cls;
+    if (this.labelSelector) {
+      return this.labelSelector;
+
+    } else if (this.formDirective.labelSelector) {
+      return this.formDirective.labelSelector;
+    }
   }
 
   protected getWrapperElement() {
@@ -192,28 +167,43 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       const wrapper = this.getWrapperElement();
       const error = this.getError(this, this.ngControl);
 
-      const messageWrapper = wrapper.querySelector(this.getMessageSelectors().join(','));
+      if (!this.getMessageSelector()) {
+        return;
+      }
+
+      const messageWrapper = wrapper.querySelector(this.getMessageSelector());
 
       if (!messageWrapper) {
-        return console.warn('Failed to locate fs-form-message', this.elementRef.nativeElement);
+        return console.warn('Failed to locate ' + this.getMessageSelector(), this.elementRef.nativeElement);
       }
 
-      const labelWrapper = wrapper.querySelector(this.getlabelSelectors().join(','));
+      if (this.getlabelSelector()) {
+        const labelWrapper = wrapper.querySelector(this.getlabelSelector());
 
-      if (labelWrapper) {
-        this.renderer2.addClass(labelWrapper, 'fs-form-label');
+        if (labelWrapper) {
+          if (this.appendLabelClass) {
+            this.renderer2.addClass(labelWrapper, this.appendLabelClass);
+          }
+        }
       }
 
-      renderer.addClass(messageWrapper, 'fs-form-message');
-
-      const hint = messageWrapper.querySelector(this.getHintWrapperSelectors().join(','));
-
-      if (hint) {
-        renderer.setStyle(hint, 'display', error ? 'none' : 'block');
-        renderer.addClass(hint, 'fs-form-hint');
+      if (this.appendMessageClass) {
+        renderer.addClass(messageWrapper, this.appendMessageClass);
       }
 
-      let errorWrapper = wrapper.querySelector('.fs-form-error');
+      if (this.getHintWrapperSelector()) {
+        const hint = messageWrapper.querySelector(this.getHintWrapperSelector());
+
+        if (hint) {
+          renderer.setStyle(hint, 'display', error ? 'none' : 'block');
+
+          if (this.appendHintClass) {
+            renderer.addClass(hint, this.appendHintClass);
+          }
+        }
+      }
+
+      let errorWrapper = wrapper.querySelector('.fs-form-error-target');
       if (errorWrapper) {
         errorWrapper.remove();
       }
@@ -227,19 +217,13 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       wrapper.classList.add('ng-invalid');
 
       errorWrapper = renderer.createElement('div');
-      renderer.addClass(errorWrapper, 'fs-form-error');
+      renderer.addClass(errorWrapper, 'fs-form-error-target');
+      renderer.addClass(errorWrapper, this.appendErrorClass);
+      renderer.addClass(errorWrapper, this.appendErrorClass + '-' + error.name);
 
-      const errorElement = renderer.createElement('div');
-      let errorText: string = null;
+      const errorText = renderer.createText(error.message);
 
-      renderer.addClass(errorElement, 'mat-error');
-      renderer.addClass(errorElement, 'fs-form-error');
-      renderer.addClass(errorElement, 'fs-form-error-' + error.name);
-
-      errorText = renderer.createText(error.message);
-
-      renderer.appendChild(errorElement, errorText);
-      renderer.appendChild(errorWrapper, errorElement);
+      renderer.appendChild(errorWrapper, errorText);
       messageWrapper.appendChild(errorWrapper);
     }
   }
@@ -250,7 +234,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       return null;
     }
 
-    if (node.parentNode && node.parentNode.querySelector(this.getWrapperSelectors().join(','))) {
+    if (node.parentNode && node.parentNode.querySelector(this.getWrapperSelector())) {
       return node;
     }
 

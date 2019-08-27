@@ -12,6 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   template: `<ng-content></ng-content>`,
   styles: [`.fs-form-label-required:after { content: " *"; display: contents }
             .fs-form .ng-invalid.ng-dirty .fs-form-label { color: #f44336 }
+            .fs-form .fs-form-error { color: #f44336 }
             .fs-form .fs-form-message { margin-top: 0.54166667em }
             .fs-form .mat-placeholder-required { display: none }`],
   encapsulation: ViewEncapsulation.None
@@ -19,10 +20,10 @@ import { takeUntil } from 'rxjs/operators';
 export class FsFormDirective implements OnInit, OnDestroy {
 
   @ContentChild(NgForm) ngForm;
-  @Input() wrapperSelector = '.mat-form-field';
-  @Input() messageSelector = '.mat-form-field-subscript-wrapper';
-  @Input() hintSelector = '.mat-form-field-hint-wrapper';
-  @Input() labelSelector = '.mat-form-field-label';
+  @Input() wrapperSelector = '.fs-form-wrapper,.mat-form-field';
+  @Input() messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
+  @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
+  @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
   @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
 
