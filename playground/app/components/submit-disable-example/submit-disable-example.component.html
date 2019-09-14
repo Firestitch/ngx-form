@@ -1,0 +1,23 @@
+<form (fsForm)="save()" #vis>
+  <div fxLayout="column">
+   <mat-form-field>
+      <input
+        placeholder="Required field"
+        [(ngModel)]="name"
+        name="name"
+        matInput
+        fsFormRequired="true"
+        />
+    </mat-form-field>
+
+    <fieldset>
+      <legend>Actions</legend>
+      <button mat-raised-button fsFormSubmit color="primary" type="submit">Submit</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Form Status</legend>
+      <div>{{status}}</div>
+    </fieldset>
+  </div>
+</form>

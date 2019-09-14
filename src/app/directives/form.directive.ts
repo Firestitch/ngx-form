@@ -1,10 +1,12 @@
-import { OnInit, Output, EventEmitter, ContentChild, Input,
-         Component, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
+import {
+  OnInit, Output, EventEmitter, ContentChild, Input,
+  Component, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../services/fsform.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FsFormSubmitDirective } from './submit.directive';
 
 
 @Component({
@@ -30,9 +32,15 @@ export class FsFormDirective implements OnInit, OnDestroy {
   @HostBinding('class.fs-form') fsformClass = true;
 
   public submitting = false;
+
+  private _submitBtn: FsFormSubmitDirective;
   private destroy$ = new Subject();
 
   constructor(private fsForm: FsForm) {}
+
+  get submitButton() {
+    return this._submitBtn;
+  }
 
   ngOnInit() {
 
@@ -96,5 +104,9 @@ export class FsFormDirective implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  addSubmitButton(btn: FsFormSubmitDirective) {
+    this._submitBtn = btn;
   }
 }
