@@ -13,13 +13,12 @@ export class SubmitObservableComponent {
   constructor(private fsMessage: FsMessage) {}
 
   public submit = (form) => {
-
     return Observable.create(observer => {
       observer.next();
       observer.complete();
     })
     .pipe(
-      delay(1000),
+      delay(2000),
       tap(() => {
         this.fsMessage.success('Validation successful');
       })
