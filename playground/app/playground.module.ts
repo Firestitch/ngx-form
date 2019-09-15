@@ -15,6 +15,7 @@ import { FsSkeletonModule } from '@firestitch/skeleton';
 import { FsRadioGroupModule } from '@firestitch/radiogroup';
 import { FsPhoneModule } from '@firestitch/phone';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
+import { FsApiModule } from '@firestitch/api';
 
 import { ToastrModule } from 'ngx-toastr';
 
@@ -47,6 +48,7 @@ import { SubmitObservableComponent } from './components/submit-observable/submit
     FsDatePickerModule,
     FsCheckboxGroupModule,
     FsRadioGroupModule,
+    FsApiModule,
     FlexLayoutModule,
     FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),

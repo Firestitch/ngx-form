@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { of, Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
+import { FsApi } from '@firestitch/api';
 
 @Component({
   selector: 'submit-observable',
@@ -10,18 +11,30 @@ import { delay, tap } from 'rxjs/operators';
 })
 export class SubmitObservableComponent {
 
-  constructor(private fsMessage: FsMessage) {}
+  private _status;
+
+  constructor(private _message: FsMessage,
+              private _api: FsApi) {}
 
   public submit = (form) => {
-    return Observable.create(observer => {
-      observer.next();
-      observer.complete();
-    })
+
+    const data: any = {
+      sleep: 2
+    }
+
+    if (!this._status) {
+      data.exception = 'Failed Request';
+    }
+
+    return this._api.post('https://boilerplate.firestitch.com/api/dummy', data)
     .pipe(
-      delay(2000),
       tap(() => {
-        this.fsMessage.success('Validation successful');
+        this._message.success('Validation successful');
       })
     );
+  }
+
+  public status(status) {
+    this._status = status;
   }
 }

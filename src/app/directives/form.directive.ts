@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../services/fsform.service';
 import { Subject, isObservable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 
 
 @Component({
@@ -38,8 +38,8 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
   @HostBinding('class.fs-form') fsformClass = true;
 
-  public submitting = false;
-  private destroy$ = new Subject();
+  public _submitting = false;
+  private _destroy$ = new Subject();
 
   constructor(private _form: FsForm,
               private _element: ElementRef) {}
@@ -49,7 +49,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
     if (this.ngForm) {
       this.ngForm.ngSubmit
       .pipe(
-        takeUntil(this.destroy$)
+        takeUntil(this._destroy$)
       )
       .subscribe(event => {
 
@@ -57,11 +57,11 @@ export class FsFormDirective implements OnInit, OnDestroy {
           event.preventDefault();
         }
 
-        if (this.submitting) {
+        if (this._submitting) {
           return false;
         }
 
-        this.submitting = true;
+        this._submitting = true;
         this._form.broadcast('submit', this.ngForm);
         const validations = [];
 
@@ -80,7 +80,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
         Promise.all(validations)
         .then(() => {
-            this.submitting = false;
+            this._submitting = false;
             if (this.ngForm.form.status === 'INVALID') {
 
               this._form.broadcast('invalid', this.ngForm);
@@ -98,32 +98,42 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
                 if (isObservable(result)) {
 
+                  const activeElement = document.activeElement;
+
                   const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
                   buttons.forEach(button => {
-                    button.classList.toggle('submitting');
+
+                    if (activeElement === button || !activeElement) {
+                      button.classList.add('submitting');
+                    }
+
                     button.disabled = true;
                   });
 
-                  result.subscribe(response => {},
-                  () => {},
-                  () => {
+                  const clearButtons = () => {
                     buttons.forEach(button => {
-                      button.classList.toggle('submitting');
+                      button.classList.remove('submitting');
                       button.disabled = false;
                     });
-                  });
+                  }
+
+                  result
+                  .pipe(
+                    takeUntil(this._destroy$)
+                  )
+                  .subscribe(clearButtons, clearButtons);
                 }
               }
             }
-        }).catch((e) => {
-          this.submitting = false;
+        }).catch(e => {
+          this._submitting = false;
         });
       });
     }
   }
 
   ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

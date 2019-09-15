@@ -2,3 +2,11 @@
 @import '~@firestitch/message/styles.scss';
 @import '~@firestitch/datepicker/styles';
 @include fs-date-picker($mat-blue);
+
+fieldset button {
+  margin-right: 5px !important;
+
+  &:last-child {
+    margin-right: 0px !important;
+  }
+}

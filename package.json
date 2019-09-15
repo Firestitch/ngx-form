@@ -55,6 +55,8 @@
     "@firestitch/phone": "^7.1.0",
     "@firestitch/radiogroup": "^7.2.3",
     "@firestitch/skeleton": "^7.1.0",
+    "@firestitch/password": "^7.0.3",
+    "@firestitch/api": "^7.0.2",
     "codelyzer": "^4.5.0",
     "cpx": "^1.5.0",
     "date-fns": "^2.0.0-alpha.27",
@@ -80,8 +82,5 @@
     "@firestitch/common": ">=7.0.2",
     "date-fns": ">=2.0.0-alpha.2",
     "lodash-es": ">=4.17.0"
-  },
-  "dependencies": {
-    "@firestitch/password": "^7.0.3"
   }
 }

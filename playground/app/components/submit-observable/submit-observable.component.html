@@ -10,6 +10,7 @@
 
   <fieldset>
     <legend>Actions</legend>
-    <button mat-raised-button color="primary" type="submit">Submit</button>
+    <button mat-raised-button color="primary" type="submit" (click)="status(true)">Successfull Submit</button>
+    <button mat-raised-button color="primary" type="submit" (click)="status(false)">Unsuccessfull Submit</button>
   </fieldset>
 </form>
