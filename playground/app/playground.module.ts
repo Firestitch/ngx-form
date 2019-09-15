@@ -29,6 +29,7 @@ import { NestedLevel1Component } from './components/nested-level-1/nested-level-
 import { ExamplesComponent } from './components/examples';
 import { NonMaterialComponent } from './components/non-material/non-material.component';
 import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
+import { SubmitObservableComponent } from './components/submit-observable/submit-observable.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { NestedLevel2Component } from './components/nested-level-2/nested-level-
     NestedLevel1Component,
     NestedLevel2Component,
     ExamplesComponent,
-    NonMaterialComponent
+    NonMaterialComponent,
+    SubmitObservableComponent
   ]
 })
 export class PlaygroundModule {

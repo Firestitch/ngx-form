@@ -1,9 +1,9 @@
 import { OnInit, Output, EventEmitter, ContentChild, Input,
-         Component, ViewEncapsulation, HostBinding, OnDestroy } from '@angular/core';
+         Component, ViewEncapsulation, HostBinding, OnDestroy, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../services/fsform.service';
-import { Subject } from 'rxjs';
+import { Subject, isObservable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 
@@ -24,7 +24,8 @@ export class FsFormDirective implements OnInit, OnDestroy {
   @Input() messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
-  @Output('fsForm') submit: EventEmitter<any> = new EventEmitter();
+  @Input() submit: Function;
+  @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
 
   @HostBinding('class.fs-form') fsformClass = true;
@@ -32,7 +33,8 @@ export class FsFormDirective implements OnInit, OnDestroy {
   public submitting = false;
   private destroy$ = new Subject();
 
-  constructor(private fsForm: FsForm) {}
+  constructor(private _form: FsForm,
+              private _element: ElementRef) {}
 
   ngOnInit() {
 
@@ -52,7 +54,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
         }
 
         this.submitting = true;
-        this.fsForm.broadcast('submit', this.ngForm);
+        this._form.broadcast('submit', this.ngForm);
         const validations = [];
 
         values(this.ngForm.controls).forEach(control => {
@@ -73,17 +75,34 @@ export class FsFormDirective implements OnInit, OnDestroy {
             this.submitting = false;
             if (this.ngForm.form.status === 'INVALID') {
 
-              this.fsForm.broadcast('invalid', this.ngForm);
+              this._form.broadcast('invalid', this.ngForm);
 
               if (this.invalid) {
                 this.invalid.emit(this.ngForm);
               }
 
             } else {
-              this.fsForm.broadcast('valid', this.ngForm);
+              this._form.broadcast('valid', this.ngForm);
+              this.submitEvent.emit(this.ngForm);
 
               if (this.submit) {
-                this.submit.emit(this.ngForm);
+                const result = this.submit(this.ngForm);
+
+                if (isObservable(result)) {
+
+                  const buttons = this._element.nativeElement.querySelectorAll('button')
+                  buttons.forEach(button => {
+                    button.disabled = true;
+                  });
+
+                  result.subscribe(response => {},
+                  () => {},
+                  () => {
+                    buttons.forEach(button => {
+                      button.disabled = false;
+                    });
+                  });
+                }
               }
             }
         }).catch((e) => {
