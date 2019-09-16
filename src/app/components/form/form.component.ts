@@ -35,7 +35,8 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    document.addEventListener('click', this._documentClick, false);
+    document.body.addEventListener('click', this._documentClick, false);
+    document.body.addEventListener('tap', this._documentClick, false);
 
     if (this.ngForm) {
       this.ngForm.ngSubmit
@@ -94,7 +95,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
                   const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
                   buttons.forEach(button => {
-                    if (this._activeButton === button || !this._activeButton) {
+                    if (this._activeButton === button) {
                       button.classList.add('submitting');
                     }
                   });
