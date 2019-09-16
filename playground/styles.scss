@@ -1,7 +1,10 @@
 @import './../tools/assets/playground.scss';
 @import '~@firestitch/message/styles.scss';
 @import '~@firestitch/datepicker/styles';
+@import '../src/app/styles';
+
 @include fs-date-picker($mat-blue);
+@include fs-form($mat-blue);
 
 fieldset button {
   margin-right: 5px !important;

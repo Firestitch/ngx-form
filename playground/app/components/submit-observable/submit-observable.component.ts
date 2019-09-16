@@ -11,7 +11,7 @@ import { FsApi } from '@firestitch/api';
 })
 export class SubmitObservableComponent {
 
-  public required;
+  public required = 'required';
   public delay = 1000;
   private _status;
 

@@ -1,0 +1,85 @@
+.fs-form-label-required:after {
+  content: " *";
+  display: contents;
+}
+
+.fs-form .ng-invalid.ng-dirty .fs-form-label {
+  color: #f44336;
+}
+
+.fs-form .fs-form-error {
+  color: #f44336;
+}
+
+.fs-form .fs-form-message {
+  margin-top: 0.54166667em;
+}
+
+.fs-form .mat-placeholder-required {
+  display: none;
+}
+
+
+.fs-form button.submit-success,
+.fs-form button.submit-error,
+.fs-form button.submit-process {
+  transition: none;
+  text-indent: -5000px;
+  color: transparent;
+
+  svg {
+    height: 22px;
+    vertical-align: middle;
+    width: 22px;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    animation: fadein 1.2s;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.fs-form button.submit-success,
+.fs-form button.submit-error {
+  opacity: 1;
+  transition: opacity 1000ms;
+}
+
+.fs-form .mat-button {
+
+  &.submit-process svg {
+    stroke: #a3a3a3;
+  }
+
+  &.submit-error svg path,
+  &.submit-success svg path {
+    fill: #a3a3a3;
+  }
+}
+
+@-webkit-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+@mixin fs-form($theme) {
+
+  $primary: mat-palette($theme);
+
+  .fs-form .mat-button {
+
+    &.submit-process svg {
+      stroke: mat-color($primary);
+    }
+
+    &.submit-error svg path,
+    &.submit-success svg path {
+      fill: mat-color($primary);
+    }
+  }
+}
