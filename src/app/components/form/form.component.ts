@@ -36,7 +36,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     //document.body.addEventListener('click', this._documentClick, true);
-    document.body.addEventListener('touchstart', this._documentClick, true);
+    document.body.addEventListener('click', this._documentClick, { capture: true });
 
     if (this.ngForm) {
       this.ngForm.ngSubmit
