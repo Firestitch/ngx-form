@@ -38,7 +38,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
   @HostBinding('class.fs-form') fsformClass = true;
 
-  public _submitting = false;
+  private _submitting = false;
   private _destroy$ = new Subject();
 
   constructor(private _form: FsForm,
@@ -80,7 +80,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
         Promise.all(validations)
         .then(() => {
-            this._submitting = false;
+
             if (this.ngForm.form.status === 'INVALID') {
 
               this._form.broadcast('invalid', this.ngForm);
@@ -89,7 +89,10 @@ export class FsFormDirective implements OnInit, OnDestroy {
                 this.invalid.emit(this.ngForm);
               }
 
+              this._submitting = false;
+
             } else {
+
               this._form.broadcast('valid', this.ngForm);
               this.submitEvent.emit(this.ngForm);
 
@@ -106,14 +109,12 @@ export class FsFormDirective implements OnInit, OnDestroy {
                     if (activeElement === button || !activeElement) {
                       button.classList.add('submitting');
                     }
-
-                    button.disabled = true;
                   });
 
-                  const clearButtons = () => {
+                  const completeSubmit = () => {
+                    this._submitting = false;
                     buttons.forEach(button => {
                       button.classList.remove('submitting');
-                      button.disabled = false;
                     });
                   }
 
@@ -121,8 +122,14 @@ export class FsFormDirective implements OnInit, OnDestroy {
                   .pipe(
                     takeUntil(this._destroy$)
                   )
-                  .subscribe(clearButtons, clearButtons);
+                  .subscribe(completeSubmit, completeSubmit);
+
+                } else {
+                  this._submitting = false;
                 }
+
+              } else {
+                this._submitting = false;
               }
             }
         }).catch(e => {
