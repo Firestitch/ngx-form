@@ -1,7 +1,3 @@
-/*
- * Public API Surface of fs-menu
- */
-
 // Modules
 export { FsFormModule } from './app/fs-form.module';
 
@@ -9,5 +5,5 @@ export { FsFormModule } from './app/fs-form.module';
 export { FsForm } from './app/services/fsform.service';
 
 // Directives
-export { FsFormDirective } from './app/directives/form.directive';
+export { FsFormComponent } from './app/components/form/form.component';
 

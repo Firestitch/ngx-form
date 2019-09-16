@@ -3,8 +3,8 @@ import { NgControl, AbstractControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { values, keys, capitalize, remove, isArray } from 'lodash-es';
-import { FsFormDirective } from '../directives/form.directive';
+import { values, keys, capitalize, remove } from 'lodash-es';
+import { FsFormComponent } from '../components/form/form.component';
 
 
 @Directive({
@@ -45,7 +45,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
       protected renderer2: Renderer2,
       protected injector: Injector,
       @Optional() protected ngControl: NgControl,
-      @Optional() @Inject(FsFormDirective) private formDirective: FsFormDirective) {
+      @Optional() @Inject(FsFormComponent) private formDirective: FsFormComponent) {
 
         if (ngControl) {
           this._control = ngControl.control;

@@ -28,7 +28,7 @@ export class SubmitObservableComponent {
 
     return this._api.post('https://boilerplate.firestitch.com/api/dummy', data)
     .pipe(
-      tap(() => {
+      tap((response) => {
         this._message.success('Validation successful');
       })
     );

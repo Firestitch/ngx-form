@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { FsForm } from './services/fsform.service';
 
-import { FsFormDirective } from './directives/form.directive';
+import { FsFormComponent } from './components/form/form.component';
 import { FsControlDirective } from './directives/control.directive';
 import { FsFormRequiredDirective } from './directives/required.directive';
 import { FsFormMinDirective } from './directives/min.directive';
@@ -29,7 +29,7 @@ import { FsFormUrlDirective } from './directives/url.directive';
     FormsModule
   ],
   declarations: [
-    FsFormDirective,
+    FsFormComponent,
     FsControlDirective,
     FsFormRequiredDirective,
     FsFormMinDirective,
@@ -48,7 +48,7 @@ import { FsFormUrlDirective } from './directives/url.directive';
     FsFormUrlDirective,
   ],
   exports: [
-    FsFormDirective,
+    FsFormComponent,
     FsControlDirective,
     FsFormRequiredDirective,
     FsFormMinDirective,
