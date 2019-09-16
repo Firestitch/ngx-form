@@ -11,6 +11,7 @@ import { FsApi } from '@firestitch/api';
 })
 export class SubmitObservableComponent {
 
+  public required;
   private _status;
 
   constructor(private _message: FsMessage,
