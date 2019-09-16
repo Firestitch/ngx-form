@@ -38,7 +38,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
 
   @HostBinding('class.fs-form') fsformClass = true;
 
-  private _submitting = false;
+  public submitting = false;
   private _destroy$ = new Subject();
 
   constructor(private _form: FsForm,
@@ -57,11 +57,11 @@ export class FsFormDirective implements OnInit, OnDestroy {
           event.preventDefault();
         }
 
-        if (this._submitting) {
+        if (this.submitting) {
           return false;
         }
 
-        this._submitting = true;
+        this.submitting = true;
         this._form.broadcast('submit', this.ngForm);
         const validations = [];
 
@@ -89,7 +89,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
                 this.invalid.emit(this.ngForm);
               }
 
-              this._submitting = false;
+              this.submitting = false;
 
             } else {
 
@@ -112,7 +112,7 @@ export class FsFormDirective implements OnInit, OnDestroy {
                   });
 
                   const completeSubmit = () => {
-                    this._submitting = false;
+                    this.submitting = false;
                     buttons.forEach(button => {
                       button.classList.remove('submitting');
                     });
@@ -125,15 +125,15 @@ export class FsFormDirective implements OnInit, OnDestroy {
                   .subscribe(completeSubmit, completeSubmit);
 
                 } else {
-                  this._submitting = false;
+                  this.submitting = false;
                 }
 
               } else {
-                this._submitting = false;
+                this.submitting = false;
               }
             }
         }).catch(e => {
-          this._submitting = false;
+          this.submitting = false;
         });
       });
     }
