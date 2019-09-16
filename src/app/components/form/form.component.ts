@@ -80,60 +80,92 @@ export class FsFormComponent implements OnInit, OnDestroy {
             }
         });
 
-        Promise.all(validations)
-        .then(() => {
 
-            if (this.ngForm.form.status === 'INVALID') {
+        const promise = new Promise(resolve => {
 
-              this._form.broadcast('invalid', this.ngForm);
+          Promise.all(validations)
+          .then(() => {
 
-              if (this.invalid) {
-                this.invalid.emit(this.ngForm);
-              }
+              if (this.ngForm.form.status === 'INVALID') {
 
-              this.submitting = false;
+                this._form.broadcast('invalid', this.ngForm);
 
-            } else {
-
-              this._form.broadcast('valid', this.ngForm);
-              this.submitEvent.emit(this.ngForm);
-
-              if (this.submit) {
-                const result = this.submit(this.ngForm);
-
-                if (isObservable(result)) {
-
-                  const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
-                  buttons.forEach(button => {
-                    if (this._activeButton === button) {
-                      button.classList.add('submitting');
-                    }
-                  });
-
-                  const completeSubmit = () => {
-                    this.submitting = false;
-                    buttons.forEach(button => {
-                      button.classList.remove('submitting');
-                    });
-                  }
-
-                  result
-                  .pipe(
-                    takeUntil(this._destroy$)
-                  )
-                  .subscribe(completeSubmit, completeSubmit);
-
-                } else {
-                  this.submitting = false;
+                if (this.invalid) {
+                  this.invalid.emit(this.ngForm);
                 }
 
-              } else {
-                this.submitting = false;
-              }
-            }
+                resolve();
 
-        }).catch(e => {
-          this.submitting = false;
+              } else {
+
+                this._form.broadcast('valid', this.ngForm);
+                this.submitEvent.emit(this.ngForm);
+
+                if (this.submit) {
+                  const result = this.submit(this.ngForm);
+
+                  if (isObservable(result)) {
+
+                    const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
+                    buttons.forEach(button => {
+                      if (this._activeButton === button) {
+
+                         if (this.submitting) {
+                            button.classList.add('submitting');
+                          }
+                      }
+                    });
+
+                    const completeSubmit = () => {
+
+                      buttons.forEach(button => {
+                        button.classList.remove('submitting');
+                      });
+
+                      resolve();
+                    }
+
+                    result
+                    .pipe(
+                      takeUntil(this._destroy$)
+                    )
+                    .subscribe(completeSubmit, completeSubmit);
+
+                  } else {
+                    resolve();
+                  }
+
+                } else {
+                  resolve();
+                }
+              }
+
+          }).catch(e => {
+            resolve();
+          });
+        });
+
+        promise.then(() => {
+          setTimeout(() => {
+            this.submitting = false;
+          }, 500);
+
+
+          const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
+          buttons.forEach(button => {
+            if (this._activeButton === button) {
+              button.classList.add('submitted');
+            }
+          });
+
+          setTimeout(() => {
+            buttons.forEach(button => {
+              if (this._activeButton === button) {
+                button.classList.remove('submitted');
+              }
+            });
+          }, 2000);
+
         });
       });
     }
