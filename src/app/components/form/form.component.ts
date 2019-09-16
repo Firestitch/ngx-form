@@ -28,11 +28,14 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
   public submitting = false;
   private _destroy$ = new Subject();
+  private _activeButton;
 
   constructor(private _form: FsForm,
               private _element: ElementRef) {}
 
   ngOnInit() {
+
+    document.addEventListener('click', this._documentClick, false);
 
     if (this.ngForm) {
       this.ngForm.ngSubmit
@@ -89,11 +92,9 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
                 if (isObservable(result)) {
 
-                  const activeElement = document.activeElement;
-
                   const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
                   buttons.forEach(button => {
-                    if (activeElement === button || !activeElement) {
+                    if (this._activeButton === button || !this._activeButton) {
                       button.classList.add('submitting');
                     }
                   });
@@ -127,7 +128,22 @@ export class FsFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _documentClick = (event) => {
+    event.path.push(...event.target);
+
+    this._activeButton = null;
+    const index = event.path.indexOf(this._element.nativeElement);
+    if (index >= 0) {
+      this._activeButton = event.path.splice(0, index).find(el => {
+        return el.nodeName === 'BUTTON' && el.type === 'submit';
+      });
+    }
+  }
+
   ngOnDestroy() {
+
+    document.removeEventListener('click', this._documentClick);
+
     this._destroy$.next();
     this._destroy$.complete();
   }
