@@ -1,5 +1,5 @@
 import { OnInit, Output, EventEmitter, ContentChild, Input,
-         Component, ViewEncapsulation, HostBinding, OnDestroy, ElementRef } from '@angular/core';
+         Component, ViewEncapsulation, HostBinding, OnDestroy, ElementRef, HostListener } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
@@ -27,16 +27,27 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @HostBinding('class.fs-form') fsformClass = true;
 
   public submitting = false;
+
   private _destroy$ = new Subject();
   private _activeButton;
+
+  @HostListener('window: click', ['$event'])
+  public windowClick(event: any): void {
+    event.path.push(...event.target);
+
+    this._activeButton = null;
+    const index = event.path.indexOf(this._element.nativeElement);
+    if (index >= 0) {
+      this._activeButton = event.path.splice(0, index).find(el => {
+        return el.nodeName === 'BUTTON' && el.type === 'submit';
+      });
+    }
+  }
 
   constructor(private _form: FsForm,
               private _element: ElementRef) {}
 
   ngOnInit() {
-
-    //document.body.addEventListener('click', this._documentClick, true);
-    document.body.addEventListener('click', this._documentClick, { capture: true });
 
     if (this.ngForm) {
       this.ngForm.ngSubmit
@@ -129,22 +140,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _documentClick = (event) => {
-    event.path.push(...event.target);
-
-    this._activeButton = null;
-    const index = event.path.indexOf(this._element.nativeElement);
-    if (index >= 0) {
-      this._activeButton = event.path.splice(0, index).find(el => {
-        return el.nodeName === 'BUTTON' && el.type === 'submit';
-      });
-    }
-  }
-
   ngOnDestroy() {
-
-    document.removeEventListener('click', this._documentClick);
-
     this._destroy$.next();
     this._destroy$.complete();
   }
