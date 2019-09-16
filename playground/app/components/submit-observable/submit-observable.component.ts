@@ -12,6 +12,7 @@ import { FsApi } from '@firestitch/api';
 export class SubmitObservableComponent {
 
   public required;
+  public delay = 1000;
   private _status;
 
   constructor(private _message: FsMessage,
@@ -20,7 +21,7 @@ export class SubmitObservableComponent {
   public submit = (form) => {
 
     const data: any = {
-      sleep: 2
+      sleep: this.delay / 1000
     }
 
     if (!this._status) {

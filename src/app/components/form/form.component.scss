@@ -19,13 +19,18 @@
   display: none;
 }
 
-.fs-form button.submitting,
+.fs-form button.submitting {
+  transition: none;
+  text-indent: -5000px;
+  color: transparent;
+  transition: text-indent 0s linear, color 0s linear;
+  transition-delay: 200ms;
+}
+
 .fs-form button.submitted {
   transition: none;
   text-indent: -5000px;
   color: transparent;
-  transition: text-indent 5s linear, color 0s linear;
-  transition-delay: 500ms;
 }
 
 .fs-form button.submitting:after {

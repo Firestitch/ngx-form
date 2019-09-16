@@ -1,12 +1,23 @@
 <form fsForm [submit]="submit" #form="ngForm">
 
-  <mat-form-field>
-    <input placeholder="Required"
-      [(ngModel)]="required"
-      name="required"
-      matInput
-      required/>
-  </mat-form-field>
+  <div
+    fxLayout="column">
+    <mat-form-field>
+      <input placeholder="Required"
+        [(ngModel)]="required"
+        name="required"
+        matInput
+        required/>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input placeholder="Delay"
+        [(ngModel)]="delay"
+        name="delay"
+        matInput/>
+        <div matSuffix>ms</div>
+    </mat-form-field>
+  </div>
 
   <fieldset>
     <legend>Actions</legend>

@@ -81,7 +81,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
         });
 
 
-        const promise = new Promise(resolve => {
+        const promise = new Promise((resolve, reject) => {
 
           Promise.all(validations)
           .then(() => {
@@ -94,7 +94,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
                   this.invalid.emit(this.ngForm);
                 }
 
-                resolve();
+                reject();
 
               } else {
 
@@ -106,22 +106,18 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
                   if (isObservable(result)) {
 
-                    const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
-                    buttons.forEach(button => {
-                      if (this._activeButton === button) {
+                    const submitButton: any = Array.from(this._element.nativeElement
+                                                            .querySelectorAll('button[type="submit"]'))
+                                          .find(button => { return this._activeButton === button });
 
-                         if (this.submitting) {
-                            button.classList.add('submitting');
-                          }
-                      }
-                    });
+                    if (submitButton && this.submitting) {
+                      submitButton.classList.add('submitting');
+                    }
 
                     const completeSubmit = () => {
-
-                      buttons.forEach(button => {
-                        button.classList.remove('submitting');
-                      });
-
+                      if (submitButton) {
+                        submitButton.classList.remove('submitting');
+                      }
                       resolve();
                     }
 
@@ -141,31 +137,29 @@ export class FsFormComponent implements OnInit, OnDestroy {
               }
 
           }).catch(e => {
-            resolve();
+            reject();
           });
         });
 
         promise.then(() => {
+
+          const submittingButton: any =  Array.from(this._element.nativeElement
+                                                      .querySelectorAll('button[type="submit"]'))
+                                    .find(button => { return this._activeButton === button });
+          if (submittingButton) {
+            submittingButton.classList.add('submitted');
+          }
+
           setTimeout(() => {
-            this.submitting = false;
-          }, 500);
-
-
-          const buttons = this._element.nativeElement.querySelectorAll('button[type="submit"]')
-          buttons.forEach(button => {
-            if (this._activeButton === button) {
-              button.classList.add('submitted');
+            if (submittingButton) {
+              submittingButton.classList.remove('submitted');
             }
-          });
 
-          setTimeout(() => {
-            buttons.forEach(button => {
-              if (this._activeButton === button) {
-                button.classList.remove('submitted');
-              }
-            });
+            this.submitting = false;
           }, 2000);
 
+        }).catch(() => {
+          this.submitting = false;
         });
       });
     }
