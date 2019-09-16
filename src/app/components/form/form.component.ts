@@ -22,8 +22,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
   @Input() submit: Function;
   @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
-  @Output() invalid: EventEmitter<any> = new EventEmitter();
-
+  @Output() invalid: EventEmitter<any> = new EventEmitter();s
   @HostBinding('class.fs-form') fsformClass = true;
 
   public submitting = false;
@@ -31,7 +30,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
   private _activeButton;
 
-  @HostListener('window: click', ['$event'])
+  @HostListener('click', ['$event'])
   public windowClick(event: any): void {
     event.path.push(...event.target);
 
