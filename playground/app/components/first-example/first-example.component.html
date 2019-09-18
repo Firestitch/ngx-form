@@ -87,7 +87,6 @@
         name="url_input"
         matInput
         [fsFormUrl]="validations"
-        [fsFormRequired]="required && validations"
       />
     </mat-form-field>
 
@@ -149,7 +148,6 @@
       <input
         matInput
         fsDatePicker
-        [fsFormRequired]="required && validations"
         [(ngModel)]="datepicker"
         name="datepicker"
         placeholder="Date">
@@ -159,7 +157,6 @@
       <input matInput
         fsDatePickerRange
         fsFormDateRange
-        [required]="required && validations"
         [(ngModel)]="daterange"
         [(ngModelStart)]="startDate"
         [(ngModelEnd)]="endDate"
