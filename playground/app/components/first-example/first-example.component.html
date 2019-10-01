@@ -170,6 +170,7 @@
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>
+      <button mat-raised-button color="primary" type="button" (click)="submit()">Manual Submit</button>
     </div>
   </div>
 </form>

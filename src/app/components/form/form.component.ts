@@ -13,14 +13,14 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class FsFormComponent implements OnInit, OnDestroy {
 
-  @ContentChild(NgForm) ngForm;
+  @ContentChild(NgForm) ngForm: NgForm;
   @Input() wrapperSelector = '.fs-form-wrapper,.mat-form-field';
   @Input() messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
   @Input() submit: Function;
   @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
-  @Output() invalid: EventEmitter<any> = new EventEmitter();s
+  @Output() invalid: EventEmitter<any> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
 
   public submitting = false;
@@ -82,7 +82,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this._destroy$)
       )
-      .subscribe(event => {
+      .subscribe((event: KeyboardEvent) => {
 
         if (event) {
           event.preventDefault();
@@ -108,7 +108,6 @@ export class FsFormComponent implements OnInit, OnDestroy {
               validations.push(control.asyncValidator().toPromise());
             }
         });
-
 
         const promise = new Promise((resolve, reject) => {
 
@@ -190,6 +189,11 @@ export class FsFormComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
   private _completeSubmit(submittingButton, cls, svg) {
 
     let el;
@@ -207,11 +211,5 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
       this.submitting = false;
     }, 2000);
-
-  }
-
-  ngOnDestroy() {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 }

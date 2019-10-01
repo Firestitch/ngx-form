@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
-import { FsForm } from '@firestitch/form';
+import { FsForm, FsFormComponent } from '@firestitch/form';
 import { filter } from '@firestitch/common';
 
 import { of } from 'rxjs';
@@ -13,6 +13,8 @@ import { of } from 'rxjs';
   styleUrls: [ 'first-example.component.css' ]
 })
 export class FirstExampleComponent {
+
+  @ViewChild(FsFormComponent) form: FsFormComponent;
 
   public required = true;
   public hidden = false;
@@ -68,7 +70,11 @@ export class FirstExampleComponent {
 
     setTimeout(() => {
       this.skeleton = true;
-    },2000)
+    }, 2000)
+  }
+
+  public submit() {
+    this.form.ngForm.ngSubmit.next();
   }
 
   public fetchChips = keyword => {
