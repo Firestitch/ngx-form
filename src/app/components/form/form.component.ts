@@ -1,19 +1,31 @@
-import { OnInit, Output, EventEmitter, ContentChild, Input,
-         Component, ViewEncapsulation, HostBinding, OnDestroy, ElementRef, HostListener } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output
+} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
-import { Subject, isObservable } from 'rxjs';
+import { isObservable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
   selector: '[fsForm]',
-  template: `<ng-content></ng-content>`
+  template: `<ng-content></ng-content>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FsFormComponent implements OnInit, OnDestroy {
 
-  @ContentChild(NgForm) ngForm: NgForm;
+  @ContentChild(NgForm, { static: true }) ngForm: NgForm;
   @Input() wrapperSelector = '.fs-form-wrapper,.mat-form-field';
   @Input() messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';

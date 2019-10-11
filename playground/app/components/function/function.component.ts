@@ -10,7 +10,7 @@ export class FunctionComponent {
 
   constructor(private fsMessage: FsMessage) {}
 
-  @ViewChild('form') form;
+  @ViewChild('form', { static: false }) form;
 
   public email = 'existing@email.com';
   public minLength = 3;
@@ -34,9 +34,9 @@ export class FunctionComponent {
         }
       }, 300);
     });
-    
+
   }).bind(this);
-  
+
 
   public functionExceptionFn = ((formControl) => {
 
@@ -54,7 +54,7 @@ export class FunctionComponent {
   }
 
   public radioFunctionChange() {
-    this.form.controls.radio_function.updateValueAndValidity();    
+    this.form.controls.radio_function.updateValueAndValidity();
   };
 
   public radioFunction = ((formControl) => {
@@ -63,23 +63,23 @@ export class FunctionComponent {
       throw 'Invalid selection.';
     }
 
-    if (this.form.controls.radioFunctionDate && 
-        this.form.controls.radioFunctionDate.dirty && 
-        this.radioFunctionModel==='date' && 
+    if (this.form.controls.radioFunctionDate &&
+        this.form.controls.radioFunctionDate.dirty &&
+        this.radioFunctionModel==='date' &&
         !this.radioFunctionDate) {
           throw 'Invalid date selection.';
     }
 
-    if (this.form.controls.radioFunctionWeeks && 
-        this.form.controls.radioFunctionWeeks.dirty && 
-        this.radioFunctionModel==='weeks' && 
+    if (this.form.controls.radioFunctionWeeks &&
+        this.form.controls.radioFunctionWeeks.dirty &&
+        this.radioFunctionModel==='weeks' &&
         !this.radioFunctionWeeks) {
           throw 'Invalid week selection.';
     }
-   
+
   }).bind(this);
 
   public save() {
     this.fsMessage.success('Validation successful');
-  }  
+  }
 }

@@ -153,17 +153,31 @@
         placeholder="Date">
     </mat-form-field>
 
-    <mat-form-field *ngIf="render">
-      <input matInput
-        fsDatePickerRange
-        fsFormDateRange
-        [(ngModel)]="daterange"
-        [(ngModelStart)]="startDate"
-        [(ngModelEnd)]="endDate"
-        view="datetime"
-        name="datetimerangepicker"
-        placeholder="Date Time Range">
-    </mat-form-field>
+    <ng-container *ngIf="render">
+      <mat-form-field>
+        <input
+          matInput
+          fsDateRangeFrom="timerangepicker"
+          [(ngModel)]="startDate"
+          view="datetime"
+          name="date_from"
+          placeholder="Time Range From"
+        >
+      </mat-form-field>
+
+      <fs-date-range-separator></fs-date-range-separator>
+
+      <mat-form-field>
+        <input
+          matInput
+          fsDateRangeTo="timerangepicker"
+          [(ngModel)]="endDate"
+          view="datetime"
+          name="date_to"
+          placeholder="Time Range To"
+        >
+      </mat-form-field>
+    </ng-container>
 
     <div fxLayout="row" fxLayoutGap="5px">
       <button mat-raised-button color="primary" type="submit">Submit</button>

@@ -45,7 +45,7 @@ import { SubmitObservableComponent } from './components/submit-observable/submit
     FsExampleModule.forRoot(),
     FsMessageModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
-    FsDatePickerModule,
+    FsDatePickerModule.forRoot(),
     FsCheckboxGroupModule,
     FsRadioGroupModule,
     FsApiModule,

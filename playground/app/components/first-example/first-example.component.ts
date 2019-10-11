@@ -14,7 +14,7 @@ import { of } from 'rxjs';
 })
 export class FirstExampleComponent {
 
-  @ViewChild(FsFormComponent) form: FsFormComponent;
+  @ViewChild(FsFormComponent, { static: false }) form: FsFormComponent;
 
   public required = true;
   public hidden = false;
@@ -82,7 +82,7 @@ export class FirstExampleComponent {
   };
 
   submitting() {
-    this.fsMessage.info('Submitting validation', { mode: 'toast' });
+    this.fsMessage.info('Submitting validation');
   }
 
   save() {
@@ -90,7 +90,7 @@ export class FirstExampleComponent {
   }
 
   invalid() {
-    this.fsMessage.error('Validation invalid', { mode: 'toast' });
+    this.fsMessage.error('Validation invalid');
   }
 
 }
