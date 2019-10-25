@@ -74,7 +74,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @HostListener('click', ['$event'])
   public windowClick(event: any): void {
     const path = event.path || event.composedPath();
-    path.push(...event.target);
+    path.push(event.target);
     this._activeButton = null;
     const index = path.indexOf(this._element.nativeElement);
     if (index >= 0) {
