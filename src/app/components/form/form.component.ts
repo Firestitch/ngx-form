@@ -194,6 +194,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
         promise.then(() => {
           this._completeSubmit(submittingButton, 'submit-success', FsFormComponent.successSvg);
+          this.ngForm.control.markAsPristine();
         }).catch(() => {
           this._completeSubmit(submittingButton, 'submit-error', FsFormComponent.errorSvg);
         });
