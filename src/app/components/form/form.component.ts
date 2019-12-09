@@ -11,7 +11,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, AbstractControl } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
 import { isObservable, Subject } from 'rxjs';
@@ -30,6 +30,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @Input() messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
+  @Input() autocomplete = false;
   @Input() submit: Function;
   @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
@@ -39,6 +40,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
   private _destroy$ = new Subject();
   private _activeButton;
+  private _registerControl;
 
   private static progressSvg = `<svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
   <g fill="none" fill-rule="evenodd">
@@ -74,7 +76,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @HostListener('click', ['$event'])
   public windowClick(event: any): void {
     const path = event.path || event.composedPath();
-    path.push(...event.target);
+    path.push(event.target);
     this._activeButton = null;
     const index = path.indexOf(this._element.nativeElement);
     if (index >= 0) {
@@ -88,6 +90,22 @@ export class FsFormComponent implements OnInit, OnDestroy {
               private _element: ElementRef) {}
 
   ngOnInit() {
+
+    if (!this.autocomplete) {
+
+      this._registerControl = this.ngForm.form.registerControl.bind(this.ngForm.form);
+
+      this.ngForm.form.registerControl = (name: string, control: AbstractControl) => {
+
+        const el: Element = this._element.nativeElement.querySelector(`[name='${name}']`);
+
+        if (el) {
+          el.setAttribute('autocomplete', 'none');
+        }
+
+        return this._registerControl(name, control);
+      }
+    }
 
     if (this.ngForm) {
       this.ngForm.ngSubmit
@@ -194,6 +212,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
         promise.then(() => {
           this._completeSubmit(submittingButton, 'submit-success', FsFormComponent.successSvg);
+          this.ngForm.control.markAsPristine();
         }).catch(() => {
           this._completeSubmit(submittingButton, 'submit-error', FsFormComponent.errorSvg);
         });
