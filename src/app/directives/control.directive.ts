@@ -296,35 +296,26 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   private getValidators() {
-    const validators = [];
-
-    const fsValidators = (<any>this._control).fsValidators;
-    if (fsValidators) {
-      validators.push(...fsValidators);
-    }
+    const fsValidators = (<any>this._control).fsValidators || [];
 
     const defaultValidator = this._control.validator;
     if (defaultValidator) {
-      validators.push(defaultValidator);
+      fsValidators.push(defaultValidator);
     }
 
-    return validators;
+    return fsValidators;
   }
 
   private getAsyncValidators() {
-    const validators = [];
 
-    const fsValidators = (<any>this._control).fsAsyncValidators;
-    if (fsValidators) {
-      validators.push(...fsValidators);
-    }
+    const fsValidators = (<any>this._control).fsAsyncValidators || [];
 
     const defaultValidator = this._control.asyncValidator;
     if (defaultValidator) {
-      validators.push(defaultValidator);
+      fsValidators.push(defaultValidator);
     }
 
-    return validators;
+    return fsValidators;
   }
 
   public removeValidator(validator) {
