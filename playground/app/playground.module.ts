@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FsFormModule } from '@firestitch/form';
+import { FsFormModule, CanDeactivateGuard } from '@firestitch/form';
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -31,6 +31,8 @@ import { ExamplesComponent } from './components/examples';
 import { NonMaterialComponent } from './components/non-material/non-material.component';
 import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
 import { SubmitObservableComponent } from './components/submit-observable/submit-observable.component';
+import { DeactivateComponent } from './components/deactivate/deactivate.component';
+import { FsPromptModule } from '@firestitch/prompt';
 
 
 @NgModule({
@@ -50,10 +52,13 @@ import { SubmitObservableComponent } from './components/submit-observable/submit
     FsRadioGroupModule,
     FsApiModule,
     FlexLayoutModule,
+    FsPromptModule.forRoot(),
     FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: ExamplesComponent },
+      { path: 'deactivate', component: DeactivateComponent, canDeactivate: [CanDeactivateGuard] },
+      { path: 'leave', component: ExamplesComponent },
     ]),
   ],
   declarations: [
@@ -67,7 +72,8 @@ import { SubmitObservableComponent } from './components/submit-observable/submit
     NestedLevel2Component,
     ExamplesComponent,
     NonMaterialComponent,
-    SubmitObservableComponent
+    SubmitObservableComponent,
+    DeactivateComponent
   ]
 })
 export class PlaygroundModule {

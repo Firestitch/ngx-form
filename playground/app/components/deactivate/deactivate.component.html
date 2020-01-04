@@ -1,0 +1,20 @@
+<a [routerLink]="['/leave']">Leave</a>
+
+<form fsForm [submit]="submit">
+  <div fxLayout="column">
+
+    <mat-form-field>
+      <input placeholder="Email"
+        [(ngModel)]="email"
+        name="email"
+        matInput
+        fsFormEmail
+        required
+        />
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutGap="5px">
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </div>
+  </div>
+</form>

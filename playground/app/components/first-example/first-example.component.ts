@@ -90,7 +90,7 @@ export class FirstExampleComponent {
   }
 
   invalid() {
-    this.fsMessage.error('Validation invalid');
+    console.log('Validation invalid');
   }
 
 }

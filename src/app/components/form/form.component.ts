@@ -16,6 +16,7 @@ import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
 import { isObservable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { FsMessage, MessageMode } from '@firestitch/message';
 
 
 @Component({
@@ -87,7 +88,8 @@ export class FsFormComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _form: FsForm,
-              private _element: ElementRef) {}
+              private _element: ElementRef,
+              private _message: FsMessage) {}
 
   ngOnInit() {
 
@@ -151,6 +153,8 @@ export class FsFormComponent implements OnInit, OnDestroy {
                 if (this.invalid) {
                   this.invalid.emit(this.ngForm);
                 }
+
+                this._message.error('Changes not saved. Please review errors highlighted in red.', { mode: MessageMode.Toast });
 
                 reject();
 
