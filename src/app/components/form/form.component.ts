@@ -35,6 +35,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @Input() submit: Function;
   @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
+  @Output() valid: EventEmitter<any> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
 
   public submitting = false;
@@ -162,6 +163,7 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
                 this._form.broadcast('valid', this.ngForm);
                 this.submitEvent.emit(this.ngForm);
+                this.valid.emit(this.ngForm);
 
                 if (this.submit) {
                   const result = this.submit(this.ngForm);

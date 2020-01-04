@@ -3,6 +3,7 @@ import { CanDeactivate } from '@angular/router';
 import { FsPrompt } from '@firestitch/prompt';
 import { Observable } from 'rxjs';
 import { FsFormComponent } from '../components/form/form.component';
+import { first } from 'rxjs/operators';
 
 
 @Injectable({
@@ -29,9 +30,9 @@ export class CanDeactivateGuard implements CanDeactivate<any> {
         dialogConfig: { width: 'auto' },
         buttons: [
           {
-            label: 'Review Change',
+            label: 'Save & Continue',
             color: 'primary',
-            value: 'review'
+            value: 'save'
           },
           {
             label: 'Discard Changes & Continue',
@@ -40,8 +41,33 @@ export class CanDeactivateGuard implements CanDeactivate<any> {
         ]
       }).subscribe(value => {
 
-        observer.next(value === 'discard');
-        observer.complete();
+        if (value === 'discard') {
+          observer.next(true);
+          observer.complete();
+        }
+
+        if (value === 'save') {
+
+          form.valid
+          .pipe(
+            first()
+          )
+          .subscribe(() => {
+            observer.next(true);
+            observer.complete();
+          });
+
+          form.invalid
+          .pipe(
+            first()
+          )
+          .subscribe(() => {
+            observer.next(false);
+            observer.complete();
+          });
+
+          form.ngForm.ngSubmit.emit();
+        }
 
       }, (error: any) => {
 
