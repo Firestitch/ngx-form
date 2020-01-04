@@ -37,6 +37,10 @@ export class CanDeactivateGuard implements CanDeactivate<any> {
           {
             label: 'Discard Changes & Continue',
             value: 'discard'
+          },
+          {
+            label: 'Review Changes',
+            cancel: true
           }
         ]
       }).subscribe(value => {
@@ -70,7 +74,8 @@ export class CanDeactivateGuard implements CanDeactivate<any> {
         }
 
       }, (error: any) => {
-
+        observer.next(false);
+        observer.complete();
       });
     });
   }
