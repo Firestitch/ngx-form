@@ -1,33 +1,31 @@
-import { Directive, Input, AfterViewInit, OnChanges } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
+import { FsValidators } from '../validators/validators';
 
 
 @Directive({
   selector: '[fsFormInteger]'
 })
-export class FsFormIntegerDirective extends FsControlDirective implements OnChanges {
+export class FsFormIntegerDirective extends FsControlDirective implements OnInit, OnChanges {
+
   @Input() fsFormInteger;
 
-  private integerValidator = (control: AbstractControl): { [key: string]: boolean } => {
-
-    if (!control.value || this.isInteger(control.value)) {
-        return null;
-    } else {
-        return { integer: true }
-    }
+  public ngOnInit() {
+    this._addValidator();
   }
 
-  ngOnChanges() {
-    if (this.isEnabled(this.fsFormInteger)) {
-      this.addValidator(this.integerValidator);
-    } else {
-      this.removeValidator(this.integerValidator);
-    }
+  public ngOnChanges() {
+    this._control.updateValueAndValidity();
   }
 
-  isInteger(value) {
-    return String(value) === '' || (value % 1 === 0);
+  private _addValidator() {
+    this.addValidator(() => {
+      if (this.isEnabled(this.fsFormInteger)) {
+        return FsValidators.integer(this._control);
+      } else {
+        return false;
+      }
+    });
   }
 }

@@ -1,16 +1,17 @@
 import { Directive, Input, AfterViewInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { FsControlDirective } from './control.directive';
-import { validatorNumeric } from '../validators/numeric';
+import { FsValidators } from '../validators/validators';
 
 @Directive({
   selector: '[fsFormMin]'
 })
 export class FsFormMinDirective extends FsControlDirective implements AfterViewInit {
+
   @Input() fsFormMin: number;
 
-  ngAfterViewInit() {
-    this.addValidator(validatorNumeric);
+  public ngAfterViewInit() {
+    this.addValidator(FsValidators.numeric);
     this.addValidator(Validators.min(this.fsFormMin));
   }
 }

@@ -1,28 +1,30 @@
-import { Directive, Input, OnChanges } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
-import { url } from '@firestitch/common';
+import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
+import { FsValidators } from '../validators/validators';
 
 @Directive({
   selector: '[fsFormUrl]'
 })
-export class FsFormUrlDirective extends FsControlDirective implements OnChanges {
+export class FsFormUrlDirective extends FsControlDirective implements OnInit, OnChanges {
+
   @Input() public fsFormUrl;
 
-  protected urlValidator = (control: AbstractControl) => {
-    if (!control.value || url(control.value)) {
-      return null;
-    }
-
-    return { url: true };
-  };
+  public ngOnInit() {
+    this._addValidator();
+  }
 
   public ngOnChanges() {
-    if (this.isEnabled(this.fsFormUrl)) {
-      this.addValidator(this.urlValidator);
-    } else {
-      this.removeValidator(this.urlValidator);
-    }
+    this._control.updateValueAndValidity();
+  }
+
+  private _addValidator() {
+    this.addValidator(() => {
+      if (this.isEnabled(this.fsFormUrl)) {
+        return FsValidators.url(this._control);
+      } else {
+        return false;
+      }
+    });
   }
 }

@@ -8,7 +8,7 @@ import { FsControlDirective } from './control.directive';
 export class FsFormPatternDirective extends FsControlDirective implements AfterViewInit {
   @Input() fsFormPattern: RegExp;
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.addValidator(Validators.pattern(this.fsFormPattern));
   }
 }

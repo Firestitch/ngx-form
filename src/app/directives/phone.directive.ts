@@ -1,31 +1,31 @@
-import { Directive, Input, AfterViewInit, OnChanges } from '@angular/core';
+import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
-import { AbstractControl } from '@angular/forms';
-import { phone } from '@firestitch/common';
+import { FsValidators } from '../validators/validators';
 
 
 @Directive({
   selector: '[fsFormPhone]'
 })
-export class FsFormPhoneDirective extends FsControlDirective implements OnChanges {
+export class FsFormPhoneDirective extends FsControlDirective implements OnInit, OnChanges {
 
   @Input() public fsFormPhone;
 
-  private phoneValidator = (control: AbstractControl) => {
-
-    if (!control.value || phone(control.value)) {
-        return null;
-    }
-
-    return { phone: true };
+  public ngOnInit() {
+    this._addValidator();
   }
 
   public ngOnChanges() {
-    if (this.isEnabled(this.fsFormPhone)) {
-      this.addValidator(this.phoneValidator);
-    } else {
-      this.removeValidator(this.phoneValidator)
-    }
+    this._control.updateValueAndValidity();
+  }
+
+  private _addValidator() {
+    this.addValidator(() => {
+      if (this.isEnabled(this.fsFormPhone)) {
+        return FsValidators.phone(this._control);
+      } else {
+        return false;
+      }
+    });
   }
 }
