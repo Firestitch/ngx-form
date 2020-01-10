@@ -15,7 +15,7 @@ export class CanDeactivateGuard implements CanDeactivate<any> {
 
   canDeactivate(component: any): Observable<boolean> {
 
-    return Observable.create(observer => {
+    return new Observable(observer => {
       const form: FsFormComponent = component.formComponent;
 
       if (!form.ngForm.dirty) {

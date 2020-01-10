@@ -16,6 +16,7 @@ import { FsRadioGroupModule } from '@firestitch/radiogroup';
 import { FsPhoneModule } from '@firestitch/phone';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 import { FsApiModule } from '@firestitch/api';
+import { FsPromptModule } from '@firestitch/prompt';
 
 import { ToastrModule } from 'ngx-toastr';
 
@@ -32,7 +33,6 @@ import { NonMaterialComponent } from './components/non-material/non-material.com
 import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
 import { SubmitObservableComponent } from './components/submit-observable/submit-observable.component';
 import { DeactivateComponent } from './components/deactivate/deactivate.component';
-import { FsPromptModule } from '@firestitch/prompt';
 
 
 @NgModule({
@@ -52,7 +52,7 @@ import { FsPromptModule } from '@firestitch/prompt';
     FsRadioGroupModule,
     FsApiModule,
     FlexLayoutModule,
-    FsPromptModule.forRoot(),
+    FsPromptModule,
     FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),
     RouterModule.forRoot([
