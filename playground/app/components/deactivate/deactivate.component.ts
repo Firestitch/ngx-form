@@ -13,6 +13,8 @@ export class DeactivateComponent {
 
   @ViewChild(FsFormComponent, { static: false }) public form: FsFormComponent;
 
+  public email;
+
   constructor(private fsMessage: FsMessage) {}
 
   submit = () => {
