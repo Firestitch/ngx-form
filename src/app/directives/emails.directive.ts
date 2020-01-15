@@ -1,36 +1,31 @@
-import { Directive, Input, OnChanges } from '@angular/core';
+import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
-import { email } from '@firestitch/common';
+import { FsValidators } from '../validators/validators';
 
 
 @Directive({
   selector: '[fsFormEmails]'
 })
-export class FsFormEmailsDirective extends FsControlDirective implements OnChanges {
+export class FsFormEmailsDirective extends FsControlDirective implements OnInit, OnChanges {
 
   @Input() public fsFormEmails;
 
-  ngOnChanges() {
+  public ngOnInit() {
+    this._addValidator();
+  }
 
-      const validator = () => {
-        return new Promise((resolve, reject) => {
-            const model = this.ngControl.control.value || '';
+  public ngOnChanges() {
+    this._control.updateValueAndValidity();
+  }
 
-            for (const value of model.split(',')) {
-              if (!email(value)) {
-                resolve({ emails: true });
-              }
-            };
-
-            resolve(null);
-        });
-      };
-
+  private _addValidator() {
+    this.addValidator(() => {
       if (this.isEnabled(this.fsFormEmails)) {
-        super.addAsyncValidator(validator);
+        return FsValidators.emails(this._control);
       } else {
-        super.removeAsyncValidator(validator);
+        return false;
       }
+    });
   }
 }

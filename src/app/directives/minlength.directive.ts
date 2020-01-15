@@ -6,9 +6,10 @@ import { FsControlDirective } from './control.directive';
   selector: '[fsFormMinLength]'
 })
 export class FsFormMinLengthDirective extends FsControlDirective implements AfterViewInit {
+
   @Input() fsFormMinLength: number;
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.addValidator(Validators.minLength(this.fsFormMinLength));
   }
 }

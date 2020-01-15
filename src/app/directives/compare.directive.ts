@@ -6,17 +6,10 @@ import { FsControlDirective } from './control.directive';
   selector: '[fsFormCompare]'
 })
 export class FsFormCompareDirective extends FsControlDirective implements AfterViewInit, OnDestroy {
+
   @Input() fsFormCompare;
 
-  private validator = () => {
-    if (this.fsFormCompare.value === this.elementRef.nativeElement.value) {
-        return null;
-    } else {
-        return { compare: true };
-    }
-  }
-
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     super.addValidator(this.validator);
 
     this.fsFormCompare.addEventListener('keyup', () => {
@@ -24,9 +17,17 @@ export class FsFormCompareDirective extends FsControlDirective implements AfterV
     }, false);
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.fsFormCompare.removeEventListener('keyup', () => {
       this.ngControl.control.updateValueAndValidity();
     }, false);
   }
+
+  private validator = () => {
+    if (this.fsFormCompare.value === this.elementRef.nativeElement.value) {
+      return null;
+    } else {
+      return { compare: true };
+    }
+  };
 }

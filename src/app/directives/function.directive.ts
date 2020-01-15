@@ -1,5 +1,6 @@
 import { Directive, Input, AfterViewInit } from '@angular/core';
 import { FsControlDirective } from './control.directive';
+import { FsValidators } from '../validators/validators';
 
 
 @Directive({
@@ -8,27 +9,9 @@ import { FsControlDirective } from './control.directive';
 export class FsFormFunctionDirective extends FsControlDirective implements AfterViewInit {
   @Input() fsFormFunction;
 
-  ngAfterViewInit() {
-
-      this.addAsyncValidator(() => {
-
-          return new Promise((resolve, reject) => {
-            try {
-              const result = this.fsFormFunction(this.ngControl);
-              if (result instanceof Promise) {
-                result.then(() => {
-                  return resolve(null);
-                })
-                .catch((err) => {
-                  return resolve({ validationError: err });
-                });
-              } else {
-                return resolve(null);
-              }
-            } catch (e) {
-              resolve({ validationError: e });
-            }
-          });
-      });
+  public ngAfterViewInit() {
+    this.addAsyncValidator(() => {
+      return FsValidators.func(this._control, this.fsFormFunction);
+    });
   }
 }
