@@ -1,4 +1,4 @@
-<a [routerLink]="['/leave']">Leave</a>
+
 
 <form fsForm [submit]="submit">
   <div fxLayout="column">
@@ -14,7 +14,8 @@
     </mat-form-field>
 
     <div fxLayout="row" fxLayoutGap="5px">
-      <button mat-raised-button color="primary" type="submit">Submit</button>
+      <button mat-raised-button color="primary" type="submit">Save</button>
+      <a mat-raised-button [routerLink]="['/leave']">Leave Page</a>
     </div>
   </div>
 </form>

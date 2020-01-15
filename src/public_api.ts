@@ -7,8 +7,8 @@ export { FsForm } from './app/services/fsform.service';
 // Directives
 export { FsFormComponent } from './app/components/form/form.component';
 
-export { FormCanDeactivate } from './app/interfaces/form-can-deactivate';
+export { FormDeactivate } from './app/interfaces/form-deactivate';
 
-export { CanDeactivateGuard } from './app/guards/can-deactivate.guard';
+export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
 
 
