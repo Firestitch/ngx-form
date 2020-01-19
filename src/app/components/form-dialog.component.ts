@@ -10,10 +10,7 @@ import { Destroy } from '../decorators/destroy.decorator';
 import { AfterViewInit } from '../decorators/after-view-init.decorator';
 
 
-@Destroy(function() {
-  this._formDestroy$.next();
-  this._formDestroy$.complete();
-})
+@Destroy()
 @AfterViewInit(function () {
 
   this._formDialogClose.forEach(item => {
@@ -57,6 +54,11 @@ export class FormDialog {
     .subscribe(_ => {
       this._formClose(null);
     });
+  }
+
+  protected _formDestroy() {
+    this._formDestroy$.next();
+    this._formDestroy$.complete();
   }
 
   private _formClose(value = null): void {

@@ -1,11 +1,11 @@
-export function Destroy( func: Function ): any {
+export function Destroy(): any {
 
   return function ( constructor ) {
     const original = constructor.prototype.ngOnDestroy;
 
     constructor.prototype.ngOnDestroy = function () {
 
-      func.apply(this);
+      this._formDestroy();
 
       let x = 'lookatme';
       x = 'sss';
