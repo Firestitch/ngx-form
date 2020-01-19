@@ -12,7 +12,7 @@ import { FsPrompt } from '@firestitch/prompt';
 })
 export class DialogComponent extends FormDialog {
 
-  public animal = {};
+  public animal = { name: '', color: '' };
 
   constructor(private _message: FsMessage,
               private _dialogRef: MatDialogRef<DialogComponent>,
