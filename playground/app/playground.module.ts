@@ -34,6 +34,8 @@ import { NestedLevel2Component } from './components/nested-level-2/nested-level-
 import { SubmitObservableComponent } from './components/submit-observable/submit-observable.component';
 import { DeactivateComponent } from './components/deactivate/deactivate.component';
 import { DeactivateLeaveComponent } from './components/deactivate-leave/deactivate-leave.component';
+import { DialogExampleComponent } from './components/dialog-example/dialog-example.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 
 
 @NgModule({
@@ -74,7 +76,12 @@ import { DeactivateLeaveComponent } from './components/deactivate-leave/deactiva
     NonMaterialComponent,
     SubmitObservableComponent,
     DeactivateComponent,
-    DeactivateLeaveComponent
+    DeactivateLeaveComponent,
+    DialogExampleComponent,
+    DialogComponent
+  ],
+  entryComponents: [
+    DialogComponent
   ]
 })
 export class PlaygroundModule {

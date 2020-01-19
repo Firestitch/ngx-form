@@ -11,5 +11,6 @@ export { FsValidators } from './app/validators/validators';
 export { FormDeactivate } from './app/interfaces/form-deactivate';
 
 export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
+export { FormDialog } from './app/components/form-dialog.component';
 
 

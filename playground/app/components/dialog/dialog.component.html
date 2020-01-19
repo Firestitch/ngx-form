@@ -1,0 +1,28 @@
+<form fsForm [submit]="save">
+
+  <h1 mat-dialog-title>Add Animal</h1>
+  <div mat-dialog-content>
+    <div fxLayout="column">
+      <mat-form-field>
+        <input
+          placeholder="Name"
+          matInput
+          [(ngModel)]="animal.name"
+          name="name">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          placeholder="Color"
+          matInput
+          [(ngModel)]="animal.color"
+          name="color">
+      </mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button color="primary">Save</button>
+    <button mat-button fsFormDialogClose>Cancel</button>
+  </div>
+
+</form>

@@ -21,6 +21,7 @@ import { FsFormPatternDirective } from './directives/pattern.directive';
 import { FsFormFunctionDirective} from './directives/function.directive';
 import { FsFormDateRangeDirective } from './directives/daterange.directive';
 import { FsFormUrlDirective } from './directives/url.directive';
+import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { FsFormUrlDirective } from './directives/url.directive';
     FsFormFunctionDirective,
     FsFormDateRangeDirective,
     FsFormUrlDirective,
+    FsFormDialogCloseDirective
   ],
   exports: [
     FsFormComponent,
@@ -65,6 +67,7 @@ import { FsFormUrlDirective } from './directives/url.directive';
     FsFormFunctionDirective,
     FsFormDateRangeDirective,
     FsFormUrlDirective,
+    FsFormDialogCloseDirective
   ],
   providers: [
     FsForm
