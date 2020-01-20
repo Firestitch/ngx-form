@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 
 
 @Directive({
-  selector: '[fsFormDialogClose]'
+  selector: '[fsFormDialogClose],[fs-form-dialog-close]'
 })
 export class FsFormDialogCloseDirective implements OnDestroy {
 

@@ -9,7 +9,12 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  Inject,
+  Optional,
+  QueryList,
+  ContentChildren,
+  AfterContentInit
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
 import { values } from 'lodash-es';
@@ -17,6 +22,10 @@ import { FsForm } from '../../services/fsform.service';
 import { isObservable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
+import { MatDialogRef } from '@angular/material';
+import { confirmUnsaved } from 'src/app/helpers/confirm-unsaved';
+import { FsPrompt } from '@firestitch/prompt';
+import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 
 
 @Component({
@@ -24,7 +33,10 @@ import { FsMessage, MessageMode } from '@firestitch/message';
   template: `<ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FsFormComponent implements OnInit, OnDestroy {
+export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
+
+  @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
+  _formDialogClose: QueryList<FsFormDialogCloseDirective>;
 
   @ContentChild(NgForm, { static: true }) ngForm: NgForm;
   @Input() wrapperSelector = '.fs-form-wrapper,.mat-form-field';
@@ -37,6 +49,27 @@ export class FsFormComponent implements OnInit, OnDestroy {
   @Output() invalid: EventEmitter<any> = new EventEmitter();
   @Output() valid: EventEmitter<any> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
+
+  @HostListener('window:keydown.esc', ['$event'])
+  windowKeyUp(event: any) {
+    if (this._dialogRef) {
+
+      const dialog = document.getElementById(this._dialogRef.id);
+
+      event.path.forEach(item => {
+        if (dialog === item) {
+          this._formClose();
+        }
+      });
+    }
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  windowBeforeUnload(event: Event) {
+    if (this.ngForm.dirty) {
+      event.returnValue = false;
+    }
+  }
 
   public submitting = false;
 
@@ -90,9 +123,13 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
   constructor(private _form: FsForm,
               private _element: ElementRef,
-              private _message: FsMessage) {}
+              private _message: FsMessage,
+              private _prompt: FsPrompt,
+              @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>) {
+    this._registerDialogClose(_dialogRef);
+  }
 
-  ngOnInit() {
+  public ngOnInit() {
 
     if (!this.autocomplete) {
 
@@ -248,5 +285,58 @@ export class FsFormComponent implements OnInit, OnDestroy {
 
       this.submitting = false;
     }, 2000);
+  }
+
+  private _registerDialogClose(dialogRef: MatDialogRef<any>) {
+    if (dialogRef) {
+      dialogRef.disableClose = true;
+      dialogRef.backdropClick()
+      .subscribe(_ => {
+        this._formClose();
+      });
+    }
+  }
+
+  public ngAfterContentInit() {
+
+    if (this._dialogRef) {
+      this._formDialogClose.forEach(item => {
+        this._registerClose(item);
+      });
+
+      this._formDialogClose.changes
+      .pipe(
+        takeUntil(this._destroy$)
+      )
+      .subscribe((e) => {
+        e.forEach(item => {
+          this._registerClose(item);
+        });
+      });
+    }
+  }
+
+  private _formClose(value = null): void {
+
+    confirmUnsaved(this, this._prompt)
+    .subscribe(close => {
+      if (close) {
+        this._dialogRef.close(value);
+      }
+    });
+  }
+
+  private _registerClose(directive: FsFormDialogCloseDirective) {
+
+    if (!directive.registered) {
+      directive.registered = true;
+      directive.clicked$
+      .pipe(
+        takeUntil(this._destroy$)
+      )
+      .subscribe(() => {
+        this._formClose(null);
+      });
+    }
   }
 }

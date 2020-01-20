@@ -24,7 +24,8 @@
     "package:test": "cd tools && npm run cli:package:test",
     "package:publish": "cd tools && npm run cli:package:publish",
     "demo:build": "cd tools && npm run cli:demo",
-    "serve": "cd tools && npm run cli:serve"
+    "serve": "cd tools && npm run cli:serve",
+    "serve:aot": "cd tools && npm run cli:serve:aot"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.9",
