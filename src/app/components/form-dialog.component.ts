@@ -10,11 +10,16 @@ import { Destroy } from '../decorators/destroy.decorator';
 import { AfterViewInit } from '../decorators/after-view-init.decorator';
 
 
-@Destroy()
 @AfterViewInit()
 export class FormDialog {
 
   private _formDestroy$ = new Subject();
+
+  @Destroy
+  public destroy(arg: string) {
+    console.log('test');
+    console.log(this);
+  }
 
   @HostListener('window:keyup.esc') onKeyUp() {
     this._formClose();
