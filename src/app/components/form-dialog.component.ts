@@ -11,22 +11,7 @@ import { AfterViewInit } from '../decorators/after-view-init.decorator';
 
 
 @Destroy()
-@AfterViewInit(function () {
-
-  this._formDialogClose.forEach(item => {
-    this._registerClose(item);
-  });
-
-  this._formDialogClose.changes
-  .pipe(
-    takeUntil(this._formDestroy$)
-  )
-  .subscribe((e) => {
-    e.forEach(item => {
-      this._registerClose(item);
-    });
-  });
-})
+@AfterViewInit()
 export class FormDialog {
 
   private _formDestroy$ = new Subject();
@@ -56,9 +41,26 @@ export class FormDialog {
     });
   }
 
-  protected _formDestroy() {
+  public _formDestroy() {
     this._formDestroy$.next();
     this._formDestroy$.complete();
+  }
+
+  public _formAfterViewInit() {
+
+      this._formDialogClose.forEach(item => {
+        this._registerClose(item);
+      });
+
+      this._formDialogClose.changes
+      .pipe(
+        takeUntil(this._formDestroy$)
+      )
+      .subscribe((e) => {
+        e.forEach(item => {
+          this._registerClose(item);
+        });
+      });
   }
 
   private _formClose(value = null): void {

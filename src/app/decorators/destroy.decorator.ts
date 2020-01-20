@@ -7,9 +7,6 @@ export function Destroy(): any {
 
       this._formDestroy();
 
-      let x = 'lookatme';
-      x = 'sss';
-
       original && typeof original === 'function' && original.apply(this, arguments);
     };
   }

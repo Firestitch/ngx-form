@@ -1,17 +1,14 @@
-export function AfterViewInit( func: Function ): any {
+export function AfterViewInit(): any {
 
   return function ( constructor ) {
     const original = constructor.prototype.ngOnDestroy;
 
+
     constructor.prototype.ngAfterViewInit = function () {
 
-      func.apply(this);
-
-      let x = 'lookatme';
-      x = 'sss';
+      this._formAfterViewInit();
 
       original && typeof original === 'function' && original.apply(this, arguments);
     };
   }
-
 }
