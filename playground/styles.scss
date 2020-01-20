@@ -2,6 +2,7 @@
 @import '~@firestitch/message/styles.scss';
 @import '~@firestitch/prompt/styles';
 @import '~@firestitch/datepicker/styles';
+@import '~@firestitch/dialog/styles';
 @import '../src/app/styles';
 
 @include fs-date-picker($mat-blue);

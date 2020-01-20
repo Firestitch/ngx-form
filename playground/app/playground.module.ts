@@ -17,6 +17,7 @@ import { FsPhoneModule } from '@firestitch/phone';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 import { FsApiModule } from '@firestitch/api';
 import { FsPromptModule } from '@firestitch/prompt';
+import { FsDialogModule } from '@firestitch/dialog';
 
 import { ToastrModule } from 'ngx-toastr';
 
@@ -49,6 +50,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     FsSkeletonModule,
     FsExampleModule.forRoot(),
     FsMessageModule.forRoot(),
+    FsDialogModule.forRoot(),
     ToastrModule.forRoot({ preventDuplicates: true }),
     FsDatePickerModule.forRoot(),
     FsCheckboxGroupModule,

@@ -23,7 +23,7 @@ import { isObservable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
 import { MatDialogRef } from '@angular/material';
-import { confirmUnsaved } from 'src/app/helpers/confirm-unsaved';
+import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsPrompt } from '@firestitch/prompt';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 

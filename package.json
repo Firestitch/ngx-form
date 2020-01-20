@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "title": "Form",
-  "version": "8.2.0",
+  "version": "8.3.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-form"
@@ -58,9 +58,10 @@
     "@firestitch/label": "^7.1.9",
     "@firestitch/menu": "^7.0.11",
     "@firestitch/message": "^8.1.0",
+    "@firestitch/dialog": "^8.1.1",
     "@firestitch/password": "^7.0.4",
     "@firestitch/phone": "^7.2.1",
-    "@firestitch/prompt": "^8.2.0",
+    "@firestitch/prompt": "^8.3.0",
     "@firestitch/radiogroup": "^7.2.5",
     "@firestitch/scroll-picker": "^7.0.3",
     "@firestitch/skeleton": "^7.1.2",
