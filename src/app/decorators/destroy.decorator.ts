@@ -14,8 +14,8 @@
 
 
 export function Destroy(target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) {
-  const originalMethod = descriptor.value; // save a reference to the original method
-
+  const originalMethod = descriptor.value;
+console.log("TEST!!!")
     const original = target.constructor.prototype.ngOnDestroy;
 
     target.constructor.prototype.ngOnDestroy = function () {
