@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { FsPrompt } from '@firestitch/prompt';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FsFormComponent } from '../components/form/form.component';
-import { first } from 'rxjs/operators';
 import { FormDeactivate } from '../interfaces/form-deactivate';
 import { confirmUnsaved } from '../helpers/confirm-unsaved';
 
@@ -20,9 +19,9 @@ export class FormDeactivateGuard implements CanDeactivate<any> {
     const form: FsFormComponent = component.formDeactivateComponent;
 
     if (!form) {
-      const error = `Component ${component.constructor.name} not property implmented with interface FormCanDeactivate`;
+      const error = `Component ${component.constructor.name} does not property implement interface FormCanDeactivate`;
       console.error(error);
-      return throwError(error);
+      return of(true);
     }
 
     return confirmUnsaved(form, this._prompt);
