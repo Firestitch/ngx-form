@@ -22,7 +22,7 @@ import { FsForm } from '../../services/fsform.service';
 import { isObservable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsPrompt } from '@firestitch/prompt';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
@@ -38,7 +38,6 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
   _formDialogClose: QueryList<FsFormDialogCloseDirective>;
 
-  @ContentChild(NgForm, { static: true }) ngForm: NgForm;
   @Input() wrapperSelector = '.fs-form-wrapper,.mat-form-field';
   @Input() messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
@@ -125,6 +124,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
               private _element: ElementRef,
               private _message: FsMessage,
               private _prompt: FsPrompt,
+              @Inject(NgForm) public ngForm: NgForm,
               @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>) {
     this._registerDialogClose(_dialogRef);
   }
