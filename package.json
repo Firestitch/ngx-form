@@ -50,7 +50,7 @@
     "@firestitch/autocomplete-chips": "^8.0.0",
     "@firestitch/checkboxgroup": "^7.1.10",
     "@firestitch/clear": "^7.1.0",
-    "@firestitch/common": "^7.0.2",
+    "@firestitch/common": "^8.0.1",
     "@firestitch/datepicker": "^8.0.1",
     "@firestitch/drawer": "^8.0.0",
     "@firestitch/example": "^8.0.0",
