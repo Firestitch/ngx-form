@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
   ElementRef,
   EventEmitter,
   HostBinding,
@@ -65,12 +64,13 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
   @HostListener('window:beforeunload', ['$event'])
   windowBeforeUnload(event: Event) {
-    if (this.ngForm.dirty) {
+    if (!this.disableDirtyConfirm && this.ngForm.dirty) {
       event.returnValue = false;
     }
   }
 
   public submitting = false;
+  public disableDirtyConfirm = false;
 
   private _destroy$ = new Subject();
   private _activeButton;
@@ -263,7 +263,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this._destroy$.next();
     this._destroy$.complete();
   }
