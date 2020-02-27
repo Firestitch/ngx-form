@@ -25,6 +25,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsPrompt } from '@firestitch/prompt';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
+import { guid } from '@firestitch/common';
 
 
 @Component({
@@ -137,10 +138,14 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
       this.ngForm.form.registerControl = (name: string, control: AbstractControl) => {
 
-        const el: Element = this._element.nativeElement.querySelector(`[name='${name}']`);
+        const el: Element = this._element.nativeElement.querySelector(`input[name='${name}']`);
 
         if (el) {
-          el.setAttribute('autocomplete', 'none');
+          el.setAttribute('name', name + '_' + guid());
+
+          if (!el.getAttribute('autocomplete')) {
+            el.setAttribute('autocomplete', 'none');
+          }
         }
 
         return this._registerControl(name, control);
