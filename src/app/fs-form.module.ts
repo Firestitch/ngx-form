@@ -18,8 +18,10 @@ import { FsFormCompareDirective } from './directives/compare.directive';
 import { FsFormIntegerDirective } from './directives/integer.directive';
 import { FsFormNumericDirective } from './directives/numeric.directive';
 import { FsFormPatternDirective } from './directives/pattern.directive';
-import { FsFormFunctionDirective} from './directives/function.directive';
+import { FsFormFunctionDirective } from './directives/function.directive';
+import { FsFormGreaterDirective } from './directives/greater.directive';
 import { FsFormDateRangeDirective } from './directives/daterange.directive';
+import { FsFormLesserDirective } from './directives/lesser.directive';
 import { FsFormUrlDirective } from './directives/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
 
@@ -46,6 +48,8 @@ import { FsFormDialogCloseDirective } from './directives/form-dialog-close.direc
     FsFormPatternDirective,
     FsFormFunctionDirective,
     FsFormDateRangeDirective,
+    FsFormGreaterDirective,
+    FsFormLesserDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective
   ],
@@ -66,6 +70,8 @@ import { FsFormDialogCloseDirective } from './directives/form-dialog-close.direc
     FsFormPatternDirective,
     FsFormFunctionDirective,
     FsFormDateRangeDirective,
+    FsFormGreaterDirective,
+    FsFormLesserDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective
   ],

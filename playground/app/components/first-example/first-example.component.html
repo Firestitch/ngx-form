@@ -102,9 +102,27 @@
 
     <mat-form-field *ngIf="render">
       <input
+        placeholder="Greater"
+        [(ngModel)]="model.greater"
+        name="greater"
+        matInput
+        fsFormGreater="0"/>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="render">
+      <input
+        placeholder="Lesser"
+        [(ngModel)]="model.lesser"
+        name="lesser"
+        matInput
+        fsFormLesser="10"/>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="render">
+      <input
         placeholder="Min"
-        [(ngModel)]="minInput"
-        name="minInput"
+        [(ngModel)]="model.min"
+        name="min"
         matInput
         fsFormMin="10"/>
     </mat-form-field>
@@ -112,7 +130,7 @@
     <mat-form-field *ngIf="render">
       <input
         placeholder="Max"
-        [(ngModel)]="maxInput"
+        [(ngModel)]="model.max"
         name="maxInput"
         matInput
         fsFormMax="100"/>

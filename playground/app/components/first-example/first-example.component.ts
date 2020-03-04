@@ -39,6 +39,8 @@ export class FirstExampleComponent {
   public minMaxInput = null;
   public radioRequired = null;
   public skeleton;
+  public greaterInput;
+  public model: any = {};
 
   public items = [
     { name: 'Item 1', id: 1 },

@@ -8,10 +8,10 @@ import { FsValidators } from '../validators/validators';
 })
 export class FsFormMinDirective extends FsControlDirective implements AfterViewInit {
 
-  @Input() fsFormMin: number;
+  @Input() fsFormMin;
 
   public ngAfterViewInit() {
     this.addValidator(FsValidators.numeric);
-    this.addValidator(Validators.min(this.fsFormMin));
+    this.addValidator(Validators.min(parseFloat(this.fsFormMin)));
   }
 }

@@ -272,65 +272,37 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   public addValidator(validator) {
 
     if (this._control) {
-      // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
-      // Expression has changed after it was checked.
-      // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
-      setTimeout(() => {
-      this.getValidators().push(validator);
-        this.updateValidators();
-      });
+      const validators = this.getValidators().slice(0).concat(validator);
+      this._setControlValidators(validators);
     }
   }
 
   public addAsyncValidator(validator) {
 
     if (this._control) {
-      // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
-      // Expression has changed after it was checked.
-      // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
-      setTimeout(() => {
-        this.getAsyncValidators().push(validator);
-        this._control.setAsyncValidators(this.getAsyncValidators());
-      });
+      const validators = this.getAsyncValidators().slice(0).concat(validator);
+      this._setControlAsyncValidators(validators);
     }
   }
 
   private getValidators() {
-    const fsValidators = (<any>this._control).fsValidators || [];
-
-    const defaultValidator = this._control.validator;
-    if (defaultValidator) {
-      fsValidators.push(defaultValidator);
-    }
-
-    return fsValidators;
+    return (<any>this._control).fsValidators || [];
   }
 
   private getAsyncValidators() {
-
-    const fsValidators = (<any>this._control).fsAsyncValidators || [];
-
-    const defaultValidator = this._control.asyncValidator;
-    if (defaultValidator) {
-      fsValidators.push(defaultValidator);
-    }
-
-    return fsValidators;
+    return (<any>this._control).fsAsyncValidators || [];
   }
 
   public removeValidator(validator) {
-    remove(this.getValidators(), (item) => {
-      return item === validator;
-    });
-    this.updateValidators();
+    const validators = this.getValidators().slice(0);
+    remove(validators, (item) => { return item === validator; });
+    this._setControlValidators(validators);
   }
 
   public removeAsyncValidator(validator) {
-
-    remove(this.getAsyncValidators(), (item) => {
-      return item === validator;
-    });
-    this.updateValidators();
+    const validators = this.getAsyncValidators().slice(0);
+    remove(validators, (item) => { return item === validator; });
+    this._setControlAsyncValidators(validators);
   }
 
   public isEnabled(value) {
@@ -342,9 +314,29 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     return value !== 'false' && (value || value === '');
   }
 
-  private updateValidators() {
-    this._control.setValidators(this.getValidators());
-    this._control.setAsyncValidators(this.getAsyncValidators());
-    this._control.updateValueAndValidity();
+  private _setControlValidators(validators) {
+
+    this._control.setValidators(validators);
+    (<any>this._control).fsValidators = validators;
+
+    // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
+    // Expression has changed after it was checked.
+    // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
+    setTimeout(() => {
+      this._control.updateValueAndValidity();
+    });
+  }
+
+  private _setControlAsyncValidators(validators) {
+
+    this._control.setAsyncValidators(validators);
+    (<any>this._control).fsAsyncValidators = validators;
+
+    // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
+    // Expression has changed after it was checked.
+    // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
+    setTimeout(() => {
+      this._control.updateValueAndValidity();
+    });
   }
 }
