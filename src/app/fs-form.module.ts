@@ -24,6 +24,7 @@ import { FsFormDateRangeDirective } from './directives/daterange.directive';
 import { FsFormLesserDirective } from './directives/lesser.directive';
 import { FsFormUrlDirective } from './directives/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
+import { FsSubmitButtonDirective } from './directives/submit-button.directive';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { FsFormDialogCloseDirective } from './directives/form-dialog-close.direc
     FsFormGreaterDirective,
     FsFormLesserDirective,
     FsFormUrlDirective,
-    FsFormDialogCloseDirective
+    FsFormDialogCloseDirective,
+    FsSubmitButtonDirective
   ],
   exports: [
     FsFormComponent,
@@ -73,7 +75,8 @@ import { FsFormDialogCloseDirective } from './directives/form-dialog-close.direc
     FsFormGreaterDirective,
     FsFormLesserDirective,
     FsFormUrlDirective,
-    FsFormDialogCloseDirective
+    FsFormDialogCloseDirective,
+    FsSubmitButtonDirective
   ],
   providers: [
     FsForm
