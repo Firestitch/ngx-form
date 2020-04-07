@@ -1,3 +1,4 @@
+import { delay } from 'rxjs/operators';
 import { Component, ViewChild } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
@@ -87,8 +88,12 @@ export class FirstExampleComponent {
     this.fsMessage.info('Submitting validation');
   }
 
-  save() {
+  save = () => {
     this.fsMessage.success('Validation successful');
+    return of(true)
+    .pipe(
+      delay(300)
+    );
   }
 
   invalid() {

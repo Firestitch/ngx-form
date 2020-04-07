@@ -20,7 +20,7 @@ import { NgForm, AbstractControl } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
 import { isObservable, Subject, fromEvent } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
 import { MatDialogRef } from '@angular/material/dialog';
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
@@ -112,7 +112,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       this._registerDirtyConfirmDialogBackdrop();
     }
 
-    if (this.dirtyConfirm && this.dirtySubmitButton) {
+    if (this.dirtySubmitButton) {
       this._registerDirtySubmitButton();
     }
 
@@ -181,14 +181,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
                   if (isObservable(result)) {
 
-                    let progressEl;
-                    if (this.submitting) {
-                      progressEl = new DOMParser().parseFromString(this._getProgressSvg(), 'text/xml').firstChild;
-                      this._submitButtons.forEach(button => {
-                        button.element.append(progressEl);
-                        button.element.classList.add('submit-process');
-                      });
-                    }
+                    const progressEl = new DOMParser().parseFromString(this._getProgressSvg(), 'text/xml').firstChild;
+                    this._submitButtons.forEach(button => {
+                      button.element.append(progressEl);
+                      button.element.classList.add('submit-process');
+                    });
 
                     result
                     .pipe(
@@ -200,6 +197,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
                         button.element.classList.remove('submit-process');
                       });
                       resolve();
+
                     }, () => {
                       this._submitButtons.forEach(button => {
                         button.element.removeChild(progressEl);
@@ -225,7 +223,9 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
         promise.then(() => {
           this._completeSubmit('submit-success', this._getSuccessSvg());
           this.ngForm.control.markAsPristine();
-          this._updateDirtySubmitButtons();
+          if (this.dirtySubmitButton) {
+            this._updateDirtySubmitButtons();
+          }
         }).catch(() => {
           this._completeSubmit('submit-error', this._getErrorSvg());
         });

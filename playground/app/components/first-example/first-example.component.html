@@ -1,5 +1,5 @@
 
-<form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()">
+<form fsForm [submit]="save" (submit)="submitting()" (invalid)="invalid()">
   <div fxLayout="column">
 
     <fs-radio-group
