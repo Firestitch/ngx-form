@@ -6,7 +6,7 @@ import { FsPrompt } from '@firestitch/prompt';
 export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observable<boolean> {
   return new Observable(observer => {
 
-    if (form.disableDirtyConfirm || !form.ngForm.dirty) {
+    if (!form.dirtyConfirm || !form.ngForm.dirty) {
       observer.next(true);
       observer.complete();
       return;

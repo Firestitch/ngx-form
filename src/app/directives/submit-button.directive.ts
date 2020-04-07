@@ -1,16 +1,13 @@
-import { Directive, OnInit, Host } from '@angular/core';
-import { MatButton } from '@angular/material';
+import { Directive, OnInit, Host, ElementRef } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 
 @Directive({
   selector: 'form button[type="submit"]'
 })
-export class FsSubmitButtonDirective implements OnInit {
+export class FsSubmitButtonDirective {
 
-  constructor(@Host() private _matButton: MatButton) {}
-
-  ngOnInit() {
-    this.disable();
-  }
+  constructor(@Host() private _matButton: MatButton,
+              private _element: ElementRef) {}
 
   public disable() {
     this._matButton.disabled = true;
@@ -18,5 +15,9 @@ export class FsSubmitButtonDirective implements OnInit {
 
   public enable() {
     this._matButton.disabled = false;
+  }
+
+  public get element() {
+    return this._element.nativeElement;
   }
 }
