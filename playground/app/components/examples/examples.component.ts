@@ -6,12 +6,12 @@ import { DeactivateComponent } from '../deactivate/deactivate.component';
 @Component({
   templateUrl: 'examples.component.html'
 })
-export class ExamplesComponent implements FormDeactivate {
+export class ExamplesComponent {
   public config = environment;
 
   @ViewChild(DeactivateComponent, { static: false }) public deactivate: DeactivateComponent;
 
-  get formDeactivateComponent() {
+  get formComponent() {
     return this.deactivate.form;
   }
 }

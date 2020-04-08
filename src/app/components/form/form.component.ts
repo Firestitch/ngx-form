@@ -1,3 +1,4 @@
+import { ConfigService } from './../../services/config.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,8 +19,8 @@ import {
 import { NgForm, AbstractControl } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
-import { isObservable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { isObservable, Subject, of } from 'rxjs';
+import { takeUntil, delay, first } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
 import { MatDialogRef } from '@angular/material/dialog';
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
@@ -33,6 +34,7 @@ import { guid } from '@firestitch/common';
   selector: '[fsForm]',
   template: `<ng-content></ng-content>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ ConfigService ]
 })
 export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
@@ -102,11 +104,12 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
               private _element: ElementRef,
               private _message: FsMessage,
               private _prompt: FsPrompt,
+              private _configService: ConfigService,
               @Inject(NgForm) public ngForm: NgForm,
               @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>) {}
 
   public ngOnInit() {
-
+    this._configService.form = this;
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {
       this._registerDirtyConfirmDialogBackdrop();
     }
@@ -284,7 +287,13 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       button.element.append(el);
     });
 
-    setTimeout(() => {
+    of(true)
+    .pipe(
+      takeUntil(this._destroy$),
+      delay(2000),
+      first()
+    ).subscribe(() => {
+
       this._submitButtons.forEach(button => {
 
         const el = button.element.querySelector('.svg-icon');
@@ -296,7 +305,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       });
 
       this.submitting = false;
-    }, 2000);
+    });
   }
 
   private _registerDirtyConfirmDialogClose() {
