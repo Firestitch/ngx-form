@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "title": "Form",
-  "version": "8.7.14",
+  "version": "8.7.15",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-form"

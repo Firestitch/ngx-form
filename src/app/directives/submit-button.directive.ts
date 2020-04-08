@@ -1,27 +1,33 @@
-import { Directive, OnInit, Host, ElementRef, HostBinding } from '@angular/core';
+import { Directive, OnInit, Host, ElementRef, HostBinding, Optional } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { ConfigService } from './../services/config.service';
 
 
 @Directive({
-  selector: 'form button[type="submit"]'
+  selector: 'form button[type="submit"],form button:not([type])'
 })
 export class FsSubmitButtonDirective implements OnInit {
 
-  @HostBinding('style.transition') transitionStyle = 'none';
+  @HostBinding('style.transition') transitionStyle = null;
 
   constructor(@Host() private _matButton: MatButton,
               private _element: ElementRef,
-              private _configService: ConfigService) {}
+              @Optional() private _configService: ConfigService) {
+    if (_configService) {
+      this.transitionStyle = 'none';
+    }
+  }
 
   ngOnInit() {
-    if (this._configService.form.dirtySubmitButton) {
-      this.disable();
-    }
+    if (this._configService) {
+      if (this._configService.form.dirtySubmitButton) {
+        this.disable();
+      }
 
-    setTimeout(() => {
-      this.transitionStyle = null;
-    }, 5000);
+      setTimeout(() => {
+        this.transitionStyle = null;
+      }, 500);
+    }
   }
 
   public disable() {
