@@ -3,10 +3,12 @@
 @import '~@firestitch/prompt/styles';
 @import '~@firestitch/datepicker/styles';
 @import '~@firestitch/dialog/styles';
+@import '~@firestitch/drawer/styles';
 @import '../src/app/styles';
 
 @include fs-date-picker($mat-blue);
 @include fs-form($mat-blue);
+@include fs-drawer($mat-blue);
 
 fieldset button {
   margin-right: 5px !important;

@@ -1,3 +1,5 @@
+import { DrawerExampleComponent } from './components/drawer-example/drawer-example.component';
+import { DrawerComponent } from './components/drawer/drawer.component';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -55,6 +57,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     FsDatePickerModule.forRoot(),
     FsCheckboxGroupModule,
     FsRadioGroupModule,
+    FlexLayoutModule,
     FsApiModule,
     FlexLayoutModule,
     FsPromptModule,
@@ -80,10 +83,13 @@ import { DialogComponent } from './components/dialog/dialog.component';
     DeactivateComponent,
     DeactivateLeaveComponent,
     DialogExampleComponent,
-    DialogComponent
+    DialogComponent,
+    DrawerComponent,
+    DrawerExampleComponent
   ],
   entryComponents: [
-    DialogComponent
+    DialogComponent,
+    DrawerComponent
   ]
 })
 export class PlaygroundModule {

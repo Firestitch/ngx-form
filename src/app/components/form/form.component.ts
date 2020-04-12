@@ -19,7 +19,7 @@ import {
 import { NgForm, AbstractControl } from '@angular/forms';
 import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
-import { isObservable, Subject, of } from 'rxjs';
+import { isObservable, Subject, of, Observable } from 'rxjs';
 import { takeUntil, delay, first } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -28,6 +28,7 @@ import { FsPrompt } from '@firestitch/prompt';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 import { FsSubmitButtonDirective } from './../../directives/submit-button.directive';
 import { guid } from '@firestitch/common';
+import { DrawerRef } from '@firestitch/drawer';
 
 
 @Component({
@@ -49,15 +50,17 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
   @Input() autocomplete = false;
-  @Input() submit: Function;
+  @Input() submit: (ngForm: NgForm) => Observable<any>;
   @Input() shortcuts = true;
   @Input() dirtyConfirm = true;
   @Input() dirtyConfirmDialog = true;
+  @Input() dirtyConfirmDrawer = true;
   @Input() dirtyConfirmBrowser = true;
   @Input() dirtySubmitButton = true;
   @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
   @Output() invalid: EventEmitter<any> = new EventEmitter();
   @Output() valid: EventEmitter<any> = new EventEmitter();
+  @Output() submitted: EventEmitter<any> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
 
   @HostListener('window:keydown.esc', ['$event'])
@@ -106,7 +109,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
               private _prompt: FsPrompt,
               private _configService: ConfigService,
               @Inject(NgForm) public ngForm: NgForm,
-              @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>) {}
+              @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
+              @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
 
   public ngOnInit() {
     this._configService.form = this;
@@ -151,7 +155,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
             }
         });
 
-        const promise = new Promise((resolve, reject) => {
+        new Observable(observer => {
 
           Promise.all(validations)
           .then(() => {
@@ -163,10 +167,9 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
                 if (this.invalid) {
                   this.invalid.emit(this.ngForm);
                 }
-
-                this._message.error('Changes not saved. Please review errors highlighted in red.',{ mode: MessageMode.Toast });
-
-                reject();
+                const message = 'Changes not saved. Please review errors highlighted in red.';
+                this._message.error(message, { mode: MessageMode.Toast });
+                observer.error();
 
               } else {
 
@@ -189,40 +192,44 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
                     .pipe(
                       takeUntil(this._destroy$)
                     )
-                    .subscribe(() => {
+                    .subscribe(response => {
                       this._submitButtons.forEach(button => {
                         button.element.removeChild(progressEl);
                         button.element.classList.remove('submit-process');
                       });
-                      resolve();
+                      observer.next(response);
+                      observer.complete();
 
                     }, () => {
                       this._submitButtons.forEach(button => {
                         button.element.removeChild(progressEl);
                         button.element.classList.remove('submit-process');
                       });
-                      reject();
+                      observer.error();
                     });
 
                   } else {
-                    resolve();
+                    observer.next();
+                    observer.complete();
                   }
 
                 } else {
-                  resolve();
+                  observer.next();
+                  observer.complete();
                 }
               }
 
           }).catch(e => {
-            reject();
+            observer.error();
           });
-        });
 
-        promise.then(() => {
+        })
+        .subscribe(result => {
           this._completeSubmit('submit-success', this._getSuccessSvg());
           this.ngForm.control.markAsPristine();
           this._updateDirtySubmitButtons();
-        }).catch(() => {
+          this.submitted.emit(result);
+        }, () => {
           this._completeSubmit('submit-error', this._getErrorSvg());
         });
       });
@@ -239,14 +246,22 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       this._registerDirtyConfirmDialogClose();
     }
 
+    if (this.dirtyConfirm && this.dirtyConfirmDrawer) {
+      this._registerDirtyConfirmDrawerClose();
+    }
+
     if (this.dirtySubmitButton) {
       this._registerDirtySubmitButton();
     }
   }
 
+  public confirm(): Observable<boolean> {
+    return confirmUnsaved(this, this._prompt);
+  }
+
   private _formClose(value = null): void {
 
-    confirmUnsaved(this, this._prompt)
+    this.confirm()
     .subscribe(close => {
       if (close) {
         this._dialogRef.close(value);
@@ -307,6 +322,25 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       this.submitting = false;
     });
   }
+
+  private _registerDirtyConfirmDrawerClose() {
+
+    if (this._drawerRef) {
+      this._drawerRef.closeStart()
+      .subscribe(subscriber => {
+        this.confirm()
+        .subscribe(value => {
+          if (value) {
+            subscriber.next();
+          } else {
+            subscriber.error();
+          }
+          subscriber.complete();
+        });
+      });
+    }
+  }
+
 
   private _registerDirtyConfirmDialogClose() {
     if (this._dialogRef) {

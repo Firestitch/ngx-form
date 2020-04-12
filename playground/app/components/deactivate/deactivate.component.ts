@@ -15,9 +15,16 @@ export class DeactivateComponent {
 
   public email;
 
-  constructor(private fsMessage: FsMessage) {}
+  constructor(private _message: FsMessage) {}
 
   submit = () => {
-    this.fsMessage.success('Validation successful');
+    this._message.success('Validation successful');
+  }
+
+  confirm() {
+    this.form.confirm()
+    .subscribe(() => {
+      this._message.success('There are no changes');
+    });
   }
 }
