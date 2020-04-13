@@ -172,7 +172,7 @@
         placeholder="Date">
     </mat-form-field>
 
-    <ng-container *ngIf="render">
+    <div fxLayout="row" fxLayoutAlign="start center" *ngIf="render">
       <mat-form-field>
         <input
           matInput
@@ -196,7 +196,7 @@
           placeholder="Time Range To"
         >
       </mat-form-field>
-    </ng-container>
+    </div>
 
     <div fxLayout="row" fxLayoutGap="5px">
       <button mat-raised-button color="primary">Submit</button>

@@ -63,7 +63,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
-    if (this._control && this.formDirective) {
+    if (this._control) {
 
       /*
         Ensure that statusChanges has one subscription per control. Multiple can happen
@@ -91,7 +91,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     if (this.messageSelector) {
       return this.messageSelector;
 
-    } else if (this.formDirective.messageSelector) {
+    } else if (this.formDirective && this.formDirective.messageSelector) {
       return this.formDirective.messageSelector;
     }
   }
@@ -105,7 +105,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     if (this.hintSelector) {
       return this.hintSelector;
 
-    } else if (this.formDirective.hintSelector) {
+    } else if (this.formDirective && this.formDirective.hintSelector) {
       return this.formDirective.hintSelector;
     }
   }
@@ -119,7 +119,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     if (this.wrapperSelector) {
       return this.wrapperSelector;
 
-    } else if (this.formDirective) {
+    } else if (this.formDirective && this.formDirective.wrapperSelector) {
       return this.formDirective.wrapperSelector;
     }
   }
@@ -133,7 +133,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     if (this.labelSelector) {
       return this.labelSelector;
 
-    } else if (this.formDirective.labelSelector) {
+    } else if (this.formDirective && this.formDirective.labelSelector) {
       return this.formDirective.labelSelector;
     }
   }
@@ -306,11 +306,6 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   public isEnabled(value) {
-
-    if (!this.formDirective) {
-      return false;
-    }
-
     return value !== 'false' && (value || value === '');
   }
 
