@@ -256,11 +256,26 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   public confirm(): Observable<boolean> {
-    return confirmUnsaved(this, this._prompt);
+
+    return new Observable(observer => {
+      const submitted = this.submitting ? this.submitted.asObservable() : of(true);
+      submitted
+      .pipe(
+        first()
+      )
+      .subscribe(() => {
+        confirmUnsaved(this, this._prompt)
+        .subscribe(value => {
+          observer.next(value);
+          observer.complete();
+        }, () => {
+          observer.error();
+        });
+      });
+    });
   }
 
   private _formClose(value = null): void {
-
     this.confirm()
     .subscribe(close => {
       if (close) {

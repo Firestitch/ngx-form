@@ -1,7 +1,9 @@
+import { delay, tap } from 'rxjs/operators';
 import { Component, ViewChild } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
 import { FsFormComponent } from '@firestitch/form';
+import { of } from 'rxjs';
 
 
 @Component({
@@ -18,7 +20,13 @@ export class DeactivateComponent {
   constructor(private _message: FsMessage) {}
 
   submit = () => {
-    this._message.success('Validation successful');
+    return of(true)
+    .pipe(
+      delay(1000),
+      tap(() => {
+        this._message.success('Validation successful');
+      })
+    );
   }
 
   confirm() {
