@@ -83,7 +83,7 @@ import { FsSubmitButtonDirective } from './directives/submit-button.directive';
   ],
 })
 export class FsFormModule {
-  static forRoot(): ModuleWithProviders {
+  static forRoot(): ModuleWithProviders<FsFormModule> {
     return {
       ngModule: FsFormModule,
       providers: [

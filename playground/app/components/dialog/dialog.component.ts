@@ -1,6 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 

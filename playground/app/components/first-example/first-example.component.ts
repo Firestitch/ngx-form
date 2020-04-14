@@ -15,7 +15,7 @@ import { of } from 'rxjs';
 })
 export class FirstExampleComponent {
 
-  @ViewChild(FsFormComponent, { static: false }) form: FsFormComponent;
+  @ViewChild(FsFormComponent) form: FsFormComponent;
 
   public required = true;
   public hidden = false;
