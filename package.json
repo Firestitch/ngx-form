@@ -59,7 +59,6 @@
     "@firestitch/label": "^8.2.1",
     "@firestitch/menu": "^9.0.2",
     "@firestitch/message": "^8.1.0",
-    "@firestitch/password": "^8.1.0",
     "@firestitch/phone": "^8.1.0",
     "@firestitch/prompt": "^8.4.2",
     "@firestitch/radiogroup": "^8.1.1",
