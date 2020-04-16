@@ -65,8 +65,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
   @HostListener('window:keydown.esc', ['$event'])
   windowKeyUp(event: any) {
-    if (this._dialogRef) {
 
+    if (this._dialogRef && !this._dialogRef.disableClose) {
       const dialog = document.getElementById(this._dialogRef.id);
 
       event.path.forEach(item => {
@@ -376,10 +376,10 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   private _registerDirtyConfirmDialogBackdrop() {
-    if (this._dialogRef) {
+    if (this._dialogRef && !this._dialogRef.disableClose) {
       this._dialogRef.disableClose = true;
       this._dialogRef.backdropClick()
-      .subscribe(_ => {
+      .subscribe(() => {
         this._formClose();
       });
     }
