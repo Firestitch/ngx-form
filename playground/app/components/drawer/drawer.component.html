@@ -1,5 +1,5 @@
 <div fsDrawerContent>
-  <form fsForm [submit]="save" (submitted)="close()">
+  <form fsForm [submit]="save" (submitted)="close($event)">
     <div class="content">
        <mat-form-field>
         <input

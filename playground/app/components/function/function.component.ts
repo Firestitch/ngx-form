@@ -10,7 +10,7 @@ export class FunctionComponent {
 
   constructor(private fsMessage: FsMessage) {}
 
-  @ViewChild('form', { static: false }) form;
+  @ViewChild('form') form;
 
   public email = 'existing@email.com';
   public minLength = 3;

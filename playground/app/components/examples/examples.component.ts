@@ -9,7 +9,7 @@ import { DeactivateComponent } from '../deactivate/deactivate.component';
 export class ExamplesComponent {
   public config = environment;
 
-  @ViewChild(DeactivateComponent, { static: false }) public deactivate: DeactivateComponent;
+  @ViewChild(DeactivateComponent) public deactivate: DeactivateComponent;
 
   get formComponent() {
     return this.deactivate.form;

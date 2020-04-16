@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 })
 export class DeactivateComponent {
 
-  @ViewChild(FsFormComponent, { static: false }) public form: FsFormComponent;
+  @ViewChild(FsFormComponent) public form: FsFormComponent;
 
   public email;
 

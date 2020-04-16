@@ -5,7 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
   templateUrl: 'emit-example.component.html'
 })
 export class EmitExampleComponent implements OnInit {
-  @ViewChild('form', { static: false }) form;
+  @ViewChild('form') form;
 
   status = 'Not Submitted';
   minMaxInput = null;
