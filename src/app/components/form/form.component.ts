@@ -184,8 +184,10 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
                     const progressEl = new DOMParser().parseFromString(this._getProgressSvg(), 'text/xml').firstChild;
                     this._submitButtons.forEach(button => {
-                      button.element.append(progressEl);
-                      button.element.classList.add('submit-process');
+                      if (document.activeElement === button.element) {
+                        button.element.append(progressEl);
+                        button.element.classList.add('submit-process');
+                      }
                     });
 
                     result
@@ -193,18 +195,12 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
                       takeUntil(this._destroy$)
                     )
                     .subscribe(response => {
-                      this._submitButtons.forEach(button => {
-                        button.element.removeChild(progressEl);
-                        button.element.classList.remove('submit-process');
-                      });
+                      this._resetButtons();
                       observer.next(response);
                       observer.complete();
 
                     }, () => {
-                      this._submitButtons.forEach(button => {
-                        button.element.removeChild(progressEl);
-                        button.element.classList.remove('submit-process');
-                      });
+                      this._resetButtons();
                       observer.error();
                     });
 
@@ -312,9 +308,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _completeSubmit(cls, svg) {
 
     this._submitButtons.forEach(button => {
-      const el = new DOMParser().parseFromString(svg, 'text/xml').firstChild;
-      button.element.classList.add(cls);
-      button.element.append(el);
+      if (document.activeElement === button.element) {
+        const el = new DOMParser().parseFromString(svg, 'text/xml').firstChild;
+        button.element.classList.add(cls);
+        button.element.append(el);
+      }
     });
 
     of(true)
@@ -323,18 +321,22 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       delay(2000),
       first()
     ).subscribe(() => {
-
-      this._submitButtons.forEach(button => {
-
-        const el = button.element.querySelector('.svg-icon');
-        if (el) {
-          button.element.removeChild(el);
-        }
-
-        button.element.classList.remove(cls);
-      });
-
+      this._resetButtons();
       this.submitting = false;
+    });
+  }
+
+  private _resetButtons() {
+    this._submitButtons.forEach(button => {
+
+      const el = button.element.querySelector('.svg-icon');
+      if (el) {
+        button.element.removeChild(el);
+      }
+
+      button.element.classList.remove('submit-success');
+      button.element.classList.remove('submit-error');
+      button.element.classList.remove('submit-process');
     });
   }
 
