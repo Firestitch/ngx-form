@@ -16,17 +16,17 @@ export class BroadcastExampleComponent implements OnInit {
 
   ngOnInit() {
     this.fsForm.on<string>('submit')
-      .subscribe((form: any) => {
+      .subscribe(() => {
         this.status = 'Submitting...';
       });
 
     this.fsForm.on<string>('valid')
-      .subscribe((form: any) => {
+      .subscribe(() => {
         this.status = 'Valid';
       });
 
     this.fsForm.on<string>('invalid')
-      .subscribe((form: any) => {
+      .subscribe(() => {
         this.status = 'Invalid';
       });
   }

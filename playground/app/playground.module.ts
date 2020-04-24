@@ -1,5 +1,3 @@
-import { DrawerExampleComponent } from './components/drawer-example/drawer-example.component';
-import { DrawerComponent } from './components/drawer/drawer.component';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -25,6 +23,9 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
 
+import { TabsExampleComponent } from './components/tabs-example/tabs-example.component';
+import { DrawerExampleComponent } from './components/drawer-example/drawer-example.component';
+import { DrawerComponent } from './components/drawer/drawer.component';
 import { FirstExampleComponent } from './components/first-example/first-example.component';
 import { EmitExampleComponent } from './components/emit-example/emit-example.component';
 import { BroadcastExampleComponent } from './components/broadcast-example/broadcast-example.component';
@@ -85,7 +86,8 @@ import { DialogComponent } from './components/dialog/dialog.component';
     DialogExampleComponent,
     DialogComponent,
     DrawerComponent,
-    DrawerExampleComponent
+    DrawerExampleComponent,
+    TabsExampleComponent
   ],
   entryComponents: [
     DialogComponent,

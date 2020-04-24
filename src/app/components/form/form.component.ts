@@ -1,4 +1,3 @@
-import { ConfigService } from './../../services/config.service';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -29,6 +28,9 @@ import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.d
 import { FsSubmitButtonDirective } from './../../directives/submit-button.directive';
 import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
+import { MatTabGroup, MatTab, MatTabHeader } from '@angular/material/tabs';
+import { ConfigService } from './../../services/config.service';
+import { SubmittedEvent, SubmitEvent } from './../../interfaces';
 
 
 @Component({
@@ -42,6 +44,9 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
   _formDialogClose: QueryList<FsFormDialogCloseDirective>;
 
+  @ContentChildren(MatTabGroup, { descendants: true })
+  _tabGroups: QueryList<MatTabGroup> = new QueryList();
+
   @ContentChildren(FsSubmitButtonDirective, { descendants: true })
   _submitButtons: QueryList<FsSubmitButtonDirective>;
 
@@ -50,23 +55,24 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @Input() hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
   @Input() autocomplete = false;
-  @Input() submit: (ngForm: NgForm) => Observable<any>;
-  @Input() shortcuts = true;
+  @Input() shortcuts = true; //Ctrl + s
   @Input() dirtyConfirm = true;
   @Input() dirtyConfirmDialog = true;
   @Input() dirtyConfirmDrawer = true;
   @Input() dirtyConfirmBrowser = true;
+  @Input() dirtyConfirmTabs = true;
   @Input() dirtySubmitButton = true;
-  @Output('fsForm') submitEvent: EventEmitter<any> = new EventEmitter();
-  @Output() invalid: EventEmitter<any> = new EventEmitter();
-  @Output() valid: EventEmitter<any> = new EventEmitter();
-  @Output() submitted: EventEmitter<any> = new EventEmitter();
+  @Input() submit: (event: SubmitEvent) => Observable<any>;
+  @Output('fsForm') submitEvent: EventEmitter<SubmitEvent> = new EventEmitter();
+  @Output() invalid: EventEmitter<SubmitEvent> = new EventEmitter();
+  @Output() valid: EventEmitter<SubmitEvent> = new EventEmitter();
+  @Output() submitted: EventEmitter<SubmitEvent> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
 
   @HostListener('window:keydown.esc', ['$event'])
   windowKeyUp(event: any) {
 
-    if (this._dialogRef && !this._dialogRef.disableClose) {
+    if (this._dialogBackdropEscape) {
       const dialog = document.getElementById(this._dialogRef.id);
 
       event.path.forEach(item => {
@@ -78,7 +84,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   @HostListener('window:keydown', ['$event'])
-  windowKeyDown(event: KeyboardEvent) {
+  windowKeyDown(event: any) {
 
     if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
       event.preventDefault();
@@ -102,6 +108,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
   private _destroy$ = new Subject();
   private _registerControl;
+  private _activeSubmitButton: FsSubmitButtonDirective;
+  private _dialogBackdropEscape = false;
 
   constructor(private _form: FsForm,
               private _element: ElementRef,
@@ -115,7 +123,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   public ngOnInit() {
     this._configService.form = this;
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {
-      this._registerDirtyConfirmDialogBackdrop();
+      this._registerDirtyConfirmDialogBackdropEscape();
     }
 
     if (!this.autocomplete) {
@@ -128,10 +136,10 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       .pipe(
         takeUntil(this._destroy$)
       )
-      .subscribe((event: KeyboardEvent) => {
+      .subscribe((ngSubmitEvent: KeyboardEvent) => {
 
-        if (event) {
-          event.preventDefault();
+        if (ngSubmitEvent) {
+          ngSubmitEvent.preventDefault();
         }
 
         if (this.submitting) {
@@ -160,71 +168,84 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
           Promise.all(validations)
           .then(() => {
 
-              if (this.ngForm.form.status === 'INVALID') {
+            this._activeSubmitButton = this._getActiveButton();
+            this._resetButtons();
 
-                this._form.broadcast('invalid', this.ngForm);
+            const progressEl = new DOMParser().parseFromString(this._getProgressSvg(), 'text/xml').firstChild;
+            const submitter = this._activeSubmitButton ? this._activeSubmitButton.name : null;
 
-                if (this.invalid) {
-                  this.invalid.emit(this.ngForm);
-                }
-                const message = 'Changes not saved. Please review errors highlighted in red.';
-                this._message.error(message, { mode: MessageMode.Toast });
-                observer.error();
+            if (this._activeSubmitButton) {
+              this._activeSubmitButton.element.append(progressEl);
+              this._activeSubmitButton.element.classList.add('submit-process');
+            }
 
-              } else {
+            const submitEvent: SubmitEvent = {
+              ngForm: this.ngForm,
+              submitter: submitter
+            };
 
-                this._form.broadcast('valid', this.ngForm);
-                this.submitEvent.emit(this.ngForm);
-                this.valid.emit(this.ngForm);
+            const submittedEvent: SubmittedEvent = {
+              ngForm: this.ngForm,
+              submitter: submitter,
+              response: null
+            };
 
-                if (this.submit) {
-                  const result = this.submit(this.ngForm);
+            if (this.ngForm.form.status === 'INVALID') {
+              this._form.broadcast('invalid', submitEvent);
 
-                  if (isObservable(result)) {
+              if (this.invalid) {
+                this.invalid.emit(submitEvent);
+              }
+              const message = 'Changes not saved. Please review errors highlighted in red.';
+              this._message.error(message, { mode: MessageMode.Toast });
+              observer.error();
 
-                    const progressEl = new DOMParser().parseFromString(this._getProgressSvg(), 'text/xml').firstChild;
-                    this._submitButtons.forEach(button => {
-                      if (document.activeElement === button.element) {
-                        button.element.append(progressEl);
-                        button.element.classList.add('submit-process');
-                      }
-                    });
+            } else {
 
-                    result
-                    .pipe(
-                      takeUntil(this._destroy$)
-                    )
-                    .subscribe(response => {
-                      this._resetButtons();
-                      observer.next(response);
-                      observer.complete();
+              this._form.broadcast('valid', submitEvent);
+              this.submitEvent.emit(submitEvent);
+              this.valid.emit(submitEvent);
 
-                    }, () => {
-                      this._resetButtons();
-                      observer.error();
-                    });
+              if (this.submit) {
 
-                  } else {
-                    observer.next();
+                const result = this.submit(submitEvent);
+
+                if (isObservable(result)) {
+
+                  result
+                  .pipe(
+                    takeUntil(this._destroy$)
+                  )
+                  .subscribe(response => {
+                    submittedEvent.response = response;
+                    observer.next(submittedEvent);
                     observer.complete();
-                  }
+
+                  }, () => {
+                    observer.error();
+                  });
 
                 } else {
-                  observer.next();
+                  observer.next(submittedEvent);
                   observer.complete();
                 }
+
+              } else {
+                observer.next(submittedEvent);
+                observer.complete();
               }
+            }
 
           }).catch(e => {
             observer.error();
           });
 
         })
-        .subscribe(result => {
+        .subscribe((event: SubmittedEvent) => {
           this._completeSubmit('submit-success', this._getSuccessSvg());
           this.ngForm.control.markAsPristine();
           this._updateDirtySubmitButtons();
-          this.submitted.emit(result);
+          this.submitted.emit(event);
         }, () => {
           this._completeSubmit('submit-error', this._getErrorSvg());
         });
@@ -249,12 +270,16 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     if (this.dirtySubmitButton) {
       this._registerDirtySubmitButton();
     }
+
+    if (this.dirtyConfirm && this.dirtyConfirmTabs) {
+      this._registerDirtyConfirmTabs();
+    }
   }
 
   public confirm(): Observable<boolean> {
 
     return new Observable(observer => {
-      const submitted = this.submitting ? this.submitted.asObservable() : of(true);
+      const submitted = this.submitting ? this.submitted.asObservable() : of({});
       submitted
       .pipe(
         first()
@@ -262,6 +287,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       .subscribe(() => {
         confirmUnsaved(this, this._prompt)
         .subscribe(value => {
+
+          if (value) {
+            this.ngForm.control.markAsPristine();
+          }
+
           observer.next(value);
           observer.complete();
         }, () => {
@@ -294,6 +324,14 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
+  private _getActiveButton() {
+    const activeButton = this._submitButtons.find(button => {
+      return button.active;
+    });
+
+    return activeButton ? activeButton : this._submitButtons.first;
+  }
+
   private _elementInForm(el: Element) {
 
     if (el.isSameNode(this._element.nativeElement)) {
@@ -307,28 +345,27 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
   private _completeSubmit(cls, svg) {
 
-    this._submitButtons.forEach(button => {
-      if (document.activeElement === button.element) {
-        const el = new DOMParser().parseFromString(svg, 'text/xml').firstChild;
-        button.element.classList.add(cls);
-        button.element.append(el);
-      }
-    });
+    if (this._activeSubmitButton) {
+      this._resetButtons();
+      const el = new DOMParser().parseFromString(svg, 'text/xml').firstChild;
+      this._activeSubmitButton.element.classList.add(cls);
+      this._activeSubmitButton.element.append(el);
+    }
 
     of(true)
     .pipe(
       takeUntil(this._destroy$),
-      delay(2000),
+      delay(1500),
       first()
     ).subscribe(() => {
-      this._resetButtons();
       this.submitting = false;
+      this._resetButtons();
     });
   }
 
   private _resetButtons() {
     this._submitButtons.forEach(button => {
-
+      button.active = false;
       const el = button.element.querySelector('.svg-icon');
       if (el) {
         button.element.removeChild(el);
@@ -358,6 +395,37 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
+  private _registerDirtyConfirmTabs() {
+
+    this._registerDirtyConfirmTabGroups();
+
+    this._tabGroups.changes
+    .pipe(
+      takeUntil(this._destroy$)
+    )
+    .subscribe(changes => {
+      this._registerDirtyConfirmTabGroups();
+    });
+  }
+
+  private _registerDirtyConfirmTabGroups() {
+    this._tabGroups.forEach((tabGroup: any) => {
+      if (!tabGroup._dirtyHandleClick) {
+        tabGroup._dirtyHandleClick = tabGroup._handleClick;
+        tabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
+
+          if (!this.submitting) {
+            this.confirm()
+            .subscribe(confirm => {
+              if (confirm) {
+                tabGroup.selectedIndex = idx;
+              }
+            });
+          }
+        }
+      }
+    });
+  }
 
   private _registerDirtyConfirmDialogClose() {
     if (this._dialogRef) {
@@ -377,10 +445,15 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  private _registerDirtyConfirmDialogBackdrop() {
-    if (this._dialogRef && !this._dialogRef.disableClose) {
+  private _registerDirtyConfirmDialogBackdropEscape() {
+    this._dialogBackdropEscape = this._dialogRef && this._dialogRef.disableClose !== true;
+
+    if (this._dialogRef) {
       this._dialogRef.disableClose = true;
       this._dialogRef.backdropClick()
+      .pipe(
+        takeUntil(this._destroy$)
+      )
       .subscribe(() => {
         this._formClose();
       });

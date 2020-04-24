@@ -2,27 +2,37 @@
   <fs-dialog>
     <h1 mat-dialog-title>Add Animal</h1>
     <div mat-dialog-content>
-      <div fxLayout="column">
-        <mat-form-field>
-          <input
-            placeholder="Name"
-            matInput
-            [(ngModel)]="animal.name"
-            name="name">
-        </mat-form-field>
 
-        <mat-form-field>
-          <input
-            placeholder="Color"
-            matInput
-            [(ngModel)]="animal.color"
-            name="color">
-        </mat-form-field>
-      </div>
+      <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+        <mat-tab label="First">
+          <div fxLayout="column">
+            <mat-form-field>
+              <input
+                placeholder="Name"
+                matInput
+                [(ngModel)]="animal.name"
+                name="name">
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                placeholder="Color"
+                matInput
+                [(ngModel)]="animal.color"
+                name="color">
+            </mat-form-field>
+          </div>
+        </mat-tab>
+        <mat-tab label="Second"> Content </mat-tab>
+        <mat-tab label="Third"> Content </mat-tab>
+      </mat-tab-group>
     </div>
     <div mat-dialog-actions>
-      <button mat-button color="primary">Save</button>
-      <button mat-button fs-form-dialog-close>Cancel</button>
+      <ng-container *ngIf="selectedIndex===0">
+        <button mat-button color="primary" name="save">Save</button>
+        <button mat-button color="primary" name="close">Save & Close</button>
+      </ng-container>
+      <button mat-button type="button" fs-form-dialog-close>Cancel</button>
     </div>
 </fs-dialog>
 </form>

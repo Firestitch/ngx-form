@@ -1,4 +1,4 @@
-import { Directive, OnInit, Host, ElementRef, HostBinding, Optional } from '@angular/core';
+import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, HostListener, Input } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { ConfigService } from './../services/config.service';
 
@@ -9,6 +9,15 @@ import { ConfigService } from './../services/config.service';
 export class FsSubmitButtonDirective implements OnInit {
 
   @HostBinding('style.transition') transitionStyle = null;
+
+  @HostListener('click', ['$event.target'])
+  click() {
+    this.active = true;
+  }
+
+  @Input() name;
+
+  public active = false;
 
   constructor(@Host() private _matButton: MatButton,
               private _element: ElementRef,
