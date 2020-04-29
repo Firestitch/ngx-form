@@ -32,7 +32,8 @@
         <button mat-button color="primary" name="save">Save</button>
         <button mat-button color="primary" name="close">Save & Close</button>
       </ng-container>
-      <button mat-button type="button" fs-form-dialog-close>Cancel</button>
+      <button mat-button type="button" [matDialogClose]="null">Cancel (Ignore Dirty Form)</button>
+      <button mat-button type="button" fsFormDialogClose>Cancel (Confirm Dirty Form)</button>
     </div>
 </fs-dialog>
 </form>
