@@ -15,7 +15,8 @@ export class DeactivateComponent {
 
   @ViewChild(FsFormComponent) public form: FsFormComponent;
 
-  public email;
+  public email = 'bob@email.com';
+  public email1 = 'ray@email.com';
 
   constructor(private _message: FsMessage) {}
 

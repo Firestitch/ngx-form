@@ -1,4 +1,4 @@
-import { Component, SkipSelf } from '@angular/core';
+import { Component } from '@angular/core';
 import { ControlContainer, NgForm } from '@angular/forms';
 
 @Component({

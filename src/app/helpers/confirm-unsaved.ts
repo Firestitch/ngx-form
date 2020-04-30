@@ -37,6 +37,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
       if (value === 'discard') {
         observer.next(true);
         observer.complete();
+        form.reset();
       }
 
       if (value === 'save') {
@@ -59,6 +60,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
           observer.complete();
         });
 
+        form.ngForm.control.markAsPristine();
         form.ngForm.ngSubmit.emit();
       }
 

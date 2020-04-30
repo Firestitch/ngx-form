@@ -16,9 +16,9 @@ import {
   AfterContentInit
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
-import { values } from 'lodash-es';
 import { FsForm } from '../../services/fsform.service';
 import { isObservable, Subject, of, Observable } from 'rxjs';
+import { forOwn } from 'lodash-es';
 import { takeUntil, delay, first } from 'rxjs/operators';
 import { FsMessage, MessageMode } from '@firestitch/message';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -110,6 +110,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _registerControl;
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
+  private _snapshot: any = {};
 
   constructor(private _form: FsForm,
               private _element: ElementRef,
@@ -121,6 +122,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
               @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
 
   public ngOnInit() {
+
     this._configService.form = this;
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {
       this._registerDirtyConfirmDialogBackdropEscape();
@@ -150,16 +152,15 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
         this._form.broadcast('submit', this.ngForm);
         const validations = [];
 
-        values(this.ngForm.controls).forEach(control => {
+        (Object as any).values(this.ngForm.controls).forEach(control => {
           control.markAsDirty();
           control.markAsTouched();
         });
 
-        values(this.ngForm.controls).forEach(control => {
+        (Object as any).values(this.ngForm.controls).forEach(control => {
             control.updateValueAndValidity();
-
             if (control.asyncValidator) {
-              validations.push(control.asyncValidator().toPromise());
+              validations.push((control.asyncValidator(control) as Observable<any>).toPromise());
             }
         });
 
@@ -246,6 +247,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
           this.ngForm.control.markAsPristine();
           this._updateDirtySubmitButtons();
           this.submitted.emit(event);
+          this._snapshot = {};
+
+          forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
+            this._snapshot[name] = control.value;
+          });
         }, () => {
           this._completeSubmit('submit-error', this._getErrorSvg());
         });
@@ -259,6 +265,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   public ngAfterContentInit() {
+
+    if (this.dirtyConfirm) {
+      this._registerDirtyConfirm();
+    }
+
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {
       this._registerDirtyConfirmDialogClose();
     }
@@ -276,6 +287,16 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
+  public reset() {
+    forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
+      control.setValue(this._snapshot[name]);
+      setTimeout(() => {
+        control.updateValueAndValidity();
+        this.ngForm.control.markAsPristine();
+      });
+    });
+  }
+
   public confirm(): Observable<boolean> {
 
     return new Observable(observer => {
@@ -287,11 +308,6 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       .subscribe(() => {
         confirmUnsaved(this, this._prompt)
         .subscribe(value => {
-
-          if (value) {
-            this.ngForm.control.markAsPristine();
-          }
-
           observer.next(value);
           observer.complete();
         }, () => {
@@ -374,6 +390,21 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       button.element.classList.remove('submit-success');
       button.element.classList.remove('submit-error');
       button.element.classList.remove('submit-process');
+    });
+  }
+
+  private _registerDirtyConfirm() {
+    this.ngForm.form.valueChanges
+    .pipe(
+      takeUntil(this._destroy$)
+    )
+    .subscribe((changes) => {
+      const existing = Object.keys(this._snapshot);
+      forOwn(changes, (value, name) => {
+        if (existing.indexOf(name) < 0) {
+          this._snapshot[name] = value;
+        }
+      });
     });
   }
 

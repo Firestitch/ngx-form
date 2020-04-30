@@ -39,7 +39,6 @@
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            [required]="required && validations"
             matInput
             />
         </mat-form-field>
@@ -47,7 +46,6 @@
         <input placeholder="Password Confirm"
           name="password_confirm"
           [(ngModel)]="passwordConfirm"
-          [required]="required && validations"
           [fsFormCompare]="passwordInput"
           matInput
           />
