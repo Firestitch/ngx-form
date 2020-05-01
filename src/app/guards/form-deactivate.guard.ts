@@ -19,7 +19,7 @@ export class FormDeactivateGuard implements CanDeactivate<any> {
     if (!('formComponent' in component)) {
       const error = `Component ${(<any>component).constructor.name} does not property implement interface FormDeactivate`;
       console.error(error);
-      return of(false);
+      return of(true);
     }
 
     const form: FsFormComponent = component.formComponent;
@@ -27,7 +27,7 @@ export class FormDeactivateGuard implements CanDeactivate<any> {
     if (!form) {
       const error = `Component ${component.constructor.name}.formComponent does not return a valid FsFormComponent`;
       console.error(error);
-      return of(false);
+      return of(true);
     }
 
     return confirmUnsaved(form, this._prompt);
