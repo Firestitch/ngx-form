@@ -411,7 +411,10 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _registerDirtyConfirmDrawerClose() {
 
     if (this._drawerRef) {
-      this._drawerRef.closeStart()
+      this._drawerRef.closeStart$
+      .pipe(
+        takeUntil(this._destroy$)
+      )
       .subscribe(subscriber => {
         this.confirm()
         .subscribe(value => {

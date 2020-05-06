@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "title": "Form",
-  "version": "9.2.1",
+  "version": "9.2.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-form"
@@ -53,7 +53,7 @@
     "@firestitch/common": "^8.0.1",
     "@firestitch/datepicker": "^8.2.2",
     "@firestitch/dialog": "^8.1.1",
-    "@firestitch/drawer": "^8.3.3",
+    "@firestitch/drawer": "^8.3.5",
     "@firestitch/example": "^9.0.0",
     "@firestitch/iframe": "^8.0.0",
     "@firestitch/label": "^8.2.1",
@@ -79,15 +79,14 @@
     "rxjs": "^6.5.5",
     "tslint": "^6.1.1",
     "typescript": "^3.8.3",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "tslib": "^1.10.0"
   },
   "engines": {
     "node": ">=6.0.0"
   },
   "peerDependencies": {
-    "@firestitch/common": ">=7.0.2"
-  },
-  "dependencies": {
-    "tslib": "^1.10.0"
+    "@firestitch/common": ">=7.0.2",
+    "@firestitch/drawer": ">=8.3.5"
   }
 }
