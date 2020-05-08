@@ -19,9 +19,9 @@ export class FsSubmitButtonDirective implements OnInit {
 
   public active = false;
 
-  constructor(@Host() private _matButton: MatButton,
-              private _element: ElementRef,
-              @Optional() private _configService: ConfigService) {
+  constructor(@Optional() @Host() private _matButton: MatButton,
+              @Optional() private _configService: ConfigService,
+              private _element: ElementRef) {
     if (_configService) {
       this.transitionStyle = 'none';
     }
@@ -40,11 +40,15 @@ export class FsSubmitButtonDirective implements OnInit {
   }
 
   public disable() {
-    this._matButton.disabled = true;
+    if (this._matButton) {
+      this._matButton.disabled = true;
+    }
   }
 
   public enable() {
-    this._matButton.disabled = false;
+    if (this._matButton) {
+      this._matButton.disabled = false;
+    }
   }
 
   public get element() {
