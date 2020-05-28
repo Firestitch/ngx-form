@@ -10,7 +10,7 @@ export class FsSubmitButtonDirective implements OnInit {
 
   @HostBinding('style.transition') transitionStyle = null;
 
-  @HostListener('click', ['$event.target'])
+  @HostListener('click')
   click() {
     this.active = true;
   }
