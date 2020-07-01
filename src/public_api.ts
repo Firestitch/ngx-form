@@ -1,4 +1,4 @@
-import { SubmitEvent } from './app/interfaces/submit-event';
+
 // Modules
 export { FsFormModule } from './app/fs-form.module';
 
@@ -17,6 +17,8 @@ export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
 export { SubmitEvent } from './app/interfaces/submit-event';
 export { SubmittedEvent } from './app/interfaces/submitted-event';
 
+// Enums
+export { ConfirmResult } from './app/enums/confirm-result';
 
 
 

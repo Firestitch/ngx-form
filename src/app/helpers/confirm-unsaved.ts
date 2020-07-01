@@ -1,14 +1,17 @@
-import { Observable } from 'rxjs';
-import { FsFormComponent } from '../components/form/form.component';
-import { first } from 'rxjs/operators';
 import { FsPrompt } from '@firestitch/prompt';
 
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 
-export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observable<boolean> {
+import { FsFormComponent } from '../components/form/form.component';
+import { ConfirmResult } from '../enums/confirm-result';
+
+
+export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observable<ConfirmResult> {
   return new Observable(observer => {
 
     if (!form.dirtyConfirm || !form.ngForm.dirty) {
-      observer.next(true);
+      observer.next(ConfirmResult.Pristine);
       observer.complete();
       return;
     }
@@ -35,7 +38,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
     }).subscribe(value => {
 
       if (value === 'discard') {
-        observer.next(true);
+        observer.next(ConfirmResult.Discard);
         observer.complete();
         form.reset();
       }
@@ -47,7 +50,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
           first()
         )
         .subscribe(() => {
-          observer.next(true);
+          observer.next(ConfirmResult.Save);
           observer.complete();
         });
 
@@ -56,7 +59,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
           first()
         )
         .subscribe(() => {
-          observer.next(false);
+          observer.next(ConfirmResult.Invalid);
           observer.complete();
         });
 
@@ -65,7 +68,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
       }
 
     }, (error: any) => {
-      observer.next(false);
+      observer.next(ConfirmResult.Review);
       observer.complete();
     });
   });

@@ -16,22 +16,28 @@ import {
   AfterContentInit
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
-import { FsForm } from '../../services/fsform.service';
-import { isObservable, Subject, of, Observable } from 'rxjs';
-import { forOwn } from 'lodash-es';
-import { takeUntil, delay, first } from 'rxjs/operators';
-import { FsMessage, MessageMode } from '@firestitch/message';
+
 import { MatDialogRef } from '@angular/material/dialog';
-import { confirmUnsaved } from '../../helpers/confirm-unsaved';
+import { MatTabGroup, MatTab, MatTabHeader } from '@angular/material/tabs';
+
+import { FsMessage, MessageMode } from '@firestitch/message';
 import { FsPrompt } from '@firestitch/prompt';
-import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
-import { FsSubmitButtonDirective } from './../../directives/submit-button.directive';
 import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
-import { MatTabGroup, MatTab, MatTabHeader } from '@angular/material/tabs';
+
+import { isObservable, Subject, of, Observable } from 'rxjs';
+import { takeUntil, delay, first } from 'rxjs/operators';
+
+import { forOwn } from 'lodash-es';
+
+import { confirmUnsaved } from '../../helpers/confirm-unsaved';
+import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
+import { FsSubmitButtonDirective } from './../../directives/submit-button.directive';
 import { ConfigService } from './../../services/config.service';
 import { SubmittedEvent, SubmitEvent } from './../../interfaces';
-
+import { ConfirmResult } from './../../enums/confirm-result';
+import { FsForm } from '../../services/fsform.service';
+import { confirmResultContinue } from '../../helpers';
 
 @Component({
   selector: '[fsForm]',
@@ -297,8 +303,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  public confirm(): Observable<boolean> {
-
+  public confirm(): Observable<ConfirmResult> {
     return new Observable(observer => {
       const submitted = this.submitting ? this.submitted.asObservable() : of({});
       submitted
@@ -319,8 +324,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
   private _formClose(value = null): void {
     this.confirm()
-    .subscribe(close => {
-      if (close) {
+    .subscribe((result) => {
+      if (confirmResultContinue(result)) {
         this._dialogRef.close(value);
       }
     });
@@ -417,8 +422,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       )
       .subscribe(subscriber => {
         this.confirm()
-        .subscribe(value => {
-          if (value) {
+        .subscribe(result => {
+          if (confirmResultContinue(result)) {
             subscriber.next();
           } else {
             subscriber.error();
@@ -450,8 +455,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
           if (!this.submitting) {
             this.confirm()
-            .subscribe(confirm => {
-              if (confirm) {
+            .subscribe((result) => {
+              if (confirmResultContinue(result)) {
                 tabGroup.selectedIndex = idx;
               }
             });
