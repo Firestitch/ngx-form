@@ -100,4 +100,9 @@ export class FirstExampleComponent {
     console.log('Validation invalid');
   }
 
+  reset() {
+
+    this.integer = null;
+    this.form.reset();
+  }
 }

@@ -41,20 +41,21 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   protected _control: AbstractControl;
 
   constructor(
-      protected elementRef: ElementRef,
-      protected renderer2: Renderer2,
-      protected injector: Injector,
-      @Optional() protected ngControl: NgControl,
-      @Optional() @Inject(FsFormComponent) private formDirective: FsFormComponent) {
+    protected elementRef: ElementRef,
+    protected renderer2: Renderer2,
+    protected injector: Injector,
+    @Optional() protected ngControl: NgControl,
+    @Optional() @Inject(FsFormComponent) private formDirective: FsFormComponent,
+  ) {
 
-        if (ngControl) {
-          this._control = ngControl.control;
-          (<any>this._control).fsValidators = (<any>this._control).fsValidators || [];
-          (<any>this._control).fsAsyncValidators = (<any>this._control).asyncValidators || [];
+    if (ngControl) {
+      this._control = ngControl.control;
+      (<any>this._control).fsValidators = (<any>this._control).fsValidators || [];
+      (<any>this._control).fsAsyncValidators = (<any>this._control).asyncValidators || [];
 
-        } else {
-          console.error('The element does not have a valid ngModel', this.elementRef.nativeElement);
-        }
+    } else {
+      console.error('The element does not have a valid ngModel', this.elementRef.nativeElement);
+    }
   }
 
   ngOnDestroy() {
@@ -161,11 +162,11 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
   protected render() {
 
-    if (this.ngControl && this.ngControl.dirty) {
+    if (this.ngControl) {
 
       const renderer = this.renderer2;
       const wrapper = this.getWrapperElement();
-      const error = this.getError(this, this.ngControl);
+      const error = this.ngControl.dirty ? this.getError(this, this.ngControl) : null;
 
       if (!this.getMessageSelector()) {
         return;

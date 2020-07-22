@@ -13,7 +13,8 @@ import {
   Optional,
   QueryList,
   ContentChildren,
-  AfterContentInit
+  AfterContentInit,
+  ChangeDetectorRef
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
 
@@ -42,7 +43,6 @@ import { confirmResultContinue } from '../../helpers';
 @Component({
   selector: '[fsForm]',
   template: `<ng-content></ng-content>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ ConfigService ]
 })
 export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
@@ -118,14 +118,16 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _dialogBackdropEscape = false;
   private _snapshot: any = {};
 
-  constructor(private _form: FsForm,
-              private _element: ElementRef,
-              private _message: FsMessage,
-              private _prompt: FsPrompt,
-              private _configService: ConfigService,
-              @Inject(NgForm) public ngForm: NgForm,
-              @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
-              @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
+  constructor(
+    private _form: FsForm,
+    private _element: ElementRef,
+    private _message: FsMessage,
+    private _prompt: FsPrompt,
+    private _configService: ConfigService,
+    private _cdRef: ChangeDetectorRef,
+    @Inject(NgForm) public ngForm: NgForm,
+    @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
+    @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
 
   public ngOnInit() {
 
@@ -294,12 +296,13 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   public reset() {
+    this.ngForm.reset();
+    this.ngForm.resetForm();
     forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
-      control.setValue(this._snapshot[name]);
-      setTimeout(() => {
-        control.updateValueAndValidity();
-        this.ngForm.control.markAsPristine();
-      });
+      control.reset(this._snapshot[name]);
+      control.markAsUntouched();
+      control.markAsPristine();
+      control.setErrors(null);
     });
   }
 
