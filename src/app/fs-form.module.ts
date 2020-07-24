@@ -2,7 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { FsForm } from './services/fsform.service';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 import { FsFormComponent } from './components/form/form.component';
 import { FsControlDirective } from './directives/control.directive';
@@ -79,16 +79,16 @@ import { FsSubmitButtonDirective } from './directives/submit-button.directive';
     FsSubmitButtonDirective
   ],
   providers: [
-    FsForm
+    {
+      provide: ErrorStateMatcher,
+      useClass: ShowOnDirtyErrorStateMatcher,
+    }
   ],
 })
 export class FsFormModule {
   static forRoot(): ModuleWithProviders<FsFormModule> {
     return {
       ngModule: FsFormModule,
-      providers: [
-        FsForm
-      ]
     };
   }
 }

@@ -7,7 +7,9 @@ interface BroadcastEvent {
     data?: any;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class FsForm {
     private _eventBus: Subject<BroadcastEvent>;
 
