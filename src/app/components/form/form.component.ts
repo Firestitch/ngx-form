@@ -306,6 +306,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
+  public dirty(): void {
+    this.ngForm.form.markAsDirty();
+    this._updateDirtySubmitButtons();
+  }
+
   public confirm(): Observable<ConfirmResult> {
     return new Observable(observer => {
       const submitted = this.submitting ? this.submitted.asObservable() : of({});

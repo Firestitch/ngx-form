@@ -101,8 +101,11 @@ export class FirstExampleComponent {
   }
 
   reset() {
-
     this.integer = null;
     this.form.reset();
+  }
+
+  dirty() {
+    this.form.dirty();
   }
 }
