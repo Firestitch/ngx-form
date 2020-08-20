@@ -204,6 +204,7 @@
       <button mat-raised-button color="primary" type="button" (click)="submit()">Manual Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="reset()">Reset</button>
       <button mat-raised-button color="primary" type="button" (click)="dirty()">Dirty</button>
+      <button mat-raised-button color="primary" type="submit" [dirtySubmit]="false">Submit (Dirty Disabled)</button>
     </div>
   </div>
 </form>

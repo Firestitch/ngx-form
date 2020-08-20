@@ -550,11 +550,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _updateDirtySubmitButtons() {
 
     if (this.dirtySubmitButton) {
-      this._submitButtons.forEach(item => {
-        if (this.ngForm.dirty) {
-          item.enable();
+      this._submitButtons.forEach((button) => {
+        if (this.ngForm.dirty || !button.dirtySubmit) {
+          button.enable();
         } else {
-          item.disable();
+          button.disable();
         }
       });
     }

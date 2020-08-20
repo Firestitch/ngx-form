@@ -16,6 +16,7 @@ export class FsSubmitButtonDirective implements OnInit {
   }
 
   @Input() name;
+  @Input() dirtySubmit = true;
 
   public active = false;
 
@@ -28,7 +29,7 @@ export class FsSubmitButtonDirective implements OnInit {
   }
 
   ngOnInit() {
-    if (this._configService) {
+    if (this._configService && this.dirtySubmit) {
       if (this._configService.form.dirtySubmitButton) {
         this.disable();
       }
