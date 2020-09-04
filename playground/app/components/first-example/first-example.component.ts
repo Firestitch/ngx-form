@@ -92,7 +92,7 @@ export class FirstExampleComponent {
     this.fsMessage.success('Validation successful');
     return of(true)
     .pipe(
-      delay(1000)
+      delay(2000)
     );
   }
 

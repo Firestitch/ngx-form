@@ -69,7 +69,7 @@
 
   $primary: mat-palette($theme);
 
-  .fs-form button[disabled] {
+  .fs-form button {
 
     &.submit-process svg {
       stroke: mat-color($primary);
@@ -78,6 +78,17 @@
     &.submit-error svg path,
     &.submit-success svg path {
       fill: mat-color($primary);
+    }
+
+    &[color='primary'] {
+      &.submit-process svg {
+        stroke: #fff;
+      }
+
+      &.submit-error svg path,
+      &.submit-success svg path {
+        fill: #fff;
+      }
     }
   }
 }

@@ -20,15 +20,17 @@ export class FsSubmitButtonDirective implements OnInit {
 
   public active = false;
 
-  constructor(@Optional() @Host() private _matButton: MatButton,
-              @Optional() private _configService: ConfigService,
-              private _element: ElementRef) {
+  constructor(
+    @Optional() @Host() private _matButton: MatButton,
+    @Optional() private _configService: ConfigService,
+    private _element: ElementRef,
+  ) {
     if (_configService) {
       this.transitionStyle = 'none';
     }
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     if (this._configService && this.dirtySubmit) {
       if (this._configService.form.dirtySubmitButton) {
         this.disable();
