@@ -45,7 +45,7 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
 
       if (value === 'save') {
 
-        form.valid
+        form.submitted
         .pipe(
           first()
         )

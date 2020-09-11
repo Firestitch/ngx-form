@@ -1,3 +1,4 @@
+import { SubmitEvent } from './../../interfaces/submit-event';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,7 +36,7 @@ import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 import { FsSubmitButtonDirective } from './../../directives/submit-button.directive';
 import { ConfigService } from './../../services/config.service';
-import { SubmittedEvent, SubmitEvent } from './../../interfaces';
+import { SubmittedEvent } from './../../interfaces';
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FsForm } from '../../services/fsform.service';
 import { confirmResultContinue } from '../../helpers';
@@ -250,17 +251,10 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
           });
 
         })
-        .subscribe((event: SubmittedEvent) => {
-          this._completeSubmit(true);
-          this.ngForm.control.markAsPristine();
-          this.submitted.emit(event);
-          this._snapshot = {};
-
-          forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
-            this._snapshot[name] = control.value;
-          });
+        .subscribe((submittedEvent: SubmittedEvent) => {
+          this._completeSubmit(true, submittedEvent);
         }, () => {
-          this._completeSubmit(false);
+          this._completeSubmit(false, null);
         });
       });
     }
@@ -319,7 +313,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       )
       .subscribe(() => {
         confirmUnsaved(this, this._prompt)
-        .subscribe(value => {
+        .subscribe((value) => {
           observer.next(value);
           observer.complete();
         }, () => {
@@ -371,7 +365,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     return false;
   }
 
-  private _completeSubmit(success) {
+  private _completeSubmit(success, submitEvent: SubmitEvent) {
     if (this._activeSubmitButton) {
       this._resetButtons();
       const type = success ? 'success' : 'error';
@@ -386,11 +380,17 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       delay(1500),
       first()
     ).subscribe(() => {
-      this.submitting = false;
       this._resetButtons();
       if (success) {
+        this.ngForm.control.markAsPristine();
+        this.submitted.emit(submitEvent);
+        this._snapshot = {};
+        forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
+          this._snapshot[name] = control.value;
+        });
         this._updateDirtySubmitButtons();
       }
+      this.submitting = false;
     });
   }
 
