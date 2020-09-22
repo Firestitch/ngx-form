@@ -1,11 +1,9 @@
 import { SubmitEvent } from './../../interfaces/submit-event';
 import {
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -15,7 +13,6 @@ import {
   QueryList,
   ContentChildren,
   AfterContentInit,
-  ChangeDetectorRef
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
 
@@ -27,7 +24,7 @@ import { FsPrompt } from '@firestitch/prompt';
 import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
 
-import { isObservable, Subject, of, Observable } from 'rxjs';
+import { isObservable, Subject, of, Observable, fromEvent } from 'rxjs';
 import { takeUntil, delay, first } from 'rxjs/operators';
 
 import { forOwn } from 'lodash-es';
@@ -39,6 +36,7 @@ import { ConfigService } from './../../services/config.service';
 import { SubmittedEvent } from './../../interfaces';
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FsForm } from '../../services/fsform.service';
+import { DirtyConfirmConfig } from './../../interfaces';
 import { confirmResultContinue } from '../../helpers';
 
 @Component({
@@ -63,7 +61,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @Input() labelSelector = '.fs-form-label,.mat-form-field-label';
   @Input() autocomplete = false;
   @Input() shortcuts = true; //Ctrl + s
-  @Input() dirtyConfirm = true;
+  @Input() dirtyConfirm: DirtyConfirmConfig | boolean = true;
   @Input() dirtyConfirmDialog = true;
   @Input() dirtyConfirmDrawer = true;
   @Input() dirtyConfirmBrowser = true;
@@ -75,41 +73,6 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @Output() valid: EventEmitter<SubmitEvent> = new EventEmitter();
   @Output() submitted: EventEmitter<SubmitEvent> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
-
-  @HostListener('window:keydown.esc', ['$event'])
-  windowKeyUp(event: any) {
-
-    if (this._dialogBackdropEscape) {
-      const dialog = document.getElementById(this._dialogRef.id);
-
-      event.path.forEach(item => {
-        if (dialog === item) {
-          this._formClose();
-        }
-      });
-    }
-  }
-
-  @HostListener('window:keydown', ['$event'])
-  windowKeyDown(event: any) {
-
-    if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
-      event.preventDefault();
-
-      if (this.shortcuts) {
-        if (this._elementInForm(document.activeElement)) {
-          this.ngForm.ngSubmit.next();
-        }
-      }
-    }
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-  windowBeforeUnload(event: Event) {
-    if (this.dirtyConfirm && this.dirtyConfirmBrowser && this.ngForm.dirty) {
-      event.returnValue = false;
-    }
-  }
 
   public submitting = false;
 
@@ -125,12 +88,50 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     private _message: FsMessage,
     private _prompt: FsPrompt,
     private _configService: ConfigService,
-    private _cdRef: ChangeDetectorRef,
     @Inject(NgForm) public ngForm: NgForm,
     @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
     @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
 
   public ngOnInit() {
+
+    fromEvent(document, 'keydown')
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe((event: KeyboardEvent) => {
+
+        if (this._dialogBackdropEscape && event.code === 'Escape') {
+          const dialog = document.getElementById(this._dialogRef.id);
+
+          if ((event as any).path) {
+            (event as any).path.forEach(item => {
+              if (dialog === item) {
+                this._formClose();
+              }
+            });
+          }
+        }
+
+        if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
+          event.preventDefault();
+
+          if (this.shortcuts) {
+            if (this._elementInForm(document.activeElement)) {
+              this.ngForm.ngSubmit.next();
+            }
+          }
+        }
+      });
+
+    fromEvent(window, 'beforeunload')
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe((event: Event) => {
+        if (this.dirtyConfirm && this.dirtyConfirmBrowser && this.ngForm.dirty) {
+          event.returnValue = false;
+        }
+      });
 
     this._configService.form = this;
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {

@@ -16,22 +16,36 @@ export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observa
       return;
     }
 
+    let title = 'You Have Unsaved Changes';
+    let message = 'What would you like to do with your changes?';
+    let saveLabel = 'Save & Continue';
+    let discardLabel = 'Discard Changes & Continue';
+    let cancelLabel = 'Review Changes';
+
+    if (typeof form.dirtyConfirm === 'object') {
+      title = form.dirtyConfirm.title || title;
+      message = form.dirtyConfirm.message || message;
+      saveLabel = form.dirtyConfirm.saveLabel || saveLabel;
+      discardLabel = form.dirtyConfirm.discardLabel || discardLabel;
+      cancelLabel = form.dirtyConfirm.cancelLabel || cancelLabel;
+    }
+
     prompt.confirm({
-      title: 'You Have Unsaved Changes',
-      template: 'What would you like to do with your changes?',
+      title: title,
+      template: message,
       dialogConfig: { width: 'auto' },
       buttons: [
         {
-          label: 'Save & Continue',
+          label: saveLabel,
           color: 'primary',
           value: 'save'
         },
         {
-          label: 'Discard Changes & Continue',
+          label: discardLabel,
           value: 'discard'
         },
         {
-          label: 'Review Changes',
+          label: cancelLabel,
           cancel: true
         }
       ]
