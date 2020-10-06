@@ -1,4 +1,3 @@
-import { SubmitEvent } from './../../interfaces/submit-event';
 import {
   Component,
   ElementRef,
@@ -13,6 +12,8 @@ import {
   QueryList,
   ContentChildren,
   AfterContentInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
 
@@ -24,8 +25,8 @@ import { FsPrompt } from '@firestitch/prompt';
 import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
 
-import { isObservable, Subject, of, Observable, fromEvent } from 'rxjs';
-import { takeUntil, delay, first } from 'rxjs/operators';
+import { isObservable, Subject, of, Observable, fromEvent, BehaviorSubject } from 'rxjs';
+import { takeUntil, delay, first, take } from 'rxjs/operators';
 
 import { forOwn } from 'lodash-es';
 
@@ -37,14 +38,20 @@ import { SubmittedEvent } from './../../interfaces';
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FsForm } from '../../services/fsform.service';
 import { DirtyConfirmConfig } from './../../interfaces';
+import { SubmitEvent } from './../../interfaces/submit-event';
 import { confirmResultContinue } from '../../helpers';
 
 @Component({
   selector: '[fsForm]',
   template: `<ng-content></ng-content>`,
-  providers: [ ConfigService ]
+  providers: [ConfigService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
+
+  static StatusIdling = 'idling';
+  static StatusSubmitting = 'submitting';
+  static StatusCompleting = 'completing';
 
   @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
   _formDialogClose: QueryList<FsFormDialogCloseDirective>;
@@ -74,13 +81,12 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   @Output() submitted: EventEmitter<SubmitEvent> = new EventEmitter();
   @HostBinding('class.fs-form') fsformClass = true;
 
-  public submitting = false;
-
   private _destroy$ = new Subject();
   private _registerControl;
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
   private _snapshot: any = {};
+  private _status$ = new BehaviorSubject(FsFormComponent.StatusIdling);
 
   constructor(
     private _form: FsForm,
@@ -88,6 +94,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     private _message: FsMessage,
     private _prompt: FsPrompt,
     private _configService: ConfigService,
+    private _cdRef: ChangeDetectorRef,
     @Inject(NgForm) public ngForm: NgForm,
     @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
     @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
@@ -154,11 +161,13 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
           ngSubmitEvent.preventDefault();
         }
 
-        if (this.submitting) {
+        if (
+          this._status$.getValue() !== FsFormComponent.StatusIdling
+        ) {
           return false;
         }
 
-        this.submitting = true;
+        this._status$.next(FsFormComponent.StatusSubmitting);
         this._form.broadcast('submit', this.ngForm);
         const validations = [];
 
@@ -185,9 +194,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
             const submitter = this._activeSubmitButton ? this._activeSubmitButton.name : null;
 
             if (this._activeSubmitButton) {
-              const progressEl = this._getSvg('progress');
-              this._activeSubmitButton.element.append(progressEl);
-              this._activeSubmitButton.element.classList.add('submit-process');
+              this._activeSubmitButton.process();
             }
 
             const submitEvent: SubmitEvent = {
@@ -212,13 +219,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
               observer.error();
 
             } else {
-
               this._form.broadcast('valid', submitEvent);
               this.submitEvent.emit(submitEvent);
               this.valid.emit(submitEvent);
 
               if (this.submit) {
-
                 const result = this.submit(submitEvent);
 
                 if (isObservable(result)) {
@@ -227,7 +232,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
                   .pipe(
                     takeUntil(this._destroy$)
                   )
-                  .subscribe(response => {
+                  .subscribe((response) => {
                     submittedEvent.response = response;
                     observer.next(submittedEvent);
                     observer.complete();
@@ -259,6 +264,18 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
         });
       });
     }
+  }
+
+  public get submitting(): boolean {
+    return this._status$.getValue() === FsFormComponent.StatusSubmitting;
+  }
+
+  public get completing(): boolean {
+    return this._status$.getValue() === FsFormComponent.StatusCompleting;
+  }
+
+  public get idling(): boolean {
+    return this._status$.getValue() === FsFormComponent.StatusIdling;
   }
 
   public ngOnDestroy() {
@@ -310,7 +327,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       const submitted = this.submitting ? this.submitted.asObservable() : of({});
       submitted
       .pipe(
-        first()
+        take(1),
+        takeUntil(this._destroy$),
       )
       .subscribe(() => {
         confirmUnsaved(this, this._prompt)
@@ -369,11 +387,20 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _completeSubmit(success, submitEvent: SubmitEvent) {
     if (this._activeSubmitButton) {
       this._resetButtons();
-      const type = success ? 'success' : 'error';
-      const svg = this._getSvg(type);
-      this._activeSubmitButton.element.classList.add(`submit-${type}`);
-      this._activeSubmitButton.element.append(svg);
+      if (success) {
+        this._activeSubmitButton.success();
+        this.ngForm.control.markAsPristine();
+        this.submitted.emit(submitEvent);
+        this._snapshot = {};
+        forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
+          this._snapshot[name] = control.value;
+        });
+      } else {
+        this._activeSubmitButton.error();
+      }
     }
+
+    this._status$.next(FsFormComponent.StatusCompleting);
 
     of(true)
     .pipe(
@@ -381,31 +408,14 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       delay(1500),
       first()
     ).subscribe(() => {
+      this._status$.next(FsFormComponent.StatusIdling);
       this._resetButtons();
-      if (success) {
-        this.ngForm.control.markAsPristine();
-        this.submitted.emit(submitEvent);
-        this._snapshot = {};
-        forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
-          this._snapshot[name] = control.value;
-        });
-        this._updateDirtySubmitButtons();
-      }
-      this.submitting = false;
     });
   }
 
   private _resetButtons() {
-    this._submitButtons.forEach(button => {
-      button.active = false;
-      const el = button.element.querySelector('.svg-icon');
-      if (el) {
-        button.element.removeChild(el);
-      }
-
-      button.element.classList.remove('submit-success');
-      button.element.classList.remove('submit-error');
-      button.element.classList.remove('submit-process');
+    this._submitButtons.forEach((button) => {
+      button.reset();
     });
   }
 
@@ -551,7 +561,6 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   private _updateDirtySubmitButtons() {
-
     if (this.dirtySubmitButton) {
       this._submitButtons.forEach((button) => {
         if (this.ngForm.dirty || !button.dirtySubmit) {
@@ -560,20 +569,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
           button.disable();
         }
       });
+      this._cdRef.markForCheck();
     }
   }
 
-  private _getSvg(type) {
-    if (type === 'success') {
-      return new DOMParser().parseFromString(`<svg class="svg-icon svg-icon-success" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512px" height="512px"><g><g><g><path d="M437.019,74.98C388.667,26.629,324.38,0,256,0C187.619,0,123.331,26.629,74.98,74.98C26.628,123.332,0,187.62,0,256 s26.628,132.667,74.98,181.019C123.332,485.371,187.619,512,256,512c68.38,0,132.667-26.629,181.019-74.981 C485.371,388.667,512,324.38,512,256S485.371,123.333,437.019,74.98z M256,482C131.383,482,30,380.617,30,256S131.383,30,256,30 s226,101.383,226,226S380.617,482,256,482z" data-original="#000000" data-old_color="#000000"/></g></g><g><g><path d="M378.305,173.859c-5.857-5.856-15.355-5.856-21.212,0.001L224.634,306.319l-69.727-69.727 c-5.857-5.857-15.355-5.857-21.213,0c-5.858,5.857-5.858,15.355,0,21.213l80.333,80.333c2.929,2.929,6.768,4.393,10.606,4.393 c3.838,0,7.678-1.465,10.606-4.393l143.066-143.066C384.163,189.215,384.163,179.717,378.305,173.859z" data-original="#000000" data-old_color="#000000"/></g></g></g> </svg>`, 'text/xml').firstChild;
-    }
-
-    if (type === 'progress') {
-      return new DOMParser().parseFromString(`<svg class="svg-icon svg-icon-progress" width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".5" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur=".7s" repeatCount="indefinite"/></path></g></g></svg>`, 'text/xml').firstChild;
-    }
-
-    if (type === 'error') {
-      return new DOMParser().parseFromString(`<svg class="svg-icon svg-icon-error" xmlns="http://www.w3.org/2000/svg" width="38px" height="38px" viewBox="0 0 16 16"><g><path d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z" data-original="#444444" data-old_color="#444444"/><path d="M12.2 10.8l-2.8-2.8 2.8-2.8-1.4-1.4-2.8 2.8-2.8-2.8-1.4 1.4 2.8 2.8-2.8 2.8 1.4 1.4 2.8-2.8 2.8 2.8z" data-original="#444444" data-old_color="#444444"/></g> </svg>`, 'text/xml').firstChild;
-    }
-  }
 }

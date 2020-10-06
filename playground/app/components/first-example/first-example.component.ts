@@ -1,5 +1,5 @@
 import { delay } from 'rxjs/operators';
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
 import { FsForm, FsFormComponent } from '@firestitch/form';
@@ -11,7 +11,8 @@ import { of } from 'rxjs';
 @Component({
   selector: 'first-example',
   templateUrl: 'first-example.component.html',
-  styleUrls: [ 'first-example.component.css' ]
+  styleUrls: ['first-example.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FirstExampleComponent {
 

@@ -23,6 +23,7 @@
 .fs-form button.submit-error,
 .fs-form button.submit-process {
   transition: none;
+  cursor: wait;
   color: transparent !important;
 
   svg {
