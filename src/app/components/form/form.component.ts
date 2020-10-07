@@ -410,6 +410,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     ).subscribe(() => {
       this._status$.next(FsFormComponent.StatusIdling);
       this._resetButtons();
+      this._updateDirtySubmitButtons();
     });
   }
 
