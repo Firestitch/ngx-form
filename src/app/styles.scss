@@ -25,6 +25,7 @@
   transition: none;
   cursor: wait;
   color: transparent !important;
+  pointer-events: none;
 
   svg {
     height: 22px;
@@ -72,16 +73,19 @@
 
   .fs-form button {
 
-    &.submit-process svg {
-      stroke: mat-color($primary);
+    &.mat-button,
+    &.mat-raised-button:not([color='primary']) {
+      &.submit-process svg {
+        stroke: mat-color($primary);
+      }
+
+      &.submit-error svg path,
+      &.submit-success svg path {
+        fill: mat-color($primary);
+      }
     }
 
-    &.submit-error svg path,
-    &.submit-success svg path {
-      fill: mat-color($primary);
-    }
-
-    &[color='primary'] {
+    &.mat-raised-button[color='primary'] {
       &.submit-process svg {
         stroke: #fff;
       }

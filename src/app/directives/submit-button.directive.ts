@@ -108,7 +108,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
 
   private _disableShadowAnimation() {
     // .mat-elevation-z2 removes the click shadow animation
-    this.element.classList.add('mat-elevation-z2');
+    //this.element.classList.add('mat-elevation-z2');
   }
 
   private _resetClass() {

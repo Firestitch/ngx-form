@@ -43,6 +43,7 @@ export class FirstExampleComponent {
   public skeleton;
   public greaterInput;
   public model: any = {};
+  public disabled = false;
 
   public items = [
     { name: 'Item 1', id: 1 },
@@ -85,11 +86,11 @@ export class FirstExampleComponent {
     return of(this.items);
   };
 
-  submitting() {
+  public submitting() {
     this.fsMessage.info('Submitting validation');
   }
 
-  save = () => {
+  public save = () => {
     this.fsMessage.success('Validation successful');
     return of(true)
     .pipe(
@@ -97,16 +98,26 @@ export class FirstExampleComponent {
     );
   }
 
-  invalid() {
+  public toggleDisable() {
+    this.disabled = !this.disabled;
+
+    if (this.disabled) {
+      this.form.disable();
+    } else {
+      this.form.enable();
+    }
+  }
+
+  public invalid() {
     console.log('Validation invalid');
   }
 
-  reset() {
+  public reset() {
     this.integer = null;
     this.form.reset();
   }
 
-  dirty() {
+  public dirty() {
     this.form.dirty();
   }
 }

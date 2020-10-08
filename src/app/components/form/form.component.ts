@@ -342,6 +342,30 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
+  public disable() {
+    Object.keys(this.ngForm.controls).forEach((name) => {
+      this.ngForm.controls[name].disable();
+    });
+
+    this._submitButtons.forEach((button) => {
+      button.disable();
+    });
+  }
+
+  public enable() {
+    Object.keys(this.ngForm.controls).forEach((name) => {
+      this.ngForm.controls[name].enable();
+    });
+
+    if (this.dirtySubmitButton) {
+      this._updateDirtySubmitButtons();
+    } else {
+      this._submitButtons.forEach((button) => {
+        button.enable();
+      });
+    }
+  }
+
   private _formClose(value = null): void {
     this.confirm()
     .subscribe((result) => {
