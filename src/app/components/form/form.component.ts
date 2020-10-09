@@ -26,9 +26,7 @@ import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
 
 import { isObservable, Subject, of, Observable, fromEvent, BehaviorSubject } from 'rxjs';
-import { takeUntil, delay, first, take } from 'rxjs/operators';
-
-import { forOwn } from 'lodash-es';
+import { takeUntil, delay, first, take, filter } from 'rxjs/operators';
 
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
@@ -39,19 +37,16 @@ import { ConfirmResult } from './../../enums/confirm-result';
 import { FsForm } from '../../services/fsform.service';
 import { DirtyConfirmConfig } from './../../interfaces';
 import { SubmitEvent } from './../../interfaces/submit-event';
+import { FormStatus } from './../../enums/form-status';
 import { confirmResultContinue } from '../../helpers';
 
 @Component({
   selector: '[fsForm]',
   template: `<ng-content></ng-content>`,
-  providers: [ConfigService],
+  providers: [ ConfigService ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
-
-  static StatusIdling = 'idling';
-  static StatusSubmitting = 'submitting';
-  static StatusCompleting = 'completing';
 
   @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
   _formDialogClose: QueryList<FsFormDialogCloseDirective>;
@@ -86,7 +81,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
   private _snapshot: any = {};
-  private _status$ = new BehaviorSubject(FsFormComponent.StatusIdling);
+  private _status$ = new BehaviorSubject(FormStatus.Valid);
 
   constructor(
     private _form: FsForm,
@@ -97,10 +92,10 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     private _cdRef: ChangeDetectorRef,
     @Inject(NgForm) public ngForm: NgForm,
     @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
-    @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>) {}
+    @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>,
+  ) {}
 
   public ngOnInit() {
-
     fromEvent(document, 'keydown')
       .pipe(
         takeUntil(this._destroy$),
@@ -162,159 +157,182 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
         }
 
         if (
-          this._status$.getValue() !== FsFormComponent.StatusIdling
+          this._status$.getValue() === FormStatus.Valid ||
+          this._status$.getValue() === FormStatus.Invalid
         ) {
-          return false;
-        }
 
-        this._status$.next(FsFormComponent.StatusSubmitting);
-        this._form.broadcast('submit', this.ngForm);
-        const validations = [];
+          this._status$.next(FormStatus.Submitting);
+          this._form.broadcast('submit', this.ngForm);
+          const validations = [];
 
-        (Object as any).values(this.ngForm.controls).forEach(control => {
-          control.markAsDirty();
-          control.markAsTouched();
-        });
+          (Object as any).values(this.ngForm.controls).forEach(control => {
+            control.markAsDirty();
+            control.markAsTouched();
+          });
 
-        (Object as any).values(this.ngForm.controls).forEach(control => {
+          (Object as any).values(this.ngForm.controls).forEach(control => {
             control.updateValueAndValidity();
             if (control.asyncValidator) {
               validations.push((control.asyncValidator(control) as Observable<any>).toPromise());
             }
-        });
-
-        new Observable(observer => {
-
-          Promise.all(validations)
-          .then(() => {
-
-            this._activeSubmitButton = this._getActiveButton();
-            this._resetButtons();
-
-            const submitter = this._activeSubmitButton ? this._activeSubmitButton.name : null;
-
-            if (this._activeSubmitButton) {
-              this._activeSubmitButton.process();
-            }
-
-            const submitEvent: SubmitEvent = {
-              ngForm: this.ngForm,
-              submitter: submitter
-            };
-
-            const submittedEvent: SubmittedEvent = {
-              ngForm: this.ngForm,
-              submitter: submitter,
-              response: null
-            };
-
-            if (this.ngForm.form.status === 'INVALID') {
-              this._form.broadcast('invalid', submitEvent);
-
-              if (this.invalid) {
-                this.invalid.emit(submitEvent);
-              }
-              const message = 'Changes not saved. Please review errors highlighted in red.';
-              this._message.error(message, { mode: MessageMode.Toast });
-              observer.error();
-
-            } else {
-              this._form.broadcast('valid', submitEvent);
-              this.submitEvent.emit(submitEvent);
-              this.valid.emit(submitEvent);
-
-              if (this.submit) {
-                const result = this.submit(submitEvent);
-
-                if (isObservable(result)) {
-
-                  result
-                  .pipe(
-                    takeUntil(this._destroy$)
-                  )
-                  .subscribe((response) => {
-                    submittedEvent.response = response;
-                    observer.next(submittedEvent);
-                    observer.complete();
-
-                  }, () => {
-                    observer.error();
-                  });
-
-                } else {
-                  observer.next(submittedEvent);
-                  observer.complete();
-                }
-
-              } else {
-                observer.next(submittedEvent);
-                observer.complete();
-              }
-            }
-
-          }).catch(e => {
-            observer.error();
           });
 
-        })
-        .subscribe((submittedEvent: SubmittedEvent) => {
-          this._completeSubmit(true, submittedEvent);
-        }, () => {
-          this._completeSubmit(false, null);
-        });
+          new Observable(observer => {
+
+            Promise.all(validations)
+              .then(() => {
+
+                this._activeSubmitButton = this._getActiveButton();
+                this._resetButtons();
+
+                const submitter = this._activeSubmitButton ? this._activeSubmitButton.name : null;
+
+                if (this._activeSubmitButton) {
+                  this._activeSubmitButton.process();
+                }
+
+                const submitEvent: SubmitEvent = {
+                  ngForm: this.ngForm,
+                  submitter: submitter
+                };
+
+                const submittedEvent: SubmittedEvent = {
+                  ngForm: this.ngForm,
+                  submitter: submitter,
+                  response: null
+                };
+
+                if (this.ngForm.form.status === 'INVALID') {
+                  this._form.broadcast('invalid', submitEvent);
+
+                  if (this.invalid) {
+                    this.invalid.emit(submitEvent);
+                  }
+                  const message = 'Changes not saved. Please review errors highlighted in red.';
+                  this._message.error(message, { mode: MessageMode.Toast });
+                  observer.error();
+
+                } else {
+                  this._form.broadcast('valid', submitEvent);
+                  this.submitEvent.emit(submitEvent);
+                  this.valid.emit(submitEvent);
+
+                  if (this.submit) {
+                    const result = this.submit(submitEvent);
+
+                    if (isObservable(result)) {
+
+                      result
+                        .pipe(
+                          takeUntil(this._destroy$)
+                        )
+                        .subscribe((response) => {
+                          submittedEvent.response = response;
+                          observer.next(submittedEvent);
+                          observer.complete();
+
+                        }, () => {
+                          observer.error();
+                        });
+
+                    } else {
+                      observer.next(submittedEvent);
+                      observer.complete();
+                    }
+
+                  } else {
+                    observer.next(submittedEvent);
+                    observer.complete();
+                  }
+                }
+
+              }).catch(e => {
+                observer.error();
+              });
+
+          })
+            .subscribe((submittedEvent: SubmittedEvent) => {
+              this._completeSubmit(true, submittedEvent);
+            }, () => {
+              this._completeSubmit(false, null);
+            });
+        }
       });
     }
   }
 
   public get submitting(): boolean {
-    return this._status$.getValue() === FsFormComponent.StatusSubmitting;
+    return this._status$.getValue() === FormStatus.Submitting;
   }
 
   public get completing(): boolean {
-    return this._status$.getValue() === FsFormComponent.StatusCompleting;
+    return this._status$.getValue() === FormStatus.Completing;
   }
 
-  public get idling(): boolean {
-    return this._status$.getValue() === FsFormComponent.StatusIdling;
-  }
-
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
   }
 
-  public ngAfterContentInit() {
+  public ngAfterContentInit(): void {
 
     if (this.dirtyConfirm) {
       this._registerDirtyConfirm();
-    }
 
-    if (this.dirtyConfirm && this.dirtyConfirmDialog) {
-      this._registerDirtyConfirmDialogClose();
-    }
+      if (this.dirtyConfirmDialog) {
+        this._registerDirtyConfirmDialogClose();
+      }
 
-    if (this.dirtyConfirm && this.dirtyConfirmDrawer) {
-      this._registerDirtyConfirmDrawerClose();
+      if (this.dirtyConfirmDrawer) {
+        this._registerDirtyConfirmDrawerClose();
+      }
+
+      if (this.dirtyConfirmTabs) {
+        this._registerDirtyConfirmTabs();
+      }
     }
 
     if (this.dirtySubmitButton) {
       this._registerDirtySubmitButton();
     }
 
-    if (this.dirtyConfirm && this.dirtyConfirmTabs) {
-      this._registerDirtyConfirmTabs();
-    }
+    this._registerDrawerClose();
+
   }
 
-  public reset() {
+  public createSnapshot(): void {
+    this._snapshot = {};
+    Object.keys(this.ngForm.controls)
+      .forEach((name: string) => {
+        const control = this.ngForm.controls[name];
+        this._snapshot[name] = control.value;
+      });
+  }
+
+  public reset(): void {
     this.ngForm.reset();
     this.ngForm.resetForm();
-    forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
-      control.reset(this._snapshot[name]);
-      control.markAsUntouched();
-      control.markAsPristine();
-      control.setErrors(null);
-    });
+    Object.keys(this.ngForm.controls)
+      .forEach((name: string) => {
+        const control = this.ngForm.controls[name];
+        control.reset(this._snapshot[name]);
+        control.markAsUntouched();
+        control.markAsPristine();
+        control.setErrors(null);
+      });
+  }
+
+  public clear(): void {
+    this.ngForm.reset();
+    this.ngForm.resetForm();
+    Object.keys(this.ngForm.controls)
+      .forEach((name: string) => {
+        const control = this.ngForm.controls[name];
+        control.reset(undefined);
+        control.markAsUntouched();
+        control.markAsPristine();
+        control.setErrors(null);
+      });
   }
 
   public dirty(): void {
@@ -342,7 +360,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  public disable() {
+  public disable(): void {
     Object.keys(this.ngForm.controls).forEach((name) => {
       this.ngForm.controls[name].disable();
     });
@@ -352,7 +370,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  public enable() {
+  public enable(): void {
     Object.keys(this.ngForm.controls).forEach((name) => {
       this.ngForm.controls[name].enable();
     });
@@ -375,7 +393,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  private _registerClose(directive: FsFormDialogCloseDirective) {
+  private _registerClose(directive: FsFormDialogCloseDirective): void {
 
     if (!directive.registered) {
       directive.registered = true;
@@ -389,7 +407,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  private _getActiveButton() {
+  private _getActiveButton(): FsSubmitButtonDirective {
     const activeButton = this._submitButtons.find(button => {
       return button.active;
     });
@@ -397,7 +415,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     return activeButton ? activeButton : this._submitButtons.first;
   }
 
-  private _elementInForm(el: Element) {
+  private _elementInForm(el: Element): boolean {
 
     if (el.isSameNode(this._element.nativeElement)) {
       return true;
@@ -407,24 +425,28 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
     return false;
   }
-
-  private _completeSubmit(success, submitEvent: SubmitEvent) {
+  private _completeSubmit(success, submitEvent: SubmitEvent): void {
     if (this._activeSubmitButton) {
       this._resetButtons();
       if (success) {
         this._activeSubmitButton.success();
         this.ngForm.control.markAsPristine();
+        this.createSnapshot();
         this.submitted.emit(submitEvent);
-        this._snapshot = {};
-        forOwn(this.ngForm.controls, (control: AbstractControl, name) => {
-          this._snapshot[name] = control.value;
-        });
       } else {
         this._activeSubmitButton.error();
       }
     }
 
-    this._status$.next(FsFormComponent.StatusCompleting);
+    this._status$.next(FormStatus.Submitted);
+
+    if (success) {
+      this._status$.next(FormStatus.Success);
+    } else {
+      this._status$.next(FormStatus.Error);
+    }
+
+    this._status$.next(FormStatus.Completing);
 
     of(true)
     .pipe(
@@ -432,43 +454,80 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       delay(1500),
       first()
     ).subscribe(() => {
-      this._status$.next(FsFormComponent.StatusIdling);
+      if (this.ngForm.form.status === 'VALID') {
+        this._status$.next(FormStatus.Valid);
+      } else {
+        this._status$.next(FormStatus.Invalid);
+      }
+
       this._resetButtons();
       this._updateDirtySubmitButtons();
     });
   }
 
-  private _resetButtons() {
+  private _resetButtons(): void{
     this._submitButtons.forEach((button) => {
       button.reset();
     });
   }
 
-  private _registerDirtyConfirm() {
+  private _registerDirtyConfirm(): void {
     this.ngForm.form.valueChanges
-    .pipe(
-      takeUntil(this._destroy$)
-    )
-    .subscribe((changes) => {
-      const existing = Object.keys(this._snapshot);
-      forOwn(changes, (value, name) => {
-        if (existing.indexOf(name) < 0) {
-          this._snapshot[name] = value;
-        }
+      .pipe(
+        takeUntil(this._destroy$)
+      )
+      .subscribe((changes) => {
+        const existing = Object.keys(this._snapshot);
+        Object.keys(changes)
+          .forEach((name: string) => {
+            if (existing.indexOf(name) === -1) {
+              this._snapshot[name] = changes[name];
+            }
+          });
       });
-    });
   }
 
-  private _registerDirtyConfirmDrawerClose() {
+  private _registerDrawerClose(): void {
+
+    if (this._drawerRef) {
+      this._drawerRef.closeStart$
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe((subscriber) => {
+        if (this.submitting) {
+          this._status$
+            .pipe(
+              filter((status) => status === FormStatus.Success || status === FormStatus.Error),
+              takeUntil(this._destroy$),
+            )
+            .subscribe((status) => {
+              if (status === FormStatus.Success) {
+                subscriber.next();
+                subscriber.complete();
+              } else {
+                subscriber.error();
+              }
+            });
+        } else {
+          subscriber.next();
+          subscriber.complete();
+        }
+      });
+    }
+  }
+
+
+  private _registerDirtyConfirmDrawerClose(): void {
 
     if (this._drawerRef) {
       this._drawerRef.closeStart$
       .pipe(
         takeUntil(this._destroy$)
       )
-      .subscribe(subscriber => {
+      .subscribe((subscriber) => {
         this.confirm()
-        .subscribe(result => {
+        .subscribe((result) => {
           if (confirmResultContinue(result)) {
             subscriber.next();
           } else {
@@ -480,7 +539,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  private _registerDirtyConfirmTabs() {
+  private _registerDirtyConfirmTabs(): void {
 
     this._registerDirtyConfirmTabGroups();
 
@@ -493,7 +552,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  private _registerDirtyConfirmTabGroups() {
+  private _registerDirtyConfirmTabGroups(): void {
     this._tabGroups.forEach((tabGroup: any) => {
       if (!tabGroup._dirtyHandleClick) {
         tabGroup._dirtyHandleClick = tabGroup._handleClick;
@@ -512,7 +571,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  private _registerDirtyConfirmDialogClose() {
+  private _registerDirtyConfirmDialogClose(): void {
     if (this._dialogRef) {
       this._formDialogClose.forEach(item => {
         this._registerClose(item);
@@ -530,7 +589,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  private _registerDirtyConfirmDialogBackdropEscape() {
+  private _registerDirtyConfirmDialogBackdropEscape(): void {
     this._dialogBackdropEscape = this._dialogRef && this._dialogRef.disableClose !== true;
 
     if (this._dialogRef) {
@@ -545,7 +604,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  private _registerAutocomplete() {
+  private _registerAutocomplete(): void {
     this._registerControl = this.ngForm.form.registerControl.bind(this.ngForm.form);
 
     this.ngForm.form.registerControl = (name: string, control: AbstractControl) => {
@@ -564,7 +623,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
-  private _registerDirtySubmitButton() {
+  private _registerDirtySubmitButton(): void {
 
     if (!this.ngForm) {
       return;
@@ -585,7 +644,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  private _updateDirtySubmitButtons() {
+  private _updateDirtySubmitButtons(): void {
     if (this.dirtySubmitButton) {
       this._submitButtons.forEach((button) => {
         if (this.ngForm.dirty || !button.dirtySubmit) {

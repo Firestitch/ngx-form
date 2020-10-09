@@ -196,7 +196,7 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="row" fxLayoutGap="5px">
+    <div fxLayout="row wrap" fxLayoutGap="5px">
       <button mat-raised-button color="primary">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>
@@ -204,6 +204,8 @@
       <button mat-raised-button color="primary" type="button" (click)="toggleDisable()">{{disabled ? 'Enable Form' : 'Disable Form'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="submit()">Manual Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="reset()">Reset</button>
+      <button mat-raised-button color="primary" type="button" (click)="clear()">Clear</button>
+      <button mat-raised-button color="primary" type="button" (click)="createSnapshot()">Create Snapshot</button>
       <button mat-raised-button color="primary" type="button" (click)="dirty()">Dirty</button>
       <button mat-raised-button color="primary" type="submit" [dirtySubmit]="false">Submit (Dirty Disabled)</button>
     </div>

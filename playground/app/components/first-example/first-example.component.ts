@@ -113,8 +113,15 @@ export class FirstExampleComponent {
   }
 
   public reset() {
-    this.integer = null;
     this.form.reset();
+  }
+
+  public clear() {
+    this.form.clear();
+  }
+
+  public createSnapshot() {
+    this.form.createSnapshot();
   }
 
   public dirty() {

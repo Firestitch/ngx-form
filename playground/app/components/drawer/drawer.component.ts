@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { of, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, delay } from 'rxjs/operators';
 import { DrawerRef } from '@firestitch/drawer';
 
 
@@ -22,10 +22,11 @@ export class DrawerComponent  {
 
   public save = () => {
     return of(this.animal)
-    .pipe(
-      tap(response => {
-        this._message.success('Saved changes');
-      })
+      .pipe(
+        delay(200),
+        tap(() => {
+          this._message.success('Saved changes');
+        })
     );
   }
 }

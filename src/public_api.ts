@@ -20,6 +20,6 @@ export { DirtyConfirmConfig } from './app/interfaces/dirty-confirm-config';
 
 // Enums
 export { ConfirmResult } from './app/enums/confirm-result';
-
+export { FormStatus } from './app/enums/form-status';
 
 
