@@ -592,7 +592,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _registerDirtyConfirmDialogBackdropEscape(): void {
     this._dialogBackdropEscape = this._dialogRef && this._dialogRef.disableClose !== true;
 
-    if (this._dialogRef) {
+    if (this._dialogRef && !this._dialogRef.disableClose) {
       this._dialogRef.disableClose = true;
       this._dialogRef.backdropClick()
       .pipe(
