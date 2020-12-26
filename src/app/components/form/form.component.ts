@@ -1,19 +1,7 @@
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  Inject,
-  Optional,
-  QueryList,
-  ContentChildren,
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
+  Component, ElementRef, EventEmitter, HostBinding, Input, OnDestroy,
+  OnInit, Output, Inject, Optional, QueryList, ContentChildren, AfterContentInit,
+  ChangeDetectionStrategy, ChangeDetectorRef, OnChanges, SimpleChanges,
 } from '@angular/core';
 import { NgForm, AbstractControl } from '@angular/forms';
 
@@ -46,7 +34,7 @@ import { confirmResultContinue } from '../../helpers';
   providers: [ ConfigService ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
+export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnChanges {
 
   @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
   _formDialogClose: QueryList<FsFormDialogCloseDirective>;
@@ -136,9 +124,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       });
 
     this._configService.form = this;
-    if (this.dirtyConfirm && this.dirtyConfirmDialog) {
-      this._registerDirtyConfirmDialogBackdropEscape();
-    }
+    this._registerDirtyConfirmDialogBackdropEscape();
 
     if (!this.autocomplete) {
       this._registerAutocomplete();
@@ -261,6 +247,13 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     }
   }
 
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.dirtyConfirm) {
+      this._updateDirtySubmitButtons();
+    }
+
+  }
+
   public get submitting(): boolean {
     return this._status$.getValue() === FormStatus.Submitting;
   }
@@ -275,29 +268,12 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   public ngAfterContentInit(): void {
-
-    if (this.dirtyConfirm) {
-      this._registerDirtyConfirm();
-
-      if (this.dirtyConfirmDialog) {
-        this._registerDirtyConfirmDialogClose();
-      }
-
-      if (this.dirtyConfirmDrawer) {
-        this._registerDirtyConfirmDrawerClose();
-      }
-
-      if (this.dirtyConfirmTabs) {
-        this._registerDirtyConfirmTabs();
-      }
-    }
-
-    if (this.dirtySubmitButton) {
-      this._registerDirtySubmitButton();
-    }
-
+    this._registerDirtyConfirm();
+    this._registerDirtyConfirmDialogClose();
+    this._registerDirtyConfirmDrawerClose();
+    this._registerDirtyConfirmTabs();
+    this._registerDirtySubmitButton();
     this._registerDrawerClose();
-
   }
 
   public createSnapshot(): void {
@@ -375,35 +351,32 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       this.ngForm.controls[name].enable();
     });
 
-    if (this.dirtySubmitButton) {
-      this._updateDirtySubmitButtons();
-    } else {
-      this._submitButtons.forEach((button) => {
-        button.enable();
-      });
-    }
+   this._updateDirtySubmitButtons();
   }
 
   private _formClose(value = null): void {
-    this.confirm()
-    .subscribe((result) => {
-      if (confirmResultContinue(result)) {
-        this._dialogRef.close(value);
-      }
-    });
+    if (this.dirtyConfirm && this.dirtyConfirmDialog) {
+      this.confirm()
+      .subscribe((result) => {
+        if (confirmResultContinue(result)) {
+          this._dialogRef.close(value);
+        }
+      });
+    } else {
+      this._dialogRef.close(value);
+    }
   }
 
-  private _registerClose(directive: FsFormDialogCloseDirective): void {
-
+  private _registerDialogClose(directive: FsFormDialogCloseDirective): void {
     if (!directive.registered) {
       directive.registered = true;
       directive.clicked$
       .pipe(
-        takeUntil(this._destroy$)
+        takeUntil(this._destroy$),
       )
-      .subscribe(() => {
-        this._formClose(null);
-      });
+        .subscribe(() => {
+          this._formClose(null);
+        });
     }
   }
 
@@ -425,6 +398,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
     return false;
   }
+
   private _completeSubmit(success, submitEvent: SubmitEvent): void {
     if (this._activeSubmitButton) {
       this._resetButtons();
@@ -465,7 +439,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     });
   }
 
-  private _resetButtons(): void{
+  private _resetButtons(): void {
     this._submitButtons.forEach((button) => {
       button.reset();
     });
@@ -477,13 +451,15 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
         takeUntil(this._destroy$)
       )
       .subscribe((changes) => {
-        const existing = Object.keys(this._snapshot);
-        Object.keys(changes)
-          .forEach((name: string) => {
-            if (existing.indexOf(name) === -1) {
-              this._snapshot[name] = changes[name];
-            }
-          });
+        if (this.dirtyConfirm) {
+          const existing = Object.keys(this._snapshot);
+          Object.keys(changes)
+            .forEach((name: string) => {
+              if (existing.indexOf(name) === -1) {
+                this._snapshot[name] = changes[name];
+              }
+            });
+        }
       });
   }
 
@@ -523,7 +499,8 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     if (this._drawerRef) {
       this._drawerRef.closeStart$
       .pipe(
-        takeUntil(this._destroy$)
+        takeUntil(this._destroy$),
+        filter(() => (this.dirtyConfirm && this.dirtyConfirmDrawer)),
       )
       .subscribe((subscriber) => {
         this.confirm()
@@ -547,7 +524,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
     .pipe(
       takeUntil(this._destroy$)
     )
-    .subscribe(changes => {
+    .subscribe(() => {
       this._registerDirtyConfirmTabGroups();
     });
   }
@@ -557,14 +534,17 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       if (!tabGroup._dirtyHandleClick) {
         tabGroup._dirtyHandleClick = tabGroup._handleClick;
         tabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
-
           if (!this.submitting) {
-            this.confirm()
-            .subscribe((result) => {
-              if (confirmResultContinue(result)) {
-                tabGroup.selectedIndex = idx;
-              }
-            });
+            if (this.dirtyConfirm && this.dirtyConfirmTabs) {
+              this.confirm()
+                .subscribe((result) => {
+                  if (confirmResultContinue(result)) {
+                    tabGroup.selectedIndex = idx;
+                  }
+                });
+            } else {
+              tabGroup._dirtyHandleClick(tab, tabHeader, idx);
+            }
           }
         }
       }
@@ -574,7 +554,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   private _registerDirtyConfirmDialogClose(): void {
     if (this._dialogRef) {
       this._formDialogClose.forEach(item => {
-        this._registerClose(item);
+        this._registerDialogClose(item);
       });
 
       this._formDialogClose.changes
@@ -583,7 +563,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
       )
       .subscribe((e) => {
         e.forEach(item => {
-          this._registerClose(item);
+          this._registerDialogClose(item);
         });
       });
     }
@@ -631,13 +611,13 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
 
     this.ngForm.form.valueChanges
     .pipe(
-      takeUntil(this._destroy$)
+      takeUntil(this._destroy$),
     )
     .subscribe(this._updateDirtySubmitButtons.bind(this));
 
     this._submitButtons.changes
     .pipe(
-      takeUntil(this._destroy$)
+      takeUntil(this._destroy$),
     )
     .subscribe(() => {
       this._updateDirtySubmitButtons();
@@ -645,9 +625,9 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit {
   }
 
   private _updateDirtySubmitButtons(): void {
-    if (this.dirtySubmitButton) {
+    if (this._submitButtons) {
       this._submitButtons.forEach((button) => {
-        if (this.ngForm.dirty || !button.dirtySubmit) {
+      if (!this.dirtyConfirm || !this.dirtySubmitButton || this.ngForm.dirty || !button.dirtySubmit) {
           button.enable();
         } else {
           button.disable();

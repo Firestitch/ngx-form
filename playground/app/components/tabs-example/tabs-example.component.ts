@@ -13,11 +13,14 @@ export class TabsExampleComponent {
 
   public email;
   public delay = false;
+  public dirtyConfirm = true;
 
-  constructor(private _message: FsMessage) {
+  constructor(
+    private _message: FsMessage,
+  ) {
     setTimeout(() => {
       this.delay = true;
-    }, 200)
+    }, 200);
   }
 
   public submit = () => {
