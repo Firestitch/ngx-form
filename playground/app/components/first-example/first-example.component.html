@@ -1,7 +1,7 @@
 
 <form fsForm [submit]="save" (submit)="submitting()" (invalid)="invalid()">
   <div fxLayout="column">
-<!--
+
     <fs-radio-group
       *ngIf="render"
       [(ngModel)]="radioRequired"
@@ -31,7 +31,7 @@
         <ng-template fsAutocompleteObject let-object="object">
           {{ object.name }}
         </ng-template>
-    </fs-autocomplete-chips> -->
+    </fs-autocomplete-chips>
 
     <div fxLayout="row" *ngIf="render">
       <mat-form-field>

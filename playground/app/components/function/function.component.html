@@ -5,7 +5,7 @@
         [(ngModel)]="functionPromise"
         name="function_promise"
         matInput
-        [fsFormFunction]="functionPromiseFn"
+        [validate]="functionPromiseFn"
         />
     </mat-form-field>
 
@@ -14,7 +14,8 @@
         [(ngModel)]="functionException"
         name="function_exception"
         matInput
-        [fsFormFunction]="functionExceptionFn"
+        [validate]="functionExceptionFn"
+        [validateData]="{ test: 'data' }"
         />
     </mat-form-field>
 
@@ -23,7 +24,7 @@
         [(ngModel)]="functionAnonymous"
         name="function_anonymous"
         matInput
-        [fsFormFunction]="anonymousFunctionException"
+        [validate]="anonymousFunctionException"
         />
         <mat-hint>The same anonymous pattern can be applied to the function promise example</mat-hint>
     </mat-form-field>
@@ -33,7 +34,7 @@
       label="Radio Button Group Custom Validation"
       orientation="vertical"
       name="radio_function"
-      [fsFormFunction]="radioFunction">
+      [validate]="radioFunction">
         <mat-radio-button [value]="'weeks'">
             After
             <mat-form-field>

@@ -73,11 +73,11 @@ export class FsValidators {
     return { dateRange: true };
   }
 
-  static func(control: AbstractControl, formFunction) {
+  static func(control: AbstractControl, formFunction, data: any) {
     // Must use redundant variable because without that will angular compile error
     const res = new Promise((resolve) => {
       try {
-        const result = formFunction(control);
+        const result = formFunction(control, data);
         if (result instanceof Promise) {
           result.then(() => {
             return resolve(null);
@@ -89,6 +89,7 @@ export class FsValidators {
           return resolve(null);
         }
       } catch (e) {
+        e = e instanceof Error ? e.message : e;
         resolve({ validationError: e });
       }
     });

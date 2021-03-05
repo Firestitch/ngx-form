@@ -30,7 +30,7 @@ export class FunctionComponent {
         if (testValue !== this.email) {
           reject('Email should match ' + this.email);
         } else {
-          resolve();
+          resolve(false);
         }
       }, 300);
     });
@@ -38,13 +38,12 @@ export class FunctionComponent {
   }).bind(this);
 
 
-  public functionExceptionFn = ((formControl) => {
-
+  public functionExceptionFn = (formControl, data) => {
     if (String(formControl.value).length <= this.minLength) {
-      throw 'The length must be greater then 3 characters';
+      throw new Error('The length must be greater then 3 characters');
     }
 
-  }).bind(this);
+  }
 
   public anonymousFunctionException(formControl) {
 

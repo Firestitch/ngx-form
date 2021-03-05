@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "title": "Form",
-  "version": "9.3.15",
+  "version": "9.3.17",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-form"
@@ -47,7 +47,7 @@
     "@compodoc/compodoc": "^1.1.11",
     "@firestitch/api": "^8.1.8",
     "@firestitch/autocomplete": "^8.7.0",
-    "@firestitch/autocomplete-chips": "^8.3.4",
+    "@firestitch/autocomplete-chips": "^10.0.8",
     "@firestitch/checkboxgroup": "^8.1.1",
     "@firestitch/clear": "^8.1.0",
     "@firestitch/common": "^8.0.1",

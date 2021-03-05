@@ -4,15 +4,15 @@ import { FsValidators } from '../validators/validators';
 
 
 @Directive({
-  selector: '[fsFormFunction]',
+  selector: '[validate]',
 })
-export class FsFormFunctionDirective extends FsControlDirective implements AfterViewInit {
-  @Input() fsFormFunction;
-  @Input() fsFormFunctionData;
+export class FsFormValidateDirective extends FsControlDirective implements AfterViewInit {
+  @Input() validate;
+  @Input() validateData;
 
   public ngAfterViewInit() {
     this.addAsyncValidator(() => {
-      return FsValidators.func(this._control, this.fsFormFunction, this.fsFormFunctionData);
+      return FsValidators.func(this._control, this.validate, this.validateData);
     });
   }
 }

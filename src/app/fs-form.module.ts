@@ -25,6 +25,7 @@ import { FsFormLesserDirective } from './directives/lesser.directive';
 import { FsFormUrlDirective } from './directives/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
 import { FsSubmitButtonDirective } from './directives/submit-button.directive';
+import { FsFormValidateDirective } from './directives/validate.directive';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { FsSubmitButtonDirective } from './directives/submit-button.directive';
     FsFormLesserDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective,
-    FsSubmitButtonDirective
+    FsSubmitButtonDirective,
+    FsFormValidateDirective,
   ],
   exports: [
     FsFormComponent,
@@ -76,7 +78,8 @@ import { FsSubmitButtonDirective } from './directives/submit-button.directive';
     FsFormLesserDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective,
-    FsSubmitButtonDirective
+    FsSubmitButtonDirective,
+    FsFormValidateDirective,
   ],
   providers: [
     {

@@ -3,7 +3,7 @@ import { NgControl, AbstractControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { values, keys, capitalize, remove } from 'lodash-es';
+import { values, keys, remove } from 'lodash-es';
 import { FsFormComponent } from '../components/form/form.component';
 
 
@@ -20,20 +20,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   @Input() appendLabelClass = 'fs-form-label';
   @Input() appendErrorClass = 'fs-form-error';
   @Input() appendHintClass = 'fs-form-hint';
-  @Input() fsFormRequiredMessage = 'This field is required';
-  @Input() fsFormEmailMessage = 'This is not a valid email address';
-  @Input() fsFormEmailsMessage = 'Input valid email addresses, comma separated';
-  @Input() fsFormPhoneMessage = 'Invalid phone number';
-  @Input() fsFormNumericMessage = 'Value should be numeric';
-  @Input() fsFormIntegerMessage = 'Value should be an integer';
-  @Input() fsFormMinMessage = 'Value should not be less than $(1)';
-  @Input() fsFormMaxMessage = 'Value should not be greater than $(1)';
-  @Input() fsFormMinlengthMessage = 'Should not be shorter than $(1) characters';
-  @Input() fsFormMaxlengthMessage = 'Should not be longer than $(1) characters';
-  @Input() fsFormCompareMessage = 'Inputs do not match';
-  @Input() fsFormPatternMessage = 'Value should match pattern $(1)';
-  @Input() fsFormDateRangeMessage = 'Invalid date range';
-  @Input() fsFormUrlMessage = 'This is not a valid url';
+  @Input() validateMessages = {};
 
   public errors = [];
 
@@ -166,7 +153,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
       const renderer = this.renderer2;
       const wrapper = this.getWrapperElement();
-      const error = this.ngControl.dirty ? this.getError(this, this.ngControl) : null;
+      const error = this.ngControl.dirty ? this.getError(this.ngControl) : null;
 
       if (!this.getMessageSelector()) {
         return;
@@ -243,15 +230,15 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   }
 
   protected parseErrorMessage(message, args): string {
-
-    values(args).forEach(name => {
-        message = message.replace(/\$\(\d\)/, name);
-    });
+    values(args)
+      .forEach((name) => {
+          message = message.replace(/\$\(\d\)/, name);
+      });
 
     return message;
   }
 
-  protected getError(instance, controlRef): { name: string, message: string } {
+  protected getError(controlRef): { name: string, message: string } {
 
     const name = keys(controlRef.control.errors)[0];
 
@@ -261,10 +248,29 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
     let message = controlRef.control.errors[name];
 
-    const variable = `fsForm${capitalize(name)}Message`;
+    if (this.validateMessages[name]) {
+      message = this.parseErrorMessage(this.validateMessages[name], message);
+    } else {
+      const messages = {
+        required: 'This field is required',
+        email: 'This is not a valid email address',
+        emails: 'Input valid email addresses, comma separated',
+        phone: 'Invalid phone number',
+        numeric: 'Value should be numeric',
+        integer: 'Value should be an integer',
+        min: 'Value should not be less than $(1)',
+        max: 'Value should not be greater than $(1)',
+        minlength: 'Should not be shorter than $(1) characters',
+        maxlength: 'Should not be longer than $(1) characters',
+        compare: 'Inputs do not match',
+        pattern: 'Value should match pattern $(1)',
+        dateRange: 'Invalid date range',
+        url: 'This is not a valid url',
+      };
 
-    if (instance[variable]) {
-      message = this.parseErrorMessage(instance[variable], message);
+      if (messages[name]) {
+        message = this.parseErrorMessage(messages[name], message);
+      }
     }
 
     return { name: name, message: message };
