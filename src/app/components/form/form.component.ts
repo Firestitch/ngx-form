@@ -9,6 +9,7 @@ import {
   HostBinding,
   Inject,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -40,7 +41,9 @@ import {
   catchError,
   delay,
   filter,
-  first, map, mergeMap,
+  first,
+  map,
+  mergeMap,
   startWith,
   switchMap,
   take,
@@ -101,7 +104,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
   private _registerControl;
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
-  private _snapshot: any = {};
+  private _snapshot: { [key: string]: unknown } = {};
   private _status$ = new BehaviorSubject(FormStatus.Valid);
 
   constructor(
@@ -111,6 +114,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
     private _prompt: FsPrompt,
     private _configService: ConfigService,
     private _cdRef: ChangeDetectorRef,
+    private _ngZone: NgZone,
     @Inject(NgForm) public ngForm: NgForm,
     @Optional() @Inject(MatDialogRef) private _dialogRef: MatDialogRef<any>,
     @Optional() @Inject(DrawerRef) private _drawerRef: DrawerRef<any>,
@@ -183,51 +187,15 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   public ngOnInit() {
-    fromEvent(document, 'keydown')
-      .pipe(
-        takeUntil(this._destroy$),
-      )
-      .subscribe((event: KeyboardEvent) => {
-
-        if (this._dialogBackdropEscape && event.code === 'Escape') {
-          const dialog = document.getElementById(this._dialogRef.id);
-
-          if ((event as any).path) {
-            (event as any).path.forEach(item => {
-              if (dialog === item) {
-                this._formClose();
-              }
-            });
-          }
-        }
-
-        if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
-          event.preventDefault();
-
-          if (this.shortcuts) {
-            if (this._elementInForm(document.activeElement)) {
-              this.ngForm.ngSubmit.next();
-            }
-          }
-        }
-      });
-
-    fromEvent(window, 'beforeunload')
-      .pipe(
-        takeUntil(this._destroy$),
-      )
-      .subscribe((event: Event) => {
-        if (this.dirtyConfirm && this.dirtyConfirmBrowser && this.ngForm.dirty) {
-          event.returnValue = false;
-        }
-      });
-
     this._configService.form = this;
     this._registerDirtyConfirmDialogBackdropEscape();
 
     if (!this.autocomplete) {
       this._registerAutocomplete();
     }
+
+    this._listenHotKeys();
+    this._listenWindowClose();
     this._listenSubmit();
   }
 
@@ -276,23 +244,20 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   public confirm(): Observable<ConfirmResult> {
-    return new Observable(observer => {
-      const submitted = this.submitting ? this.submitted.asObservable() : of({});
-      submitted
+    const submitted = this.submitting ? this.submitted.asObservable() : of({});
+
+    return submitted
       .pipe(
         take(1),
+        mergeMap(() => confirmUnsaved(this, this._prompt)),
         takeUntil(this._destroy$),
-      )
-      .subscribe(() => {
-        confirmUnsaved(this, this._prompt)
-        .subscribe((value) => {
-          observer.next(value);
-          observer.complete();
-        }, () => {
-          observer.error();
-        });
-      });
-    });
+      );
+  }
+
+  public enable(): void {
+    this.ngForm.control.enable();
+
+    this._updateDirtySubmitButtons();
   }
 
   public disable(): void {
@@ -303,18 +268,12 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
     });
   }
 
-  public enable(): void {
-    this.ngForm.control.enable();
-
-   this._updateDirtySubmitButtons();
-  }
-
   private _listenSubmit(): void {
     this.ngForm
       .ngSubmit
       .pipe(
         tap((event) => {
-          event.preventDefault();
+          event?.preventDefault();
         }),
         filter(() => {
           return [ FormStatus.Valid, FormStatus.Invalid ]
@@ -341,14 +300,61 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
       });
   }
 
+  private _listenWindowClose(): void {
+    fromEvent(window, 'beforeunload')
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe((event: Event) => {
+        if (this.dirtyConfirm && this.dirtyConfirmBrowser && this.ngForm.dirty) {
+          event.returnValue = false;
+        }
+      });
+  }
+
+  private _listenHotKeys(): void {
+    this._ngZone.runOutsideAngular(() => {
+      fromEvent(document, 'keydown')
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe((event: KeyboardEvent) => {
+          if (this._dialogBackdropEscape && event.code === 'Escape') {
+            const dialog = document.getElementById(this._dialogRef.id);
+
+            if ((event as any).path) {
+              (event as any).path.forEach(item => {
+                if (dialog === item) {
+                  this._formClose();
+                }
+              });
+            }
+          }
+
+          if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
+            event.preventDefault();
+
+            if (this.shortcuts) {
+              if (this._elementInForm(document.activeElement)) {
+                this.ngForm.ngSubmit.next();
+              }
+            }
+          }
+        });
+    });
+  }
+
   private _formClose(value = null): void {
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {
       this.confirm()
-      .subscribe((result) => {
-        if (confirmResultContinue(result)) {
-          this._dialogRef.close(value);
-        }
-      });
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe((result) => {
+          if (confirmResultContinue(result)) {
+            this._dialogRef.close(value);
+          }
+        });
     } else {
       this._dialogRef.close(value);
     }
@@ -357,10 +363,11 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
   private _registerDialogClose(directive: FsFormDialogCloseDirective): void {
     if (!directive.registered) {
       directive.registered = true;
+
       directive.clicked$
-      .pipe(
-        takeUntil(this._destroy$),
-      )
+        .pipe(
+          takeUntil(this._destroy$),
+        )
         .subscribe(() => {
           this._formClose(null);
         });
@@ -440,6 +447,7 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
       .subscribe((changes) => {
         if (this.dirtyConfirm) {
           const existing = Object.keys(this._snapshot);
+
           Object.keys(changes)
             .forEach((name: string) => {
               if (existing.indexOf(name) === -1) {
@@ -451,7 +459,6 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _registerDrawerClose(): void {
-
     if (this._drawerRef) {
       this._drawerRef.closeStart$
       .pipe(
@@ -486,19 +493,27 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
     if (this._drawerRef) {
       this._drawerRef.closeStart$
       .pipe(
-        takeUntil(this._destroy$),
         filter(() => (this.dirtyConfirm && this.dirtyConfirmDrawer)),
+        switchMap((subscriber) => {
+          return this.confirm()
+            .pipe(
+              map((result) => {
+                return {
+                  result,
+                  subscriber,
+                }
+              }),
+            );
+        }),
+        takeUntil(this._destroy$),
       )
-      .subscribe((subscriber) => {
-        this.confirm()
-        .subscribe((result) => {
-          if (confirmResultContinue(result)) {
-            subscriber.next();
-          } else {
-            subscriber.error();
-          }
-          subscriber.complete();
-        });
+      .subscribe(({result, subscriber}) => {
+        if (confirmResultContinue(result)) {
+          subscriber.next();
+        } else {
+          subscriber.error();
+        }
+        subscriber.complete();
       });
     }
   }
@@ -524,6 +539,9 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
           if (!this.submitting) {
             if (this.dirtyConfirm && this.dirtyConfirmTabs) {
               this.confirm()
+                .pipe(
+                  takeUntil(this._destroy$),
+                )
                 .subscribe((result) => {
                   if (confirmResultContinue(result)) {
                     tabGroup.selectedIndex = idx;
@@ -600,7 +618,9 @@ export class FsFormComponent implements OnInit, OnDestroy, AfterContentInit, OnC
     .pipe(
       takeUntil(this._destroy$),
     )
-    .subscribe(this._updateDirtySubmitButtons.bind(this));
+    .subscribe(() => {
+      this._updateDirtySubmitButtons();
+    });
 
     this._submitButtons.changes
     .pipe(

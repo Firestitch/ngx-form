@@ -16,8 +16,7 @@ export class DrawerComponent  {
   constructor(private _message: FsMessage,
               private _dialogRef: DrawerRef<DrawerComponent>) {}
 
-  public close(response) {
-    this._dialogRef.close(response);
+  public close() {
   }
 
   public save = () => {
