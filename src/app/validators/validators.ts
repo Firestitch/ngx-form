@@ -2,6 +2,8 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { email, isEmpty, isNumeric, phone, url } from '@firestitch/common';
 import { isValid } from 'date-fns';
 import { isObject } from 'lodash-es';
+import { catchError, map, take } from 'rxjs/operators';
+import { from, isObservable, Observable, of, throwError } from 'rxjs';
 
 export class FsValidators {
 
@@ -74,27 +76,35 @@ export class FsValidators {
   }
 
   static func(control: AbstractControl, formFunction, data: any) {
-    // Must use redundant variable because without that will angular compile error
-    const res = new Promise((resolve) => {
-      try {
-        const result = formFunction(control, data);
-        if (result instanceof Promise) {
-          result.then(() => {
-            return resolve(null);
-          })
-            .catch((err) => {
-              return resolve({ validationError: err });
-            });
-        } else {
-          return resolve(null);
-        }
-      } catch (e) {
-        e = e instanceof Error ? e.message : e;
-        resolve({ validationError: e });
-      }
-    });
+    let result: unknown;
+    let stream$: Observable<unknown>
 
-    return res;
+    try {
+      result = formFunction(control, data);
+    } catch (err) {
+      err = err instanceof Error ? err.message : err;
+
+      stream$ = throwError(err);
+    }
+
+    if (!stream$) {
+      if (result instanceof Promise) {
+        stream$ = from(result)
+      } else if (isObservable(result)) {
+        stream$ = result;
+      } else {
+        stream$ = of(null);
+      }
+    }
+
+    return stream$
+      .pipe(
+        map(() => null),
+        catchError((err) => {
+          return of({ validationError: err });
+        }),
+        take(1),
+      );
   }
 
   // static compare(a, b): ValidatorFn {
