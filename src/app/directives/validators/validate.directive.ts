@@ -1,6 +1,6 @@
 import { Directive, Input, AfterViewInit } from '@angular/core';
 import { FsControlDirective } from './control.directive';
-import { FsValidators } from '../validators/validators';
+import { FsValidators } from '../../validators/validators';
 
 
 @Directive({

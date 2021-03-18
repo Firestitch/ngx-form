@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { FsPrompt } from '@firestitch/prompt';
 import { Observable, of } from 'rxjs';
-import { FsFormComponent } from '../components/form/form.component';
+import { FsFormDirective } from '../directives/form/form.directive';
 import { FormDeactivate } from '../interfaces/form-deactivate';
 import { confirmUnsaved } from '../helpers/confirm-unsaved';
 import { map } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class FormDeactivateGuard implements CanDeactivate<any> {
       return of(true);
     }
 
-    const form: FsFormComponent = component.formComponent;
+    const form: FsFormDirective = component.formComponent;
 
     if (!form) {
       const error = `Component ${component.constructor.name}.formComponent does not return a valid FsFormComponent`;

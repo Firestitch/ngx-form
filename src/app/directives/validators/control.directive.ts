@@ -1,10 +1,13 @@
 import { Input, ElementRef, Renderer2, Directive, Injector, Optional, Inject } from '@angular/core';
 import { NgControl, AbstractControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { values, keys, remove } from 'lodash-es';
-import { FsFormComponent } from '../components/form/form.component';
+
+import { FsFormDirective } from '../form/form.directive';
 
 
 @Directive({
@@ -32,7 +35,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     protected renderer2: Renderer2,
     protected injector: Injector,
     @Optional() protected ngControl: NgControl,
-    @Optional() @Inject(FsFormComponent) private formDirective: FsFormComponent,
+    @Optional() @Inject(FsFormDirective) private formDirective: FsFormDirective,
   ) {
 
     if (ngControl) {

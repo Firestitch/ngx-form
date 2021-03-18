@@ -1,8 +1,9 @@
-import { takeUntil } from 'rxjs/operators';
-import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, HostListener, Input, OnDestroy } from '@angular/core';
+import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, Input, OnDestroy } from '@angular/core';
+
 import { MatButton } from '@angular/material/button';
+
 import { fromEvent, Subject } from 'rxjs';
-import { ConfigService } from './../services/config.service';
+import { takeUntil } from 'rxjs/operators';
 
 
 @Directive({
@@ -10,10 +11,14 @@ import { ConfigService } from './../services/config.service';
 })
 export class FsSubmitButtonDirective implements OnInit, OnDestroy {
 
-  @HostBinding('style.transition') transitionStyle = null;
+  @Input()
+  public name;
 
-  @Input() name;
-  @Input() dirtySubmit = true;
+  @Input()
+  public dirtySubmit = true;
+
+  @HostBinding('style.transition')
+  public transitionStyle = null;
 
   public active = false;
 
@@ -21,25 +26,26 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
 
   constructor(
     @Optional() @Host() private _matButton: MatButton,
-    @Optional() private _configService: ConfigService,
     private _elementRef: ElementRef,
-  ) {
-    if (_configService) {
-      this.transitionStyle = 'none';
-    }
+  ) {}
 
+  public ngOnInit() {
     fromEvent(this.element, 'click')
       .pipe(
         takeUntil(this._destroy$),
       )
-      .subscribe((event: UIEvent) => {
+      .subscribe(() => {
         this.active = true;
       });
   }
 
-  public ngOnInit() {
-    if (this._configService && this.dirtySubmit) {
-      if (this._configService.form.dirtySubmitButton) {
+  public setFormRef(formRef) {
+    if (formRef) {
+      this.transitionStyle = 'none';
+    }
+
+    if (formRef && this.dirtySubmit) {
+      if (formRef.dirtySubmitButton) {
         this.disable();
       }
 

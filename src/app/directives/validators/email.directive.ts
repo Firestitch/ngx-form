@@ -1,14 +1,13 @@
 import { Directive, Input, OnChanges, OnInit } from '@angular/core';
-
 import { FsControlDirective } from './control.directive';
-import { FsValidators } from '../validators/validators';
+import { FsValidators } from '../../validators/validators';
+
 
 @Directive({
-  selector: '[fsFormUrl]'
+  selector: '[fsFormEmail]'
 })
-export class FsFormUrlDirective extends FsControlDirective implements OnInit, OnChanges {
-
-  @Input() public fsFormUrl;
+export class FsFormEmailDirective extends FsControlDirective implements OnInit, OnChanges {
+  @Input() fsFormEmail;
 
   public ngOnInit() {
     this._addValidator();
@@ -20,8 +19,8 @@ export class FsFormUrlDirective extends FsControlDirective implements OnInit, On
 
   private _addValidator() {
     this.addValidator(() => {
-      if (this.isEnabled(this.fsFormUrl)) {
-        return FsValidators.url(this._control);
+      if (this.isEnabled(this.fsFormEmail)) {
+        return FsValidators.email(this._control);
       } else {
         return false;
       }

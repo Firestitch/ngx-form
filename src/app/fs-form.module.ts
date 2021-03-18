@@ -4,28 +4,28 @@ import { FormsModule } from '@angular/forms';
 
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
-import { FsFormComponent } from './components/form/form.component';
-import { FsControlDirective } from './directives/control.directive';
-import { FsFormRequiredDirective } from './directives/required.directive';
-import { FsFormMinDirective } from './directives/min.directive';
-import { FsFormMaxDirective } from './directives/max.directive';
-import { FsFormMinLengthDirective } from './directives/minlength.directive';
-import { FsFormMaxLengthDirective } from './directives/maxlength.directive';
-import { FsFormEmailDirective } from './directives/email.directive';
-import { FsFormEmailsDirective } from './directives/emails.directive';
-import { FsFormPhoneDirective } from './directives/phone.directive';
-import { FsFormCompareDirective } from './directives/compare.directive';
-import { FsFormIntegerDirective } from './directives/integer.directive';
-import { FsFormNumericDirective } from './directives/numeric.directive';
-import { FsFormPatternDirective } from './directives/pattern.directive';
-import { FsFormFunctionDirective } from './directives/function.directive';
-import { FsFormGreaterDirective } from './directives/greater.directive';
-import { FsFormDateRangeDirective } from './directives/daterange.directive';
-import { FsFormLesserDirective } from './directives/lesser.directive';
-import { FsFormUrlDirective } from './directives/url.directive';
+import { FsFormDirective } from './directives/form/form.directive';
+import { FsControlDirective } from './directives/validators/control.directive';
+import { FsFormRequiredDirective } from './directives/validators/required.directive';
+import { FsFormMinDirective } from './directives/validators/min.directive';
+import { FsFormMaxDirective } from './directives/validators/max.directive';
+import { FsFormMinLengthDirective } from './directives/validators/minlength.directive';
+import { FsFormMaxLengthDirective } from './directives/validators/maxlength.directive';
+import { FsFormEmailDirective } from './directives/validators/email.directive';
+import { FsFormEmailsDirective } from './directives/validators/emails.directive';
+import { FsFormPhoneDirective } from './directives/validators/phone.directive';
+import { FsFormCompareDirective } from './directives/validators/compare.directive';
+import { FsFormIntegerDirective } from './directives/validators/integer.directive';
+import { FsFormNumericDirective } from './directives/validators/numeric.directive';
+import { FsFormPatternDirective } from './directives/validators/pattern.directive';
+import { FsFormFunctionDirective } from './directives/validators/function.directive';
+import { FsFormGreaterDirective } from './directives/validators/greater.directive';
+import { FsFormDateRangeDirective } from './directives/validators/daterange.directive';
+import { FsFormLesserDirective } from './directives/validators/lesser.directive';
+import { FsFormUrlDirective } from './directives/validators/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
 import { FsSubmitButtonDirective } from './directives/submit-button.directive';
-import { FsFormValidateDirective } from './directives/validate.directive';
+import { FsFormValidateDirective } from './directives/validators/validate.directive';
 
 
 @NgModule({
@@ -34,7 +34,7 @@ import { FsFormValidateDirective } from './directives/validate.directive';
     FormsModule
   ],
   declarations: [
-    FsFormComponent,
+    FsFormDirective,
     FsControlDirective,
     FsFormRequiredDirective,
     FsFormMinDirective,
@@ -58,7 +58,7 @@ import { FsFormValidateDirective } from './directives/validate.directive';
     FsFormValidateDirective,
   ],
   exports: [
-    FsFormComponent,
+    FsFormDirective,
     FsControlDirective,
     FsFormRequiredDirective,
     FsFormMinDirective,
