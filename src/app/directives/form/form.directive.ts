@@ -352,9 +352,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         .subscribe((event: KeyboardEvent) => {
           if (this._dialogBackdropEscape && event.code === 'Escape') {
             const dialog = document.getElementById(this._dialogRef.id);
+            const paths = event.composedPath();
 
-            if ((event as any).path) {
-              (event as any).path.forEach(item => {
+            if (paths) {
+              paths.forEach(item => {
                 if (dialog === item) {
                   this._formClose();
                 }
