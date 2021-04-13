@@ -1,5 +1,5 @@
 <div fsDrawerContent>
-  <form fsForm [submit]="save" (submitted)="close($event)" [dirtyConfirm]="true">
+  <form fsForm [submit]="save" (submitted)="close()" [dirtyConfirm]="true">
     <div class="content">
        <mat-form-field>
         <input
@@ -11,6 +11,6 @@
     </div>
 
     <button mat-raised-button color="primary">Save</button>
-    <button mat-button type="button" (click)="close(null)">Cancel</button>
+    <button mat-button type="button" (click)="close()">Cancel</button>
   </form>
 </div>

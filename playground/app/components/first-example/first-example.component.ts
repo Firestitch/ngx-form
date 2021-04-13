@@ -1,8 +1,8 @@
-import { delay } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
-import { FsForm, FsFormComponent } from '@firestitch/form';
+import { FsForm, FsFormDirective } from '@firestitch/form';
 import { filter } from '@firestitch/common';
 
 import { of } from 'rxjs';
@@ -16,7 +16,7 @@ import { of } from 'rxjs';
 })
 export class FirstExampleComponent {
 
-  @ViewChild(FsFormComponent) form: FsFormComponent;
+  @ViewChild(FsFormDirective) form: FsFormDirective;
 
   public required = true;
   public hidden = false;
@@ -94,7 +94,10 @@ export class FirstExampleComponent {
     this.fsMessage.success('Validation successful');
     return of(true)
     .pipe(
-      delay(2000)
+      delay(2000),
+      tap(() => {
+        (undefined as any).test()
+      }),
     );
   }
 

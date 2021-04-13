@@ -3,11 +3,11 @@ import { FsPrompt } from '@firestitch/prompt';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { FsFormComponent } from '../components/form/form.component';
+import { FsFormDirective } from '../directives/form/form.directive';
 import { ConfirmResult } from '../enums/confirm-result';
 
 
-export function confirmUnsaved(form: FsFormComponent, prompt: FsPrompt): Observable<ConfirmResult> {
+export function confirmUnsaved(form: FsFormDirective, prompt: FsPrompt): Observable<ConfirmResult> {
   return new Observable(observer => {
 
     if (!form.dirtyConfirm || !form.ngForm.dirty) {

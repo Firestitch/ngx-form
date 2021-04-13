@@ -2,6 +2,7 @@ import { Directive, Input, AfterViewInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { FsControlDirective } from './control.directive';
 
+
 @Directive({
   selector: '[fsFormMinLength]'
 })

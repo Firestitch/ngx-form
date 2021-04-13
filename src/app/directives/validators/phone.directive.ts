@@ -1,15 +1,15 @@
 import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
-import { FsValidators } from '../validators/validators';
+import { FsValidators } from '../../validators/validators';
 
 
 @Directive({
-  selector: '[fsFormInteger]'
+  selector: '[fsFormPhone]'
 })
-export class FsFormIntegerDirective extends FsControlDirective implements OnInit, OnChanges {
+export class FsFormPhoneDirective extends FsControlDirective implements OnInit, OnChanges {
 
-  @Input() fsFormInteger;
+  @Input() public fsFormPhone;
 
   public ngOnInit() {
     this._addValidator();
@@ -21,8 +21,8 @@ export class FsFormIntegerDirective extends FsControlDirective implements OnInit
 
   private _addValidator() {
     this.addValidator(() => {
-      if (this.isEnabled(this.fsFormInteger)) {
-        return FsValidators.integer(this._control);
+      if (this.isEnabled(this.fsFormPhone)) {
+        return FsValidators.phone(this._control);
       } else {
         return false;
       }

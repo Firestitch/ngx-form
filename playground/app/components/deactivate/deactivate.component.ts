@@ -2,7 +2,7 @@ import { delay, tap } from 'rxjs/operators';
 import { Component, ViewChild } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
-import { FsFormComponent } from '@firestitch/form';
+import { FsFormDirective } from '@firestitch/form';
 import { of } from 'rxjs';
 
 
@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 })
 export class DeactivateComponent {
 
-  @ViewChild(FsFormComponent) public form: FsFormComponent;
+  @ViewChild(FsFormDirective) public form: FsFormDirective;
 
   public email = 'bob@email.com';
   public email1 = 'ray@email.com';

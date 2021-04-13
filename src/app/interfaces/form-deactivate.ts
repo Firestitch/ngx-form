@@ -1,6 +1,6 @@
-import { FsFormComponent } from '../components/form/form.component';
+import { FsFormDirective } from '../directives/form/form.directive';
 
 
 export interface FormDeactivate {
-  formComponent: FsFormComponent
+  formComponent: FsFormDirective
 }
