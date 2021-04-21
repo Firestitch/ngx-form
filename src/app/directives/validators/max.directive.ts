@@ -18,7 +18,6 @@ export class FsFormMaxDirective extends FsControlDirective implements AfterViewI
 
   @Input('fsFormMaxMessage')
   public set validationMessage(value: string) {
-    debugger;
     this._validateMessages.max = value;
   }
 
