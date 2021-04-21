@@ -85,7 +85,7 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     {
       provide: ErrorStateMatcher,
       useClass: ShowOnDirtyErrorStateMatcher,
-    }
+    },
   ],
 })
 export class FsFormModule {

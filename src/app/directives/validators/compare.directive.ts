@@ -1,13 +1,23 @@
 import { Directive, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { FsControlDirective } from './control.directive';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 
 
 @Directive({
-  selector: '[fsFormCompare]'
+  selector: '[fsFormCompare]',
+  providers: [
+    VALIDATE_MESSAGE_PROVIDER
+  ],
 })
 export class FsFormCompareDirective extends FsControlDirective implements AfterViewInit, OnDestroy {
 
-  @Input() fsFormCompare;
+  @Input()
+  public fsFormCompare;
+
+  @Input('fsFormCompareMessage')
+  public set validationMessage(value: string) {
+    this._validateMessages.compare = value;
+  }
 
   public ngAfterViewInit() {
     super.addValidator(this.validator);

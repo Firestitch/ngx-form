@@ -1,21 +1,32 @@
 import { Directive, Input } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { FsControlDirective } from './control.directive';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 
 
 @Directive({
-  selector: '[fsFormRequired],[ngModel][required]'
+  selector: '[fsFormRequired],[ngModel][required]',
+  providers: [
+    VALIDATE_MESSAGE_PROVIDER
+  ],
 })
 export class FsFormRequiredDirective extends FsControlDirective {
 
   public required = false;
 
-  @Input('fsFormRequired') set setFsFormRequired(value) {
+  @Input('fsFormRequired')
+  public set setFsFormRequired(value) {
     this._setRequired(value);
   }
 
-  @Input('required') set setRequired(value) {
+  @Input('required')
+  public set setRequired(value) {
     this._setRequired(value);
+  }
+
+  @Input('fsFormRequiredMessage')
+  public set validationMessage(value: string) {
+    this._validateMessages.required = value;
   }
 
   private _setRequired(value) {

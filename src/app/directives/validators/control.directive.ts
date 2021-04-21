@@ -1,4 +1,13 @@
-import { Input, ElementRef, Renderer2, Directive, Injector, Optional, Inject } from '@angular/core';
+import {
+  Input,
+  ElementRef,
+  Renderer2,
+  Directive,
+  Injector,
+  Optional,
+  Inject,
+  Self
+} from '@angular/core';
 import { NgControl, AbstractControl } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
 
@@ -8,10 +17,17 @@ import { takeUntil } from 'rxjs/operators';
 import { values, keys, remove } from 'lodash-es';
 
 import { FsFormDirective } from '../form/form.directive';
+import {
+  VALIDATE_MESSAGE_PROVIDER,
+  VALIDATE_MESSAGES
+} from '../../providers/validate-messages.provider';
 
 
 @Directive({
-  selector: '[fsFormControl]'
+  selector: '[fsFormControl]',
+  providers: [
+    VALIDATE_MESSAGE_PROVIDER
+  ],
 })
 export class FsControlDirective implements AfterContentInit, OnDestroy {
 
@@ -23,10 +39,18 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   @Input() appendLabelClass = 'fs-form-label';
   @Input() appendErrorClass = 'fs-form-error';
   @Input() appendHintClass = 'fs-form-hint';
-  @Input() validateMessages = {};
+
+  @Input()
+  public set validateMessages(messages: Record<string, string>) {
+    this._validateMessages = {
+      ...this._validateMessages,
+      ...messages,
+    };
+  }
 
   public errors = [];
 
+  // protected _validateMessages = { ...ERROR_MESSAGES };
   protected _destroy$ = new Subject();
   protected _control: AbstractControl;
 
@@ -34,6 +58,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     protected elementRef: ElementRef,
     protected renderer2: Renderer2,
     protected injector: Injector,
+    @Self() @Inject(VALIDATE_MESSAGES) protected _validateMessages,
     @Optional() protected ngControl: NgControl,
     @Optional() @Inject(FsFormDirective) private formDirective: FsFormDirective,
   ) {
@@ -251,29 +276,8 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
     let message = controlRef.control.errors[name];
 
-    if (this.validateMessages[name]) {
-      message = this.parseErrorMessage(this.validateMessages[name], message);
-    } else {
-      const messages = {
-        required: 'This field is required',
-        email: 'This is not a valid email address',
-        emails: 'Input valid email addresses, comma separated',
-        phone: 'Invalid phone number',
-        numeric: 'Value should be numeric',
-        integer: 'Value should be an integer',
-        min: 'Value should not be less than $(1)',
-        max: 'Value should not be greater than $(1)',
-        minlength: 'Should not be shorter than $(1) characters',
-        maxlength: 'Should not be longer than $(1) characters',
-        compare: 'Inputs do not match',
-        pattern: 'Value should match pattern $(1)',
-        dateRange: 'Invalid date range',
-        url: 'This is not a valid url',
-      };
-
-      if (messages[name]) {
-        message = this.parseErrorMessage(messages[name], message);
-      }
+    if (this._validateMessages[name]) {
+      message = this.parseErrorMessage(this._validateMessages[name], message);
     }
 
     return { name: name, message: message };

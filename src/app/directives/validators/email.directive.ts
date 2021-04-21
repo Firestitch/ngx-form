@@ -1,13 +1,23 @@
 import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 
 
 @Directive({
-  selector: '[fsFormEmail]'
+  selector: '[fsFormEmail]',
+  providers: [
+    VALIDATE_MESSAGE_PROVIDER
+  ],
 })
 export class FsFormEmailDirective extends FsControlDirective implements OnInit, OnChanges {
-  @Input() fsFormEmail;
+  @Input()
+  public fsFormEmail;
+
+  @Input('fsFormEmailMessage')
+  public set validationMessage(value: string) {
+    this._validateMessages.email = value;
+  }
 
   public ngOnInit() {
     this._addValidator();

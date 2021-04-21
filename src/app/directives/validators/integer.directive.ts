@@ -2,14 +2,24 @@ import { Directive, Input, OnChanges, OnInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 
 
 @Directive({
-  selector: '[fsFormInteger]'
+  selector: '[fsFormInteger]',
+  providers: [
+    VALIDATE_MESSAGE_PROVIDER
+  ],
 })
 export class FsFormIntegerDirective extends FsControlDirective implements OnInit, OnChanges {
 
-  @Input() fsFormInteger;
+  @Input()
+  public fsFormInteger;
+
+  @Input('fsFormIntegerMessage')
+  public set validationMessage(value: string) {
+    this._validateMessages.integer = value;
+  }
 
   public ngOnInit() {
     this._addValidator();

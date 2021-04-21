@@ -2,14 +2,24 @@ import { Directive, Input, AfterViewInit } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 
 
 @Directive({
-  selector: '[fsFormGreater]'
+  selector: '[fsFormGreater]',
+  providers: [
+    VALIDATE_MESSAGE_PROVIDER
+  ],
 })
 export class FsFormGreaterDirective extends FsControlDirective implements AfterViewInit {
 
-  @Input() fsFormGreater;
+  @Input()
+  public fsFormGreater;
+
+  @Input('fsFormGreaterMessage')
+  public set validationMessage(value: string) {
+    this._validateMessages.greater = value;
+  }
 
   public ngAfterViewInit() {
     this.addValidator(() => {
