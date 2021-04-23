@@ -7,7 +7,10 @@ export const VALIDATE_MESSAGES = new InjectionToken<Record<string, string>>(
 
 export const VALIDATE_MESSAGE_PROVIDER = {
   provide: VALIDATE_MESSAGES,
-  useFactory: () => {
-    return { ...ERROR_MESSAGES };
-  }
+  useFactory: messageProviderFactory,
 };
+
+export function messageProviderFactory() {
+  return { ...ERROR_MESSAGES };
+}
+
