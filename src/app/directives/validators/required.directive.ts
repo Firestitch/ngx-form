@@ -1,7 +1,10 @@
 import { Directive, Input } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
+import { isEnabled } from '../../helpers/is-enabled';
 
 
 @Directive({
@@ -10,18 +13,17 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormRequiredDirective extends FsControlDirective {
-
+export class FsFormRequiredDirective extends FsControlDirective implements FsValidator {
   public required = false;
 
   @Input('fsFormRequired')
   public set setFsFormRequired(value) {
-    this._setRequired(value);
+    this.required = isEnabled(value);
   }
 
   @Input('required')
   public set setRequired(value) {
-    this._setRequired(value);
+    this.required = isEnabled(value);
   }
 
   @Input('fsFormRequiredMessage')
@@ -29,13 +31,11 @@ export class FsFormRequiredDirective extends FsControlDirective {
     this._validateMessages.required = value;
   }
 
-  private _setRequired(value) {
-    this.required = this.isEnabled(value);
-
+  public validate(control: AbstractControl): ValidationErrors | null {
     if (this.required) {
-      this.addValidator(Validators.required);
+      return Validators.required(this._control);
     } else {
-      this.removeValidator(Validators.required);
+      return null;
     }
   }
 

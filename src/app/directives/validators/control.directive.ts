@@ -8,19 +8,25 @@ import {
   Inject,
   Self
 } from '@angular/core';
-import { NgControl, AbstractControl } from '@angular/forms';
+import { NgControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { OnDestroy, AfterContentInit } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { values, keys, remove } from 'lodash-es';
+import { values, keys } from 'lodash-es';
 
 import { FsFormDirective } from '../form/form.directive';
 import {
   VALIDATE_MESSAGE_PROVIDER,
   VALIDATE_MESSAGES
 } from '../../providers/validate-messages.provider';
+
+
+export interface FsControlDirective {
+  validate?(control: AbstractControl): ValidationErrors | null;
+  validateAsync?(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null>;
+}
 
 
 @Directive({
@@ -65,8 +71,14 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
     if (ngControl) {
       this._control = ngControl.control;
-      (<any>this._control).fsValidators = (<any>this._control).fsValidators || [];
-      (<any>this._control).fsAsyncValidators = (<any>this._control).asyncValidators || [];
+
+      if (this.validate) {
+        this.ngControl['_rawValidators'].push(this.validate.bind(this));
+      }
+
+      if (this.validateAsync) {
+        this.ngControl['_rawAsyncValidators'].push(this.validateAsync.bind(this));
+      }
 
     } else {
       console.error('The element does not have a valid ngModel', this.elementRef.nativeElement);
@@ -283,69 +295,4 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     return { name: name, message: message };
   }
 
-  public addValidator(validator) {
-
-    if (this._control) {
-      const validators = this.getValidators().slice(0).concat(validator);
-      this._setControlValidators(validators);
-    }
-  }
-
-  public addAsyncValidator(validator) {
-
-    if (this._control) {
-      const validators = this.getAsyncValidators().slice(0).concat(validator);
-      this._setControlAsyncValidators(validators);
-    }
-  }
-
-  private getValidators() {
-    return (<any>this._control).fsValidators || [];
-  }
-
-  private getAsyncValidators() {
-    return (<any>this._control).fsAsyncValidators || [];
-  }
-
-  public removeValidator(validator) {
-    const validators = this.getValidators().slice(0);
-    remove(validators, (item) => { return item === validator; });
-    this._setControlValidators(validators);
-  }
-
-  public removeAsyncValidator(validator) {
-    const validators = this.getAsyncValidators().slice(0);
-    remove(validators, (item) => { return item === validator; });
-    this._setControlAsyncValidators(validators);
-  }
-
-  public isEnabled(value) {
-    return value !== 'false' && (value || value === '');
-  }
-
-  private _setControlValidators(validators) {
-
-    this._control.setValidators(validators);
-    (<any>this._control).fsValidators = validators;
-
-    // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
-    // Expression has changed after it was checked.
-    // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
-    setTimeout(() => {
-      this._control.updateValueAndValidity();
-    });
-  }
-
-  private _setControlAsyncValidators(validators) {
-
-    this._control.setAsyncValidators(validators);
-    (<any>this._control).fsAsyncValidators = validators;
-
-    // To avoid error: ExpressionChangedAfterItHasBeenCheckedError
-    // Expression has changed after it was checked.
-    // Previous value: 'ng-valid: true'. Current value: 'ng-valid: false'.
-    setTimeout(() => {
-      this._control.updateValueAndValidity();
-    });
-  }
 }

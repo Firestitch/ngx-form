@@ -1,8 +1,10 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
@@ -11,7 +13,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormGreaterDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormGreaterDirective extends FsControlDirective implements FsValidator {
 
   @Input()
   public fsFormGreater;
@@ -21,13 +23,15 @@ export class FsFormGreaterDirective extends FsControlDirective implements AfterV
     this._validateMessages.greater = value;
   }
 
-  public ngAfterViewInit() {
-    this.addValidator(() => {
-      const greater = parseFloat(this.fsFormGreater);
-      const value = parseFloat(this._control.value);
-      return !isNaN(greater) && !isNaN(value) && value <= greater ? { greater: `Value must be greater than ${greater}` } : null;
-    });
+  public validate(control: AbstractControl): ValidationErrors | null {
+    const greater = parseFloat(this.fsFormGreater);
+    const value = parseFloat(this._control.value);
 
-    this.addValidator(FsValidators.numeric);
+    if (!isNaN(greater) && !isNaN(value) && value <= greater) {
+      return { greater: { greater, actual: value } };
+    }
+
+    return FsValidators.numeric(this._control);
   }
+
 }

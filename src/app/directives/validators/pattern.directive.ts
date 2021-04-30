@@ -1,7 +1,8 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
@@ -10,7 +11,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormPatternDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormPatternDirective extends FsControlDirective implements FsValidator {
 
   @Input()
   public fsFormPattern: RegExp;
@@ -20,7 +21,8 @@ export class FsFormPatternDirective extends FsControlDirective implements AfterV
     this._validateMessages.pattern = value;
   }
 
-  public ngAfterViewInit() {
-    this.addValidator(Validators.pattern(this.fsFormPattern));
+  public validate(control: AbstractControl): ValidationErrors | null {
+    return Validators.pattern(this.fsFormPattern)(this._control);
   }
+
 }

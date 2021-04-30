@@ -1,8 +1,10 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
@@ -11,7 +13,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormLesserDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormLesserDirective extends FsControlDirective implements FsValidator {
 
   @Input()
   public fsFormLesser;
@@ -21,13 +23,15 @@ export class FsFormLesserDirective extends FsControlDirective implements AfterVi
     this._validateMessages.lesser = value;
   }
 
-  public ngAfterViewInit() {
-    this.addValidator(() => {
-      const lesser = parseFloat(this.fsFormLesser);
-      const value = parseFloat(this._control.value);
-      return !isNaN(lesser) && !isNaN(value) && value >= lesser ? { lesser: `Value must be less than ${lesser}` } : null;
-    });
+  public validate(control: AbstractControl): ValidationErrors | null {
+    const lesser = parseFloat(this.fsFormLesser);
+    const value = parseFloat(this._control.value);
 
-    this.addValidator(FsValidators.numeric);
+    if (!isNaN(lesser) && !isNaN(value) && value >= lesser) {
+      return { lesser: { lesser, actual: value } };
+    }
+
+    return FsValidators.numeric(this._control);
   }
+
 }

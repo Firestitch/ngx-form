@@ -1,7 +1,11 @@
-import { Directive, Input, OnChanges, OnInit } from '@angular/core';
+import { Directive, Input, OnChanges } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
+import { isEnabled } from '../../helpers/is-enabled';
 
 
 @Directive({
@@ -10,7 +14,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormDateRangeDirective extends FsControlDirective implements OnInit, OnChanges {
+export class FsFormDateRangeDirective extends FsControlDirective implements OnChanges, FsValidator {
 
   @Input()
   public fsFormDateRange;
@@ -20,21 +24,15 @@ export class FsFormDateRangeDirective extends FsControlDirective implements OnIn
     this._validateMessages.dateRange = value;
   }
 
-  public ngOnInit() {
-    this._addValidator();
-  }
-
   public ngOnChanges() {
     this._control.updateValueAndValidity();
   }
 
-  private _addValidator() {
-    this.addValidator(() => {
-      if (this.isEnabled(this.fsFormDateRange)) {
-        this.addValidator(FsValidators.dateRange);
-      } else {
-        this.removeValidator(FsValidators.dateRange);
-      }
-    });
+  public validate(control: AbstractControl): ValidationErrors | null {
+    if (isEnabled(this.fsFormDateRange)) {
+      return FsValidators.dateRange(this._control);
+    } else {
+      return null;
+    }
   }
 }

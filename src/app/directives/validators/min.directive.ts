@@ -1,8 +1,11 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
+
 
 @Directive({
   selector: '[fsFormMin]',
@@ -10,7 +13,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormMinDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormMinDirective extends FsControlDirective implements FsValidator {
 
   @Input()
   public fsFormMin;
@@ -20,8 +23,8 @@ export class FsFormMinDirective extends FsControlDirective implements AfterViewI
     this._validateMessages.min = value;
   }
 
-  public ngAfterViewInit() {
-    this.addValidator(FsValidators.numeric);
-    this.addValidator(Validators.min(parseFloat(this.fsFormMin)));
+  public validate(control: AbstractControl): ValidationErrors | null {
+    return FsValidators.numeric(this._control) || Validators.min(parseFloat(this.fsFormMin))(this._control);
   }
+
 }

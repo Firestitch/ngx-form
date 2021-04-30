@@ -1,7 +1,9 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
+
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
@@ -10,7 +12,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormMinLengthDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormMinLengthDirective extends FsControlDirective implements FsValidator {
 
   @Input()
   public fsFormMinLength: number;
@@ -20,7 +22,7 @@ export class FsFormMinLengthDirective extends FsControlDirective implements Afte
     this._validateMessages.minlength = value;
   }
 
-  public ngAfterViewInit() {
-    this.addValidator(Validators.minLength(this.fsFormMinLength));
+  public validate(control: AbstractControl): ValidationErrors | null {
+    return Validators.minLength(this.fsFormMinLength)(this._control);
   }
 }

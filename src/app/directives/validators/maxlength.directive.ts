@@ -1,8 +1,9 @@
-import { Directive, Input, AfterViewInit } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
@@ -11,16 +12,18 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormMaxLengthDirective extends FsControlDirective implements AfterViewInit {
+export class FsFormMaxLengthDirective extends FsControlDirective implements FsValidator {
 
-  @Input() fsFormMaxLength: number;
+  @Input()
+  public fsFormMaxLength: number;
 
   @Input('fsFormMaxLengthMessage')
   public set validationMessage(value: string) {
     this._validateMessages.maxlength = value;
   }
 
-  public ngAfterViewInit() {
-    this.addValidator(Validators.maxLength(this.fsFormMaxLength));
+  public validate(control: AbstractControl): ValidationErrors | null {
+    return Validators.maxLength(this.fsFormMaxLength)(this._control);
   }
+
 }
