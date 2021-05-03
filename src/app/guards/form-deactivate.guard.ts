@@ -15,18 +15,18 @@ export class FormDeactivateGuard implements CanDeactivate<any> {
 
   constructor(private _prompt: FsPrompt) {}
 
-  canDeactivate(component: FormDeactivate): Observable<boolean> {
+  canDeactivate(directive: FormDeactivate): Observable<boolean> {
 
-    if (!('formComponent' in component)) {
-      const error = `Component ${(<any>component).constructor.name} does not property implement interface FormDeactivate`;
+    if (!('getForm' in directive)) {
+      const error = `Directive ${(<any>directive).constructor.name} does not property implement interface FormDeactivate`;
       console.error(error);
       return of(true);
     }
 
-    const form: FsFormDirective = component.formComponent;
+    const form: FsFormDirective = directive.getForm();
 
-    if (!form) {
-      const error = `Component ${component.constructor.name}.formComponent does not return a valid FsFormComponent`;
+    if (!(form instanceof FsFormDirective)) {
+      const error = `Directive ${directive.constructor.name}.getForm() does not return a valid FsFormDirective`;
       console.error(error);
       return of(true);
     }

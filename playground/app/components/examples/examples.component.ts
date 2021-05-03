@@ -1,17 +1,19 @@
 import { Component, ViewChild } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { FormDeactivate } from '@firestitch/form';
+import { FormDeactivate, FsFormDirective } from '@firestitch/form';
 import { DeactivateComponent } from '../deactivate/deactivate.component';
 
 @Component({
   templateUrl: 'examples.component.html'
 })
-export class ExamplesComponent {
+export class ExamplesComponent implements FormDeactivate {
+
   public config = environment;
 
-  @ViewChild(DeactivateComponent) public deactivate: DeactivateComponent;
+  @ViewChild(DeactivateComponent)
+  public deactivate: DeactivateComponent;
 
-  get formComponent() {
+  public getForm(): FsFormDirective  {
     return this.deactivate.form;
   }
 }

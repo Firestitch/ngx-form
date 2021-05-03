@@ -13,7 +13,8 @@ import { of } from 'rxjs';
 })
 export class DeactivateComponent {
 
-  @ViewChild(FsFormDirective) public form: FsFormDirective;
+  @ViewChild(FsFormDirective)
+  public form: FsFormDirective;
 
   public email = 'bob@email.com';
   public email1 = 'ray@email.com';
