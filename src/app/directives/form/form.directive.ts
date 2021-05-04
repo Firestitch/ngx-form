@@ -1,7 +1,8 @@
 import {
   AfterContentInit,
   ChangeDetectorRef,
-  ContentChildren, Directive,
+  ContentChildren,
+  Directive,
   ElementRef,
   EventEmitter,
   HostBinding,
@@ -28,7 +29,9 @@ import { DrawerRef } from '@firestitch/drawer';
 
 import {
   BehaviorSubject,
+  defer,
   fromEvent,
+  iif,
   isObservable,
   Observable,
   of,
@@ -281,7 +284,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       .pipe(
         take(1),
         mergeMap(() => confirmUnsaved(this, this._prompt)),
-        takeUntil(this._destroy$),
       );
   }
 
@@ -519,34 +521,34 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
   }
 
-
   private _registerDirtyConfirmDrawerClose(): void {
-
     if (this._drawerRef) {
       this._drawerRef.closeStart$
       .pipe(
-        filter(() => (this.dirtyConfirm && this.dirtyConfirmDrawer)),
         switchMap((subscriber) => {
-          return this.confirm()
-            .pipe(
-              map((result) => {
-                return {
-                  result,
-                  subscriber,
-                }
-              }),
-            );
+          return iif(
+            () => this.dirtyConfirm && this.dirtyConfirmDrawer,
+            this.confirm()
+              .pipe(
+                map((result) => confirmResultContinue(result)),
+                tap((result) => {
+                  if (result) {
+                    subscriber.next();
+                    subscriber.complete();
+                  } else {
+                    subscriber.error();
+                  }
+                })
+              ),
+            defer(() => {
+              subscriber.next();
+              subscriber.complete();
+            }),
+          )
         }),
         takeUntil(this._destroy$),
       )
-      .subscribe(({result, subscriber}) => {
-        if (confirmResultContinue(result)) {
-          subscriber.next();
-        } else {
-          subscriber.error();
-        }
-        subscriber.complete();
-      });
+      .subscribe();
     }
   }
 
