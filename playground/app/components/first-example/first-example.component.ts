@@ -96,7 +96,7 @@ export class FirstExampleComponent {
     .pipe(
       delay(2000),
       tap(() => {
-        (undefined as any).test()
+        //(undefined as any).testConsoleError()
       }),
     );
   }

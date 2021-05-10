@@ -108,6 +108,12 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   @Input()
   public submit: (event: SubmitEvent) => Observable<any>;
 
+  @Input()
+  public successDelay = 1500;
+
+  @Input()
+  public errorDelay = 1500;
+
   @Output('fsForm')
   public submitEvent: EventEmitter<SubmitEvent> = new EventEmitter();
 
@@ -429,13 +435,13 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   private _completeSubmit(success, submitEvent: SubmitEvent): void {
     if (this._activeSubmitButton) {
-      this._resetButtons();
       if (success) {
         this._activeSubmitButton.success();
         this.ngForm.control.markAsPristine();
         this.createSnapshot();
         this.submitted.emit(submitEvent);
       } else {
+        this._resetButtons();
         this._activeSubmitButton.error();
       }
     }
@@ -450,9 +456,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
     this._status$.next(FormStatus.Completing);
 
+    const resetDelay = success ? this.successDelay : this.errorDelay;
+
     of(true)
     .pipe(
-      delay(1500),
+      delay(resetDelay),
       first(),
       takeUntil(this._destroy$),
     ).subscribe(() => {
