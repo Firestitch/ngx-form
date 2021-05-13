@@ -49,12 +49,24 @@ export class FsValidators {
     return { phone: true };
   }
 
-  static url(control: AbstractControl): ValidationErrors | null {
-    if (!control.value || url(control.value)) {
+  static url(control: AbstractControl, protocolRequired = false): ValidationErrors | null {
+    if (!control.value) {
       return null;
     }
 
-    return { url: true };
+    if (!url(control.value)) {
+      return { url: true };
+    }
+
+    if (protocolRequired) {
+      const pattern = new RegExp(/^http(s)?:\/\//gm);
+
+      if (!String(control.value).match(pattern)) {
+        return { urlProtocol: true };
+      }
+    }
+
+    return null;
   }
 
   static dateRange(control: AbstractControl): ValidationErrors | null {

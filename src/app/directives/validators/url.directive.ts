@@ -19,6 +19,9 @@ export class FsFormUrlDirective extends FsControlDirective implements OnChanges,
   @Input()
   public fsFormUrl;
 
+  @Input()
+  public fsFormUrlProtocol = false;
+
   @Input('fsFormUrlMessage')
   public set validationMessage(value: string) {
     this._validateMessages.url = value;
@@ -30,7 +33,7 @@ export class FsFormUrlDirective extends FsControlDirective implements OnChanges,
 
   public validate(control: AbstractControl): ValidationErrors | null {
     if (isEnabled(this.fsFormUrl)) {
-      return FsValidators.url(this._control);
+      return FsValidators.url(this._control, this.fsFormUrlProtocol);
     } else {
       return null;
     }

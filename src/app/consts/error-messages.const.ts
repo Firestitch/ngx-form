@@ -13,6 +13,7 @@ export const ERROR_MESSAGES = {
   pattern: 'Value should match pattern $(1)',
   dateRange: 'Invalid date range',
   url: 'This is not a valid url',
+  urlProtocol: 'Invalid URL. Proper http protocol is required. eg. https://google.com',
   greater: 'Value must be greater than $(1)',
   lesser: 'Value must be less than $(1)',
 };
