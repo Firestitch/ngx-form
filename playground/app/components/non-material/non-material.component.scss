@@ -3,10 +3,6 @@
   position: relative;
   margin-bottom: 1.25em;
 
-  &.ng-invalid {
-    color: #f44336;
-  }
-
   .label,
   .fs-form-label {
     font-size: 70%;
@@ -18,5 +14,12 @@
     bottom: -16px;
     top: unset;
     font-size: 70%;
+  }
+}
+
+
+.form-group {
+  &.ng-invalid {
+    color: #f44336;
   }
 }
