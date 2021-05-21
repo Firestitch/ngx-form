@@ -188,8 +188,11 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   */
 
   protected render() {
+    const shouldErrorBeRendered = this.ngControl
+      && this.ngControl.invalid
+      && (this.ngControl.dirty || this.formDirective.ngForm?.submitted);
 
-    if (this.ngControl) {
+    if (shouldErrorBeRendered) {
 
       const renderer = this.renderer2;
       const wrapper = this.getWrapperElement();
