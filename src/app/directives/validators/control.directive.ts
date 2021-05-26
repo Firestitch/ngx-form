@@ -188,11 +188,7 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
   */
 
   protected render() {
-    const shouldErrorBeRendered = this.ngControl
-      && this.ngControl.invalid
-      && (this.ngControl.dirty || this.formDirective.ngForm?.submitted);
-
-    if (shouldErrorBeRendered) {
+    if (this.ngControl) {
 
       const renderer = this.renderer2;
       const wrapper = this.getWrapperElement();
@@ -241,7 +237,10 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
       wrapper.classList.remove('ng-invalid');
 
-      if (!error) {
+      const shouldErrorBeRendered = this.ngControl.invalid
+        && (this.ngControl.dirty || this.formDirective.ngForm?.submitted);
+
+      if (!shouldErrorBeRendered || !error) {
         return;
       }
 
