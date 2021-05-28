@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnChanges } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
@@ -13,7 +13,7 @@ import { FsValidator } from '../../interfaces/validator';
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormGreaterDirective extends FsControlDirective implements FsValidator {
+export class FsFormGreaterDirective extends FsControlDirective implements OnChanges, FsValidator {
 
   @Input()
   public fsFormGreater;
@@ -21,6 +21,10 @@ export class FsFormGreaterDirective extends FsControlDirective implements FsVali
   @Input('fsFormGreaterMessage')
   public set validationMessage(value: string) {
     this._validateMessages.greater = value;
+  }
+
+  public ngOnChanges(): void {
+    this._control.updateValueAndValidity();
   }
 
   public validate(control: AbstractControl): ValidationErrors | null {

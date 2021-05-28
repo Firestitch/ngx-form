@@ -24,7 +24,7 @@ export class FsFormNumericDirective extends FsControlDirective implements OnChan
     this._validateMessages.numeric = value;
   }
 
-  public ngOnChanges() {
+  public ngOnChanges(): void {
     this._control.updateValueAndValidity();
   }
 

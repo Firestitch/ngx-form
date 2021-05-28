@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnChanges } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
@@ -12,7 +12,7 @@ import { FsValidator } from '../../interfaces/validator';
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormMaxLengthDirective extends FsControlDirective implements FsValidator {
+export class FsFormMaxLengthDirective extends FsControlDirective implements OnChanges, FsValidator {
 
   @Input()
   public fsFormMaxLength: number;
@@ -20,6 +20,10 @@ export class FsFormMaxLengthDirective extends FsControlDirective implements FsVa
   @Input('fsFormMaxLengthMessage')
   public set validationMessage(value: string) {
     this._validateMessages.maxlength = value;
+  }
+
+  public ngOnChanges(): void {
+    this._control.updateValueAndValidity();
   }
 
   public validate(control: AbstractControl): ValidationErrors | null {
