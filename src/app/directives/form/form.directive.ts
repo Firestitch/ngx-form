@@ -218,6 +218,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     const message = 'Changes not saved. Please review errors highlighted in red.';
     this._message.error(message, { mode: MessageMode.Toast });
 
+    const el = this._element.nativeElement.querySelector('.ng-invalid');
+
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
     return throwError('Form validation error');
   }
@@ -243,7 +248,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     if (changes.dirtyConfirm) {
       this._updateDirtySubmitButtons();
     }
-
   }
 
   public ngAfterContentInit(): void {
