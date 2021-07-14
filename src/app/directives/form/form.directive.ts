@@ -142,6 +142,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
   private _snapshot: { [key: string]: unknown } = {};
+  private _submitData$ = new Subject<SubmittedEvent>();
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _destroy$ = new Subject();
 
@@ -336,11 +337,12 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
           return source$;
         }),
+        tap((submittedEvent: SubmittedEvent) => {
+          this._completeSubmit(true, submittedEvent);
+        }),
         takeUntil(this._destroy$)
       )
-      .subscribe((submittedEvent: SubmittedEvent) => {
-        this._completeSubmit(true, submittedEvent);
-      });
+      .subscribe(() => {});
   }
 
   private _listenWindowClose(): void {
@@ -388,19 +390,19 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     });
   }
 
-  private _formClose(value = null): void {
+  private _formClose(): void {
     if (this.dirtyConfirm && this.dirtyConfirmDialog) {
       this.confirm()
         .pipe(
+          filter((result) => confirmResultContinue(result)),
+          switchMap(() => this._submitData$),
           takeUntil(this._destroy$),
         )
         .subscribe((result) => {
-          if (confirmResultContinue(result)) {
-            this._dialogRef.close(value);
-          }
+          this._dialogRef.close(result?.response);
         });
     } else {
-      this._dialogRef.close(value);
+      this._dialogRef.close(null);
     }
   }
 
@@ -413,7 +415,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
           takeUntil(this._destroy$),
         )
         .subscribe(() => {
-          this._formClose(null);
+          this._formClose();
         });
     }
   }
@@ -437,8 +439,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     return false;
   }
 
-  private _completeSubmit(success, submitEvent: SubmitEvent): void {
+  private _completeSubmit(success, submitEvent: SubmittedEvent): void {
     if (this._activeSubmitButton) {
+      this._submitData$.next(submitEvent);
+
       if (success) {
         this._activeSubmitButton.success();
         this.ngForm.control.markAsPristine();
