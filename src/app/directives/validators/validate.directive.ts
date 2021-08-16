@@ -16,18 +16,18 @@ import { FsAsyncValidator } from '../../interfaces/async-validator';
   ],
 })
 export class FsFormValidateDirective extends FsControlDirective implements OnChanges, FsAsyncValidator {
-  @Input()
-  public validate;
+  @Input('validate')
+  public validateFn;
 
-  @Input()
-  public validateData;
+  @Input('validateData')
+  public validateFnData;
 
   public ngOnChanges(): void {
     this._control.updateValueAndValidity();
   }
 
   public validateAsync(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    return FsValidators.func(this._control, this.validate, this.validateData);
+    return FsValidators.func(this._control, this.validateFn, this.validateFnData);
   }
 
 }

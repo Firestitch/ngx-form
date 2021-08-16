@@ -10,7 +10,7 @@ export class FunctionComponent {
 
   constructor(private fsMessage: FsMessage) {}
 
-  @ViewChild('form') form;
+  @ViewChild('form', { static: true }) form;
 
   public email = 'existing@email.com';
   public minLength = 3;
@@ -35,7 +35,7 @@ export class FunctionComponent {
       }, 300);
     });
 
-  }).bind(this);
+  });
 
 
   public functionExceptionFn = (formControl, data) => {
@@ -76,7 +76,7 @@ export class FunctionComponent {
           throw 'Invalid week selection.';
     }
 
-  }).bind(this);
+  });
 
   public save() {
     this.fsMessage.success('Validation successful');

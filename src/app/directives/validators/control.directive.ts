@@ -6,10 +6,12 @@ import {
   Injector,
   Optional,
   Inject,
-  Self
+  Self,
+  OnInit,
+  OnDestroy,
+  AfterContentInit,
 } from '@angular/core';
 import { NgControl, AbstractControl, ValidationErrors } from '@angular/forms';
-import { OnDestroy, AfterContentInit } from '@angular/core';
 
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -35,7 +37,7 @@ export interface FsControlDirective {
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsControlDirective implements AfterContentInit, OnDestroy {
+export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
   @Input() wrapperSelector: string | false;
   @Input() messageSelector: string | false;
@@ -71,18 +73,13 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
 
     if (ngControl) {
       this._control = ngControl.control;
-
-      if (this.validate) {
-        this.ngControl['_rawValidators'].push(this.validate.bind(this));
-      }
-
-      if (this.validateAsync) {
-        this.ngControl['_rawAsyncValidators'].push(this.validateAsync.bind(this));
-      }
-
     } else {
       console.error('The element does not have a valid ngModel', this.elementRef.nativeElement);
     }
+  }
+
+  ngOnInit() {
+    this._setupValidators();
   }
 
   ngOnDestroy() {
@@ -295,6 +292,28 @@ export class FsControlDirective implements AfterContentInit, OnDestroy {
     }
 
     return { name: name, message: message };
+  }
+
+  private _setupValidators(): void {
+    const control = this._control;
+
+    if (this.validate) {
+      const validators = control.validator
+        ? [ control.validator, this.validate.bind(this)]
+        : this.validate.bind(this);
+
+      control.setValidators(validators);
+    }
+
+    if (this.validateAsync) {
+      const asyncValidators = control.asyncValidator
+        ? [ control.asyncValidator, this.validateAsync.bind(this)]
+        : this.validateAsync.bind(this);
+
+      control.setAsyncValidators(asyncValidators);
+    }
+
+    control.updateValueAndValidity();
   }
 
 }
