@@ -1,8 +1,10 @@
 import { Directive, Input, OnChanges } from '@angular/core';
+import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 import { isEnabled } from '../../helpers/is-enabled';
+import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
@@ -11,7 +13,7 @@ import { isEnabled } from '../../helpers/is-enabled';
     VALIDATE_MESSAGE_PROVIDER
   ],
 })
-export class FsFormRequiredDirective extends FsControlDirective implements OnChanges {
+export class FsFormRequiredDirective extends FsControlDirective implements OnChanges, FsValidator {
   public required = false;
 
   @Input('fsFormRequired')
@@ -33,15 +35,13 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
     this._control.updateValueAndValidity();
   }
 
-  // We don't actually need to add our custom required validator,
-  // because it has been already done by 100% similar angular validator with same selector
-  // public validate(control: AbstractControl): ValidationErrors | null {
-  //   if (this.required) {
-  //     return Validators.required(this._control);
-  //   } else {
-  //     return null;
-  //   }
-  // }
+  public validate(control: AbstractControl): ValidationErrors | null {
+    if (this.required) {
+      return Validators.required(this._control);
+    } else {
+      return null;
+    }
+  }
 
   protected render() {
 
