@@ -395,10 +395,14 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       this.confirm()
         .pipe(
           filter((result) => confirmResultContinue(result)),
-          switchMap(() => this._submitData$),
+          switchMap((result) => {
+            return result === ConfirmResult.Pristine
+              ? of(null)
+              : this._submitData$;
+          }),
           takeUntil(this._destroy$),
         )
-        .subscribe((result) => {
+        .subscribe((result: SubmittedEvent) => {
           this._dialogRef.close(result?.response);
         });
     } else {
