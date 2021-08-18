@@ -371,7 +371,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
             if (paths) {
               paths.forEach(item => {
                 if (dialog === item) {
-                  this._formClose();
+                  this._ngZone.run(() => {
+                    this._formClose();
+                  });
                 }
               });
             }
