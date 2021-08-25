@@ -10,7 +10,7 @@ import { ConfirmResult } from '../enums/confirm-result';
 export function confirmUnsaved(form: FsFormDirective, prompt: FsPrompt): Observable<ConfirmResult> {
   return new Observable(observer => {
 
-    if (!form.dirtyConfirm || !form.ngForm.dirty) {
+    if (!form.confirm || !form.ngForm.dirty) {
       observer.next(ConfirmResult.Pristine);
       observer.complete();
       return;
@@ -22,12 +22,12 @@ export function confirmUnsaved(form: FsFormDirective, prompt: FsPrompt): Observa
     let discardLabel = 'Discard Changes & Continue';
     let cancelLabel = 'Review Changes';
 
-    if (typeof form.dirtyConfirm === 'object') {
-      title = form.dirtyConfirm.title || title;
-      message = form.dirtyConfirm.message || message;
-      saveLabel = form.dirtyConfirm.saveLabel || saveLabel;
-      discardLabel = form.dirtyConfirm.discardLabel || discardLabel;
-      cancelLabel = form.dirtyConfirm.cancelLabel || cancelLabel;
+    if (typeof form.confirm === 'object') {
+      title = form.confirm.title || title;
+      message = form.confirm.message || message;
+      saveLabel = form.confirm.saveLabel || saveLabel;
+      discardLabel = form.confirm.discardLabel || discardLabel;
+      cancelLabel = form.confirm.cancelLabel || cancelLabel;
     }
 
     prompt.confirm({

@@ -1,4 +1,4 @@
-export interface DirtyConfirmConfig {
+export interface ConfirmConfig {
   title?: string;
   message?: string;
   saveLabel?: string;

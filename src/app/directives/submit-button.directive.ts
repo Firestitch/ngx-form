@@ -1,6 +1,7 @@
 import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, Input, OnDestroy } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
+import { FsFormDirective } from '../directives/form/form.directive';
 
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -39,7 +40,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
       });
   }
 
-  public setFormRef(formRef) {
+  public setFormRef(formRef: FsFormDirective) {
     if (formRef) {
       this.transitionStyle = 'none';
     }

@@ -13,7 +13,7 @@ export class TabsExampleComponent {
 
   public email;
   public delay = false;
-  public dirtyConfirm = true;
+  public confirm = true;
 
   constructor(
     private _message: FsMessage,

@@ -32,7 +32,7 @@ export class DeactivateComponent {
   }
 
   confirm() {
-    this.form.confirm()
+    this.form.triggerConfirm()
     .subscribe(() => {
       this._message.success('There are no changes');
     });

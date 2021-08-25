@@ -15,7 +15,7 @@ export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
 // Interfaces
 export { SubmitEvent } from './app/interfaces/submit-event';
 export { SubmittedEvent } from './app/interfaces/submitted-event';
-export { DirtyConfirmConfig } from './app/interfaces/dirty-confirm-config';
+export { ConfirmConfig } from './app/interfaces/confirm-config';
 
 // Enums
 export { ConfirmResult } from './app/enums/confirm-result';
