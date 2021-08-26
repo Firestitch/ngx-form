@@ -55,7 +55,7 @@ import {
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsFormDialogCloseDirective } from '../form-dialog-close.directive';
 import { FsSubmitButtonDirective } from '../submit-button.directive';
-import { ConfirmConfig, SubmittedEvent } from './../../interfaces';
+import { ConfirmConfig, SubmittedEvent, ConfirmTabGroup } from './../../interfaces';
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FsForm } from '../../services/fsform.service';
 import { SubmitEvent } from './../../interfaces/submit-event';
@@ -109,10 +109,13 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   public submit: (event: SubmitEvent) => Observable<any>;
 
   @Input()
-  public successDelay = 1500;
+  public successDelay = 0;
 
   @Input()
-  public errorDelay = 1500;
+  public errorDelay = 1000;
+
+  @Input()
+  public tabGroup: MatTabGroup;
 
   @Output('fsForm')
   public submitEvent: EventEmitter<SubmitEvent> = new EventEmitter();
@@ -133,7 +136,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   public formDialogClose: QueryList<FsFormDialogCloseDirective>;
 
   @ContentChildren(MatTabGroup, { descendants: true })
-  public tabGroups: QueryList<MatTabGroup> = new QueryList();
+  private _tabGroups: QueryList<MatTabGroup> = new QueryList();
 
   @ContentChildren(FsSubmitButtonDirective, { descendants: true })
   public submitButtons: QueryList<FsSubmitButtonDirective>;
@@ -580,15 +583,18 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _registerConfirmTabs(): void {
+    if(this.tabGroup) {
+      this.registerConfirmTabGroup(this.tabGroup);
+    }
 
-    this.registerConfirmTabGroups(this.tabGroups.toArray());
+    this.registerConfirmTabGroups(this._tabGroups.toArray());
 
-    this.tabGroups.changes
+    this._tabGroups.changes
     .pipe(
       takeUntil(this._destroy$)
     )
     .subscribe(() => {
-      this.registerConfirmTabGroups(this.tabGroups.toArray());
+      this.registerConfirmTabGroups(this._tabGroups.toArray());
     });
   }
 
@@ -599,33 +605,36 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   public registerConfirmTabGroup(tabGroup: MatTabGroup): void {
-    const _tabGroup = tabGroup as any;
-    if (!_tabGroup._originalHandleClick) {
-      _tabGroup._originalHandleClick = tabGroup._handleClick;
-      tabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
-        if (!this.submitting) {
-          if (this.confirm && this.confirmTabs) {
-            this.triggerConfirm()
-              .pipe(
-                takeUntil(this._destroy$),
-              )
-              .subscribe((result) => {
-                if (confirmResultContinue(result)) {
-                  tabGroup.selectedIndex = idx;
-                }
-              });
-          } else {
-            _tabGroup._originalHandleClick(tab, tabHeader, idx);
-          }
+    const confirmTabGroup = tabGroup as ConfirmTabGroup;
+    if (!confirmTabGroup._originalHandleClick) {
+      confirmTabGroup._originalHandleClick = tabGroup._handleClick;
+      confirmTabGroup._handlClick$ = new Subject<{ tab: MatTab; tabHeader: MatTabHeader; idx: number }>();
+      confirmTabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
+        confirmTabGroup._handlClick$.next({ tab, tabHeader, idx});
+      }
+    }
+
+    confirmTabGroup._handlClick$
+    .pipe(
+      takeUntil(this._destroy$),
+    )
+    .subscribe((event) => {
+      if (!this.submitting) {
+        if (this.confirm && this.confirmTabs) {
+          this.triggerConfirm()
+            .pipe(
+              takeUntil(this._destroy$),
+            )
+            .subscribe((result) => {
+              if (confirmResultContinue(result)) {
+                confirmTabGroup.selectedIndex = event.idx;
+              }
+            });
+        } else {
+          confirmTabGroup._originalHandleClick(event.tab, event.tabHeader, event.idx);
         }
       }
-
-      this._destroy$
-      .subscribe(() => {
-        tabGroup._handleClick = _tabGroup._originalHandleClick;
-        _tabGroup._originalHandleClick = null;
-      });
-    }
+    });
   }
 
   private _registerConfirmDialogClose(): void {
@@ -636,7 +645,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
       this.formDialogClose.changes
       .pipe(
-        takeUntil(this._destroy$)
+        takeUntil(this._destroy$),
       )
       .subscribe((e) => {
         e.forEach(item => {

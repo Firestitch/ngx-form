@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Subject, of } from 'rxjs';
-import { FsDrawerService } from '@firestitch/drawer';
 import { FsMessage } from '@firestitch/message';
 import { tap } from 'rxjs/operators';
 
@@ -11,7 +10,10 @@ import { tap } from 'rxjs/operators';
 })
 export class TabsExampleComponent {
 
+  public name;
   public email;
+  public name1;
+  public email1;
   public delay = false;
   public confirm = true;
 
