@@ -610,7 +610,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       confirmTabGroup._originalHandleClick = tabGroup._handleClick;
       confirmTabGroup._handlClick$ = new Subject<{ tab: MatTab; tabHeader: MatTabHeader; idx: number }>();
       confirmTabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
-        confirmTabGroup._handlClick$.next({ tab, tabHeader, idx});
+        if(confirmTabGroup._handlClick$.observers.length) {
+          confirmTabGroup._handlClick$.next({ tab, tabHeader, idx});
+        } else {
+          confirmTabGroup._originalHandleClick(tab, tabHeader, idx);
+        }
       }
     }
 
