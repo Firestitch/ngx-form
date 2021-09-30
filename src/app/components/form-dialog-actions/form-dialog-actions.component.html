@@ -1,0 +1,39 @@
+<!-- <button 
+    mat-button 
+    type="button"
+    color="primary" 
+    *ngIf="close && !dirty && !create"
+    [matDialogClose]="null">
+  Close
+</button>
+<button 
+    mat-button 
+    *ngIf="dirty || create || !close"
+    type="submit"
+    color="primary" 
+    [name]="name">
+  {{create ? 'Create' : 'Save'}}
+</button>
+<ng-content></ng-content>
+<button 
+    mat-button 
+    type="button"
+    *ngIf="dirty || create || !close"
+    [matDialogClose]="null">
+  Cancel
+</button>  -->
+
+<button 
+    mat-button 
+    type="submit"
+    color="primary" 
+    [name]="name">
+  {{create ? 'Create' : 'Save'}}
+</button>
+<ng-content></ng-content>
+<button 
+    mat-button 
+    type="button"
+    [matDialogClose]="null">
+  {{ dirty ? 'Cancel' : 'Close' }}
+</button>

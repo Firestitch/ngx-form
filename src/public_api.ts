@@ -4,8 +4,11 @@ export { FsFormModule } from './app/fs-form.module';
 // Services
 export { FsForm } from './app/services/fsform.service';
 
-// Components
+// Directives
 export { FsFormDirective } from './app/directives/form/form.directive';
+
+// Components
+export { FsFormDialogActionsComponent } from './app/components/form-dialog-actions/form-dialog-actions.component';
 
 export { FsValidators } from './app/validators/validators';
 export { FormDeactivate } from './app/interfaces/form-deactivate';

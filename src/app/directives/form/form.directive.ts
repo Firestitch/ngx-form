@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  ChangeDetectorRef,
   ContentChildren,
   Directive,
   ElementRef,
@@ -138,9 +137,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   @ContentChildren(MatTabGroup, { descendants: true })
   private _tabGroups: QueryList<MatTabGroup> = new QueryList();
 
-  @ContentChildren(FsSubmitButtonDirective, { descendants: true })
-  public submitButtons: QueryList<FsSubmitButtonDirective>;
-
+  private _submitButtons: QueryList<FsSubmitButtonDirective> = new QueryList();
   private _registerControl;
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
@@ -155,7 +152,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     private _element: ElementRef,
     private _message: FsMessage,
     private _prompt: FsPrompt,
-    private _cdRef: ChangeDetectorRef,
     private _ngZone: NgZone,
 
     @Optional() @Inject(MatDialogRef)
@@ -313,9 +309,25 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   public disable(): void {
     this.ngForm.control.disable();
 
-    this.submitButtons.forEach((button) => {
+    this._submitButtons.forEach((button) => {
       button.disable();
     });
+  }
+
+  public addSubmitButton(submitButton: FsSubmitButtonDirective): void {
+    this._submitButtons.reset(
+      [
+        ...this._submitButtons.toArray(),
+        submitButton,
+      ]);
+  }
+
+  public removeSubmitButton(submitButton: FsSubmitButtonDirective): void {
+    this._submitButtons.reset(
+      [
+        ...this._submitButtons.toArray()
+        .filter((submitButton_) => (submitButton !== submitButton_)),
+      ]);
   }
 
   private _listenSubmit(): void {
@@ -433,11 +445,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _getActiveButton(): FsSubmitButtonDirective {
-    const activeButton = this.submitButtons.find(button => {
+    const activeButton = this._submitButtons.find(button => {
       return button.active;
     });
 
-    return activeButton ? activeButton : this.submitButtons.first;
+    return activeButton ? activeButton : this._submitButtons.first;
   }
 
   private _elementInForm(el: Element): boolean {
@@ -498,7 +510,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _resetButtons(): void {
-    this.submitButtons.forEach((button) => {
+    this._submitButtons.forEach((button) => {
       button.reset();
     });
   }
@@ -712,7 +724,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       this._updateDirtySubmitButtons();
     });
 
-    this.submitButtons.changes
+    this._submitButtons.changes
     .pipe(
       takeUntil(this._destroy$),
     )
@@ -722,19 +734,14 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _updateDirtySubmitButtons(): void {
-    if (this.submitButtons) {
-      this.submitButtons.forEach((button) => {
-        button.setFormRef(this);
-
-        if (!this.confirm || !this.dirtySubmitButton || this.ngForm.dirty || !button.dirtySubmit) {
-            button.enable();
-          } else {
-            button.disable();
-          }
-        });
-
-        this._cdRef.markForCheck();
-    }
+    this._submitButtons
+    .forEach((submitButton: FsSubmitButtonDirective) => {
+      if (!this.confirm || !this.dirtySubmitButton || this.ngForm.dirty || !submitButton.dirtySubmit) {
+          submitButton.enable();
+        } else {
+          submitButton.disable();
+        }
+      });
   }
 
   private _broadcastSubmittingEvents(): void {
@@ -743,7 +750,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _markControlsAsTouchedAndUpdateValidity(): void {
-    Object.values(this.ngForm.controls).forEach(control => {
+    Object.values(this.ngForm.controls)
+    .forEach(control => {
       control.markAsDirty();
       control.markAsTouched();
       control.updateValueAndValidity();

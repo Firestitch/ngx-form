@@ -1,4 +1,4 @@
-import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, Input, OnDestroy } from '@angular/core';
+import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
 import { FsFormDirective } from '../directives/form/form.directive';
@@ -8,7 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 
 
 @Directive({
-  selector: 'form button[type="submit"],form button:not([type])',
+  selector: 'button[type="submit"]',
 })
 export class FsSubmitButtonDirective implements OnInit, OnDestroy {
 
@@ -27,29 +27,32 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
 
   constructor(
     @Optional() @Host() private _matButton: MatButton,
+    @Optional() private _form: FsFormDirective,
     private _elementRef: ElementRef,
+    private _cdRef: ChangeDetectorRef,
   ) {}
 
   public ngOnInit() {
-    fromEvent(this.element, 'click')
-      .pipe(
-        takeUntil(this._destroy$),
-      )
-      .subscribe(() => {
-        this.active = true;
-      });
-  }
+    if (this._form) {
+      this._form.addSubmitButton(this); 
 
-  public setFormRef(formRef: FsFormDirective) {
-    if (formRef) {
+      fromEvent(this.element, 'click')
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe(() => {
+          this.active = true;
+        });
+
+      if (this.dirtySubmit) {
+        if (this._form.dirtySubmitButton) {
+          if(!this._form.ngForm.dirty) {
+            this.disable();
+          }
+        }
+      } 
+
       this.transitionStyle = 'none';
-    }
-
-    if (formRef && this.dirtySubmit) {
-      if (formRef.dirtySubmitButton) {
-        this.disable();
-      }
-
       setTimeout(() => {
         this.transitionStyle = null;
       }, 500);
@@ -59,6 +62,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
   public disable() {
     if (this._matButton) {
       this._matButton.disabled = true;
+      this._cdRef.markForCheck();
     }
   }
 
@@ -66,12 +70,12 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
     if (this._matButton) {
       this._matButton.disabled = false;
       this._matButton.disableRipple = true;
+      this._cdRef.markForCheck();
     }
   }
 
   public process() {
     this.setClass('process');
-
     this._matButton.disableRipple = true;
   }
 
@@ -111,6 +115,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
+    this._form.removeSubmitButton(this);
   }
 
   private _disableShadowAnimation() {

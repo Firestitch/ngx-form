@@ -2,6 +2,8 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 import { FsFormDirective } from './directives/form/form.directive';
@@ -26,12 +28,16 @@ import { FsFormUrlDirective } from './directives/validators/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
 import { FsSubmitButtonDirective } from './directives/submit-button.directive';
 import { FsFormValidateDirective } from './directives/validators/validate.directive';
+import { FsFormDialogActionsComponent } from './components/form-dialog-actions';
 
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+
+    MatButtonModule,
+    MatDialogModule,
   ],
   declarations: [
     FsFormDirective,
@@ -56,6 +62,7 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     FsFormDialogCloseDirective,
     FsSubmitButtonDirective,
     FsFormValidateDirective,
+    FsFormDialogActionsComponent,
   ],
   exports: [
     FsFormDirective,
@@ -80,6 +87,7 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     FsFormDialogCloseDirective,
     FsSubmitButtonDirective,
     FsFormValidateDirective,
+    FsFormDialogActionsComponent,
   ],
   providers: [
     {

@@ -18,6 +18,7 @@ import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 import { FsApiModule } from '@firestitch/api';
 import { FsPromptModule } from '@firestitch/prompt';
 import { FsDialogModule } from '@firestitch/dialog';
+import { FsTabsModule } from '@firestitch/tabs';
 
 import { ToastrModule } from 'ngx-toastr';
 
@@ -62,6 +63,7 @@ import { DialogComponent } from './components/dialog/dialog.component';
     FsApiModule,
     FlexLayoutModule,
     FsPromptModule,
+    FsTabsModule.forRoot(),
     FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),
     RouterModule.forRoot([

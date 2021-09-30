@@ -4,7 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { MatDialogRef } from '@angular/material/dialog';
 import { of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { delay, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -13,21 +13,18 @@ import { tap } from 'rxjs/operators';
 })
 export class DialogComponent  {
 
-  public selectedIndex = 0;
-
+  public tab = 'first';
   public animal = { name: '', color: '' };
 
-  constructor(private _message: FsMessage,
-              private _dialogRef: MatDialogRef<DialogComponent>) {
-  }
-
-  public selectedIndexChange(index) {
-    this.selectedIndex = index;
-  }
+  public constructor(
+    private _message: FsMessage,
+    private _dialogRef: MatDialogRef<DialogComponent>
+  ) {}
 
   public save = (event: SubmitEvent) => {
     return of(this.animal)
     .pipe(
+      delay(1000),
       tap(response => {
         this._message.success('Saved changes');
         if (event.submitter === 'close') {
