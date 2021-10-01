@@ -9,9 +9,11 @@ import { FsFormDirective } from '../../directives/form/form.directive';
   selector: 'fs-form-dialog-actions',
   templateUrl: './form-dialog-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./form-dialog-actions.component.scss'],
 })
 export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
 
+  @Input() public save = true;
   @Input() public create = false;
   @Input() public close = true;
   @Input() public name: string;

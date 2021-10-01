@@ -1,39 +1,29 @@
-<!-- <button 
-    mat-button 
-    type="button"
-    color="primary" 
-    *ngIf="close && !dirty && !create"
-    [matDialogClose]="null">
-  Close
-</button>
-<button 
-    mat-button 
-    *ngIf="dirty || create || !close"
-    type="submit"
-    color="primary" 
-    [name]="name">
-  {{create ? 'Create' : 'Save'}}
-</button>
-<ng-content></ng-content>
-<button 
-    mat-button 
-    type="button"
-    *ngIf="dirty || create || !close"
-    [matDialogClose]="null">
-  Cancel
-</button>  -->
+<div class="buttons">
+  <ng-container *ngIf="save">
+    <button 
+        mat-button 
+        type="submit"
+        color="primary" 
+        [name]="name">
+      {{create ? 'Create' : 'Save'}}
+    </button>
+    <button 
+        mat-button 
+        type="button"
+        [disabled]="close && !dirty"
+        [matDialogClose]="null">
+      Cancel
+    </button>
+  </ng-container>
 
-<button 
-    mat-button 
-    type="submit"
-    color="primary" 
-    [name]="name">
-  {{create ? 'Create' : 'Save'}}
-</button>
-<ng-content></ng-content>
-<button 
-    mat-button 
-    type="button"
-    [matDialogClose]="null">
-  {{ dirty ? 'Cancel' : 'Close' }}
-</button>
+  <ng-content></ng-content>
+  <div class="close" *ngIf="close">
+    <button 
+        mat-button 
+        type="button"
+        [color]="dirty ? 'basic' : 'primary'"
+        [matDialogClose]="null">
+      Close
+    </button>
+  </div>
+</div>

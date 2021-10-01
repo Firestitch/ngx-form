@@ -27,18 +27,17 @@
       </mat-tab-group>
     </div>
     <div mat-dialog-actions>
-      <ng-container *ngIf="tab === 'first'; else close">
-        <fs-form-dialog-actions></fs-form-dialog-actions>
-      </ng-container>
-      <ng-template #close>
-        <button 
-            mat-button 
-            type="button"
-            color="primary"
-            [matDialogClose]="null">
-          Close
-        </button>
-      </ng-template>
+        <fs-form-dialog-actions
+          [save]="tab === 'first'">
+          <button 
+              *ngIf="tab === 'first'"
+              mat-button 
+              type="button"
+              color="warn"
+              [matDialogClose]="null">
+            Delete
+          </button>
+        </fs-form-dialog-actions>
     </div>
 </fs-dialog>
 </form>
