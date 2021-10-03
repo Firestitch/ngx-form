@@ -10,7 +10,7 @@
     <button 
         mat-button 
         type="button"
-        [disabled]="close && !dirty"
+        [disabled]="!dirty && !create"
         [matDialogClose]="null">
       Cancel
     </button>

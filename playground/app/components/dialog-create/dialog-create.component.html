@@ -1,0 +1,29 @@
+<form fsForm [submit]="save">
+  <fs-dialog>
+    <h1 mat-dialog-title>Add Animal</h1>
+    <div mat-dialog-content>
+      <div fxLayout="column">
+        <mat-form-field>
+          <input
+            placeholder="Name"
+            matInput
+            [required]="true"
+            [(ngModel)]="animal.name"
+            name="name">
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            placeholder="Color"
+            matInput
+            [(ngModel)]="animal.color"
+            name="color">
+        </mat-form-field>
+      </div>
+    </div>
+    <div mat-dialog-actions>
+        <fs-form-dialog-actions
+          [create]="!animal.id">          
+        </fs-form-dialog-actions>
+    </div>
+</fs-dialog>
+</form>

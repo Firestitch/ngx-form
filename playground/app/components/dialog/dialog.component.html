@@ -3,7 +3,7 @@
     <h1 mat-dialog-title>Add Animal</h1>
     <div mat-dialog-content>
       <mat-tab-group fsTabs [(selectedName)]="tab">
-        <mat-tab label="First" name="first">
+        <mat-tab label="Tab 1" name="tab-1">
           <div fxLayout="column">
             <mat-form-field>
               <input
@@ -22,15 +22,16 @@
             </mat-form-field>
           </div>
         </mat-tab>
-        <mat-tab label="Second" name="second">Content</mat-tab>
-        <mat-tab label="Third" name="third">Content</mat-tab>
+        <mat-tab label="Tab 2" name="tab-2">Content</mat-tab>
+        <mat-tab label="Tab 3" name="tab-3">Content</mat-tab>
       </mat-tab-group>
     </div>
     <div mat-dialog-actions>
         <fs-form-dialog-actions
-          [save]="tab === 'first'">
+          [save]="tab === 'tab-1'"          
+          [close]="true">
           <button 
-              *ngIf="tab === 'first'"
+              *ngIf="tab === 'tab-1'"
               mat-button 
               type="button"
               color="warn"
