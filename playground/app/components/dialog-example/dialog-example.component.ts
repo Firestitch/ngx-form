@@ -1,9 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
+
 import { MatDialog } from '@angular/material/dialog';
-import { DialogComponent } from '../dialog/dialog.component';
+
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { DialogCreateComponent } from '../dialog-create/dialog-create.component';
+import { DialogSaveComponent } from '../dialog-save/dialog-save.component';
+import { DialogComponent } from '../dialog/dialog.component';
+
 
 @Component({
   selector: 'dialog-example',
@@ -33,6 +38,18 @@ export class DialogExampleComponent implements OnDestroy{
   public openCreate() {
     this.response = null;
     this._dialog.open(DialogCreateComponent)
+    .afterClosed()
+    .pipe(
+      takeUntil(this._destroy$)
+    )
+    .subscribe(reseponse => {
+      this.response = reseponse;
+    });
+  }
+
+  public openSave() {
+    this.response = null;
+    this._dialog.open(DialogSaveComponent)
     .afterClosed()
     .pipe(
       takeUntil(this._destroy$)

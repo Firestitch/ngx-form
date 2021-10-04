@@ -22,7 +22,7 @@
         mat-button 
         type="button"
         [color]="dirty ? 'basic' : 'primary'"
-        [matDialogClose]="null">
+        (click)="closeClick()">
       Close
     </button>
   </div>

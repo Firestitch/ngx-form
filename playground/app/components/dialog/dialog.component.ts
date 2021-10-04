@@ -14,7 +14,7 @@ import { delay, tap } from 'rxjs/operators';
 export class DialogComponent  {
 
   public tab = 'tab-1';
-  public animal = { name: '', color: '' };
+  public account = { id: 1, name: '', email: '' };
 
   public constructor(
     private _message: FsMessage,
@@ -22,7 +22,7 @@ export class DialogComponent  {
   ) {}
 
   public save = (event: SubmitEvent) => {
-    return of(this.animal)
+    return of(this.account)
     .pipe(
       delay(1000),
       tap(response => {

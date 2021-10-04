@@ -8,16 +8,16 @@ import { delay, tap } from 'rxjs/operators';
 
 
 @Component({
-  templateUrl: 'dialog-create.component.html',
-  styleUrls: ['dialog-create.component.scss']
+  templateUrl: 'dialog-save.component.html',
+  styleUrls: ['dialog-save.component.scss']
 })
-export class DialogCreateComponent  {
+export class DialogSaveComponent  {
 
-  public account = { id: null, name: '', email: '' };
+  public account = { id: 1, name: 'John Doe', email: 'john@email.com' };
 
   public constructor(
     private _message: FsMessage,
-    private _dialogRef: MatDialogRef<DialogCreateComponent>
+    private _dialogRef: MatDialogRef<DialogSaveComponent>
   ) {}
 
   public save = (event: SubmitEvent) => {

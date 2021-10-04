@@ -49,7 +49,7 @@ export function confirmUnsaved(form: FsFormDirective, prompt: FsPrompt): Observa
           cancel: true
         }
       ]
-    }).subscribe(value => {
+    }).subscribe((value) => {
 
       if (value === 'discard') {
         observer.next(ConfirmResult.Discard);

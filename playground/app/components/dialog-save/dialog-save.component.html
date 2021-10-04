@@ -1,6 +1,6 @@
 <form fsForm [submit]="save">
   <fs-dialog>
-    <h1 mat-dialog-title>Create Account</h1>
+    <h1 mat-dialog-title>{{ account.id ? '' : 'Create' }} Account</h1>
     <div mat-dialog-content>
       <div fxLayout="column">
         <mat-form-field>
@@ -23,6 +23,12 @@
     <div mat-dialog-actions>
         <fs-form-dialog-actions
             [create]="!account.id">  
+            <button 
+              mat-button 
+              type="button"
+              color="warn">
+            Delete
+          </button>            
           <button
               mat-button
               type="button">

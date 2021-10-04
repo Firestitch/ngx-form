@@ -128,6 +128,12 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   @Output()
   public submitted: EventEmitter<SubmitEvent> = new EventEmitter();
 
+  @Output()
+  public reseted: EventEmitter<SubmitEvent> = new EventEmitter();
+
+  @Output()
+  public cleared: EventEmitter<SubmitEvent> = new EventEmitter();
+
   @HostBinding('class.fs-form')
   public fsformClass = true;
 
@@ -275,10 +281,13 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         const control = this.ngForm.controls[name];
         control.reset(this._snapshot[name]);
       });
+    
+    this.reseted.emit();
   }
 
   public clear(): void {
     this.ngForm.resetForm();
+    this.cleared.emit();
   }
 
   public dirty(): void {

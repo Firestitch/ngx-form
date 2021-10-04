@@ -42,6 +42,7 @@ import { DeactivateLeaveComponent } from './components/deactivate-leave/deactiva
 import { DialogExampleComponent } from './components/dialog-example/dialog-example.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { DialogCreateComponent } from './components/dialog-create/dialog-create.component';
+import { DialogSaveComponent } from './components/dialog-save/dialog-save.component';
 
 
 @NgModule({
@@ -92,6 +93,7 @@ import { DialogCreateComponent } from './components/dialog-create/dialog-create.
     DrawerExampleComponent,
     TabsExampleComponent,
     DialogCreateComponent,
+    DialogSaveComponent,
   ],
   entryComponents: [
     DialogComponent,
