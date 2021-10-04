@@ -12,8 +12,8 @@ import { ConfirmResult } from '../../enums/confirm-result';
 @Component({
   selector: 'fs-form-dialog-actions',
   templateUrl: './form-dialog-actions.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./form-dialog-actions.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
 

@@ -28,7 +28,7 @@ import { FsFormUrlDirective } from './directives/validators/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
 import { FsSubmitButtonDirective } from './directives/submit-button.directive';
 import { FsFormValidateDirective } from './directives/validators/validate.directive';
-import { FsFormDialogActionsComponent } from './components/form-dialog-actions';
+import { FsFormDialogActionsComponent } from './components/form-dialog-actions/form-dialog-actions.component';
 
 
 @NgModule({

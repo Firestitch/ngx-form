@@ -1,10 +1,13 @@
-import { MatTabGroup } from '@angular/material/tabs';
-import { SubmitEvent } from './../../../../src/app/interfaces/submit-event';
-import { Component, ViewChild } from '@angular/core';
-import { FsMessage } from '@firestitch/message';
+import { Component } from '@angular/core';
+
 import { MatDialogRef } from '@angular/material/dialog';
+
+import { FsMessage } from '@firestitch/message';
+
 import { of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
+
+import { SubmitEvent } from './../../../../src/app/interfaces/submit-event';
 
 
 @Component({
