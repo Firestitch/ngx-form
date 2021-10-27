@@ -33,34 +33,36 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this._form.ngForm.valueChanges
-    .pipe(  
-      filter(() => (!this.dirty)),
-      takeUntil(this._destroy$),
-    )
-    .subscribe(() => {
-      this.dirty = this._form.ngForm.dirty;
-      this._cdRef.markForCheck();
-    });
+    if(this._form) {
+      this._form.ngForm.valueChanges
+      .pipe(  
+        filter(() => (!this.dirty)),
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        this.dirty = this._form.ngForm.dirty;
+        this._cdRef.markForCheck();
+      });
 
-    this._form.submitted
-    .pipe(
-      delay(50),
-      takeUntil(this._destroy$),
-    )
-    .subscribe(() => {
-      this.dirty = false;
-      this._cdRef.markForCheck();
-    });
+      this._form.submitted
+      .pipe(
+        delay(50),
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        this.dirty = false;
+        this._cdRef.markForCheck();
+      });
 
-    this._form.reseted
-    .pipe(
-      takeUntil(this._destroy$),
-    )
-    .subscribe(() => {
-      this.dirty = false;
-      this._cdRef.markForCheck();
-    });
+      this._form.reseted
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        this.dirty = false;
+        this._cdRef.markForCheck();
+      });
+    }
   }
   
   public closeClick(): void {
