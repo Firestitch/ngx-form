@@ -69,9 +69,9 @@ import { DialogSaveComponent } from './components/dialog-save/dialog-save.compon
     FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: ExamplesComponent, canDeactivate: [FormDeactivateGuard] },
-      { path: 'leave', component: DeactivateLeaveComponent },
-    ]),
+    { path: '', component: ExamplesComponent, canDeactivate: [FormDeactivateGuard] },
+    { path: 'leave', component: DeactivateLeaveComponent },
+], { relativeLinkResolution: 'legacy' }),
   ],
   declarations: [
     AppComponent,

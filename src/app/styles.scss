@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
 .fs-form-label-required:after {
   content: " *";
@@ -67,7 +67,7 @@
 
   // hack for material form field
   .mat-form-field.mat-form-field-invalid.ng-valid .mat-form-field-ripple {
-    background-color: mat-color($foreground, divider, if($is-dark-theme, 1, 0.87));
+    background-color: mat.get-color-from-palette($foreground, divider, if($is-dark-theme, 1, 0.87));
   }
 
   // hack for material form field
@@ -80,12 +80,12 @@
     &.mat-button,
     &.mat-raised-button:not([color='primary']) {
       svg.svg-icon-process {
-        stroke: mat-color($primary);
+        stroke: mat.get-color-from-palette($primary);
       }
 
       svg.svg-icon-error path,
       svg.svg-icon-success path {
-        fill: mat-color($primary);
+        fill: mat.get-color-from-palette($primary);
       }
     }
 
