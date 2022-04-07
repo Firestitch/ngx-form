@@ -14,7 +14,7 @@ import { FsValidator } from '../../interfaces/validator';
 export class FsFormPatternDirective extends FsControlDirective implements OnChanges, FsValidator {
 
   @Input()
-  public fsFormPattern: RegExp;
+  public fsFormPattern: RegExp | string;
 
   @Input('fsFormPatternMessage')
   public set validationMessage(value: string) {
