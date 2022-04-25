@@ -147,7 +147,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _registerControl;
   private _activeSubmitButton: FsSubmitButtonDirective;
   private _dialogBackdropEscape = false;
-  private _snapshot: { [key: string]: unknown } = {};
+  private _snapshot: { [key: string]: any } = {};
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _destroy$ = new Subject();
 
@@ -271,6 +271,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   public createSnapshot(): void {
     this._snapshot = this.ngForm.value;
+  }
+
+  public getSnapshot(): { [key: string]: any } {
+    return this._snapshot || {};
   }
 
   public reset(): void {
