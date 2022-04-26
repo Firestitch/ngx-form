@@ -34,7 +34,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
 
   public ngOnInit() {
     if (this._form) {
-      this._form.addSubmitButton(this); 
+      this._form.addSubmitButton(this);
 
       fromEvent(this.element, 'click')
         .pipe(
@@ -50,7 +50,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
             this.disable();
           }
         }
-      } 
+      }
 
       this.transitionStyle = 'none';
       setTimeout(() => {
@@ -115,7 +115,7 @@ export class FsSubmitButtonDirective implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-    this._form.removeSubmitButton(this);
+    this._form?.removeSubmitButton(this);
   }
 
   private _disableShadowAnimation() {
