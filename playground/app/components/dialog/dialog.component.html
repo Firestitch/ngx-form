@@ -37,7 +37,8 @@
     <div mat-dialog-actions>
       <fs-form-dialog-actions
           [save]="tab === 'tab-1'"          
-          [close]="true">
+          [close]="true"
+          [closeData]="{ test: true }">
         <button 
             *ngIf="tab === 'tab-1'"
             mat-button 

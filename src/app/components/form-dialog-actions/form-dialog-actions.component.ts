@@ -20,6 +20,7 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   @Input() public save = true;
   @Input() public create = false;
   @Input() public close = false;
+  @Input() public closeData = null;
   @Input() public name: string;
 
   public dirty = false;
@@ -73,10 +74,10 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
         takeUntil(this._destroy$),
       )
       .subscribe(() => {
-        this._dialogRef.close(null);
+        this._dialogRef.close(this.closeData);
       });
     } else {
-      this._dialogRef.close(null);
+      this._dialogRef.close(this.closeData);
     }
   }
 

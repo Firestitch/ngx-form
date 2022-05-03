@@ -30,7 +30,8 @@ export class DialogExampleComponent implements OnDestroy{
     .pipe(
       takeUntil(this._destroy$)
     )
-    .subscribe(reseponse => {
+    .subscribe((reseponse) => {
+      console.log(reseponse);
       this.response = reseponse;
     });
   }
