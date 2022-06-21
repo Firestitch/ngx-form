@@ -78,7 +78,8 @@
   .fs-form button {
 
     &.mat-button,
-    &.mat-raised-button:not([color='primary']) {
+    &.mat-raised-button:not([color='primary']),
+    &.mat-flat-button:not([color='primary']) {
       svg.svg-icon-process {
         stroke: mat.get-color-from-palette($primary);
       }
@@ -89,7 +90,8 @@
       }
     }
 
-    &.mat-raised-button[color='primary'] {
+    &.mat-raised-button[color='primary'],
+    &.mat-flat-button[color='primary'] {
       svg.svg-icon-process {
         stroke: #fff;
       }
