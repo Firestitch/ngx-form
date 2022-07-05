@@ -29,6 +29,7 @@ import { FsFormDialogCloseDirective } from './directives/form-dialog-close.direc
 import { FsSubmitButtonDirective } from './directives/submit-button.directive';
 import { FsFormValidateDirective } from './directives/validators/validate.directive';
 import { FsFormDialogActionsComponent } from './components/form-dialog-actions/form-dialog-actions.component';
+import { FsFormNoFsValidatorsDirective } from './directives/validators/no-fs-validators.directive';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { FsFormDialogActionsComponent } from './components/form-dialog-actions/f
     FsSubmitButtonDirective,
     FsFormValidateDirective,
     FsFormDialogActionsComponent,
+    FsFormNoFsValidatorsDirective
   ],
   exports: [
     FsFormDirective,
@@ -88,6 +90,7 @@ import { FsFormDialogActionsComponent } from './components/form-dialog-actions/f
     FsSubmitButtonDirective,
     FsFormValidateDirective,
     FsFormDialogActionsComponent,
+    FsFormNoFsValidatorsDirective,
   ],
   providers: [
     {

@@ -27,6 +27,7 @@ export { FsFormUrlDirective } from './app/directives/validators/url.directive';
 export { FsFormDialogCloseDirective } from './app/directives/form-dialog-close.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';
 export { FsFormValidateDirective } from './app/directives/validators/validate.directive';
+export { FsFormNoFsValidatorsDirective } from './app/directives/validators/no-fs-validators.directive';
 
 // Components
 export { FsFormDialogActionsComponent } from './app/components/form-dialog-actions/form-dialog-actions.component';
