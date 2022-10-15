@@ -1,4 +1,4 @@
-<div class="buttons">
+<div class="buttons" [ngClass]="{ 'save-create': save || create }">
   <ng-container *ngIf="save">
     <button 
         mat-button 
@@ -16,7 +16,10 @@
     </button>
   </ng-container>
 
-  <ng-content></ng-content>
+  <ng-container *ngIf="save || create">
+    <ng-content></ng-content>
+  </ng-container>
+
   <div class="close" *ngIf="close">
     <button 
         mat-button 
@@ -26,4 +29,8 @@
       Close
     </button>
   </div>
+
+  <ng-container *ngIf="!(save || create)">
+    <ng-content></ng-content>
+  </ng-container>
 </div>
