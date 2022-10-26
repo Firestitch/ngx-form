@@ -1,14 +1,14 @@
 <div class="buttons" [ngClass]="{ 'save-create': save || create }">
   <ng-container *ngIf="save">
-    <button 
-        mat-button 
+    <button
+        mat-button
         type="submit"
-        color="primary" 
+        color="primary"
         [name]="name">
       {{create ? 'Create' : 'Save'}}
     </button>
-    <button 
-        mat-button 
+    <button
+        mat-button
         type="button"
         [disabled]="close && !dirty && !create"
         [matDialogClose]="null">
@@ -17,12 +17,12 @@
   </ng-container>
 
   <ng-container *ngIf="save || create">
-    <ng-content></ng-content>
+    <ng-template [ngTemplateOutlet]="content"></ng-template>
   </ng-container>
 
   <div class="close" *ngIf="close">
-    <button 
-        mat-button 
+    <button
+        mat-button
         type="button"
         [color]="dirty ? 'basic' : 'primary'"
         (click)="closeClick()">
@@ -31,6 +31,10 @@
   </div>
 
   <ng-container *ngIf="!(save || create)">
-    <ng-content></ng-content>
+    <ng-template [ngTemplateOutlet]="content"></ng-template>
   </ng-container>
 </div>
+
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>
