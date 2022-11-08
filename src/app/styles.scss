@@ -10,6 +10,10 @@
   color: #f44336;
 }
 
+.fs-form.ng-invalid.ng-dirty .mat-form-field-underline {
+  background-color: #f44336;
+}
+
 .fs-form .fs-form-error {
   color: #f44336;
 }
