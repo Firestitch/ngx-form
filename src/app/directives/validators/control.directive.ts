@@ -241,7 +241,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
         return;
       }
 
-      wrapper.classList.add('ng-invalid');
+      wrapper.classList.add('ng-invalid', 'ng-dirty');
 
       errorWrapper = renderer.createElement('div');
       renderer.addClass(errorWrapper, 'fs-form-error-target');
