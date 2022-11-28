@@ -2,7 +2,7 @@
 
 .fs-form-label-required:after {
   content: " *";
-  display: contents;
+  white-space: pre-wrap;
 }
 
 .fs-form .fs-form-wrapper.ng-invalid.ng-dirty .fs-form-label,
