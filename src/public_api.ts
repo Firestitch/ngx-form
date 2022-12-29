@@ -25,6 +25,7 @@ export { FsFormGreaterDirective } from './app/directives/validators/greater.dire
 export { FsFormLesserDirective } from './app/directives/validators/lesser.directive';
 export { FsFormUrlDirective } from './app/directives/validators/url.directive';
 export { FsFormDialogCloseDirective } from './app/directives/form-dialog-close.directive';
+export { FsButtonDirective } from './app/directives/button.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';
 export { FsFormValidateDirective } from './app/directives/validators/validate.directive';
 export { FsFormNoFsValidatorsDirective } from './app/directives/validators/no-fs-validators.directive';

@@ -26,10 +26,11 @@ import { FsFormDateRangeDirective } from './directives/validators/daterange.dire
 import { FsFormLesserDirective } from './directives/validators/lesser.directive';
 import { FsFormUrlDirective } from './directives/validators/url.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
-import { FsSubmitButtonDirective } from './directives/submit-button.directive';
+import { FsButtonDirective } from './directives/button.directive';
 import { FsFormValidateDirective } from './directives/validators/validate.directive';
 import { FsFormDialogActionsComponent } from './components/form-dialog-actions/form-dialog-actions.component';
 import { FsFormNoFsValidatorsDirective } from './directives/validators/no-fs-validators.directive';
+import { FsSubmitButtonDirective } from './directives';
 
 
 @NgModule({
@@ -61,10 +62,11 @@ import { FsFormNoFsValidatorsDirective } from './directives/validators/no-fs-val
     FsFormLesserDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective,
-    FsSubmitButtonDirective,
     FsFormValidateDirective,
     FsFormDialogActionsComponent,
-    FsFormNoFsValidatorsDirective
+    FsFormNoFsValidatorsDirective,
+    FsButtonDirective,
+    FsSubmitButtonDirective,
   ],
   exports: [
     FsFormDirective,
@@ -87,10 +89,11 @@ import { FsFormNoFsValidatorsDirective } from './directives/validators/no-fs-val
     FsFormLesserDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective,
-    FsSubmitButtonDirective,
     FsFormValidateDirective,
     FsFormDialogActionsComponent,
     FsFormNoFsValidatorsDirective,
+    FsButtonDirective,
+    FsSubmitButtonDirective,
   ],
   providers: [
     {

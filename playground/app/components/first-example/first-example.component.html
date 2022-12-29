@@ -17,7 +17,7 @@
       name="checkbox"
       [required]="required && validations"
       label="Checkboxes">
-        <mat-checkbox *ngFor="let item of items" [value]="item">{{item.name}}</mat-checkbox>
+        <mat-checkbox *ngFor="let item of items" [value]="$any(item)">{{item.name}}</mat-checkbox>
         <mat-hint>Hint hint hint!!!</mat-hint>
     </fs-checkbox-group>
 
@@ -132,7 +132,7 @@
         [(ngModel)]="model.max"
         name="maxInput"
         matInput
-        fsFormMax="100"/>
+        [fsFormMax]="100"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -140,8 +140,7 @@
         [(ngModel)]="minLengthInput"
         name="minLengthInput"
         matInput
-        fsFormMinLength="5"
-        />
+        [fsFormMinLength]="5"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -149,8 +148,7 @@
         [(ngModel)]="maxLengthInput"
         name="maxLengthInput"
         matInput
-        fsFormMaxLength="10"
-        />
+        [fsFormMaxLength]="10"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -158,8 +156,7 @@
         [(ngModel)]="pattern"
         name="pattern_input"
         matInput
-        fsFormPattern="[0-9]{2,}"
-        />
+        fsFormPattern="[0-9]{2,}"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -175,9 +172,8 @@
       <mat-form-field>
         <input
           matInput
-          fsDateRangeFrom="timerangepicker"
+          fsDateTimeRangeFrom="timerangepicker"
           [(ngModel)]="startDate"
-          view="datetime"
           name="date_from"
           placeholder="Time Range From"
         >
@@ -188,17 +184,15 @@
       <mat-form-field>
         <input
           matInput
-          fsDateRangeTo="timerangepicker"
+          fsDateTimeRangeTo="timerangepicker"
           [(ngModel)]="endDate"
-          view="datetime"
           name="date_to"
-          placeholder="Time Range To"
-        >
+          placeholder="Time Range To">
       </mat-form-field>
     </div>
 
     <div fxLayout="row wrap" fxLayoutGap="5px">
-      <button mat-raised-button color="primary">Submit</button>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="render = !(!!render)">{{render ? 'Destroy' : 'Render'}} Inputs</button>

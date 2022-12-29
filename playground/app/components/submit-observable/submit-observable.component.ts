@@ -28,7 +28,7 @@ export class SubmitObservableComponent {
       data.exception = 'Failed Request';
     }
 
-    return this._api.post('https://boilerplate.firestitch.com/api/dummy', data)
+    return this._api.post('https://specify.dev.firestitch.com/api/dummy', data)
     .pipe(
       tap((response) => {
         this._message.success('Validation successful');

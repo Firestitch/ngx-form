@@ -53,7 +53,7 @@ import {
 
 import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { FsFormDialogCloseDirective } from '../form-dialog-close.directive';
-import { FsSubmitButtonDirective } from '../submit-button.directive';
+import { FsButtonDirective } from '../button.directive';
 import { ConfirmConfig, SubmittedEvent, ConfirmTabGroup } from './../../interfaces';
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FsForm } from '../../services/fsform.service';
@@ -143,9 +143,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   @ContentChildren(MatTabGroup, { descendants: true })
   private _tabGroups: QueryList<MatTabGroup> = new QueryList();
 
-  private _submitButtons: QueryList<FsSubmitButtonDirective> = new QueryList();
+  private _buttons = new QueryList<FsButtonDirective>();
   private _registerControl;
-  private _activeSubmitButton: FsSubmitButtonDirective;
+  private _activeSubmitButton: FsButtonDirective;
   private _dialogBackdropEscape = false;
   private _snapshot: { [key: string]: any } = {};
   private _status$ = new BehaviorSubject(FormStatus.Valid);
@@ -322,24 +322,24 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   public disable(): void {
     this.ngForm.control.disable();
 
-    this._submitButtons.forEach((button) => {
+    this._buttons.forEach((button) => {
       button.disable();
     });
   }
 
-  public addSubmitButton(submitButton: FsSubmitButtonDirective): void {
-    this._submitButtons.reset(
+  public addButton(button: FsButtonDirective): void {
+    this._buttons.reset(
       [
-        ...this._submitButtons.toArray(),
-        submitButton,
+        ...this._buttons.toArray(),
+        button,
       ]);
   }
 
-  public removeSubmitButton(submitButton: FsSubmitButtonDirective): void {
-    this._submitButtons.reset(
+  public removeButton(button: FsButtonDirective): void {
+    this._buttons.reset(
       [
-        ...this._submitButtons.toArray()
-        .filter((submitButton_) => (submitButton !== submitButton_)),
+        ...this._buttons.toArray()
+        .filter((item) => (button !== item)),
       ]);
   }
 
@@ -358,6 +358,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         tap(() => this._broadcastSubmittingEvents()),
         switchMap(() => this._waitUntilStatusPending()),
         tap(() => this._setupActiveSubmitButton()),
+        tap(() => this._disableButtons()),
         mergeMap(() => {
           return this.ngForm.status === 'INVALID'
             ? this._formInvalidState$
@@ -457,16 +458,19 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
   }
 
-  private _getActiveButton(): FsSubmitButtonDirective {
-    const activeButton = this._submitButtons.find(button => {
-      return button.active;
-    });
+  private _getActiveSubmitButton(): FsButtonDirective {
+    const submitButtons = this._buttons    
+      .filter((button) => button.submit);
 
-    return activeButton ? activeButton : this._submitButtons.first;
+    const activeButton = submitButtons
+      .find(button => {
+        return button.active;
+      });
+      
+    return activeButton ? activeButton : submitButtons[0];
   }
 
   private _elementInForm(el: Element): boolean {
-
     if (el.isSameNode(this._element.nativeElement)) {
       return true;
     } else if (el.parentElement) {
@@ -518,13 +522,20 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       }
 
       this._resetButtons();
+      this._resetActiveButtons();
       this._updateDirtySubmitButtons();
     });
   }
 
   private _resetButtons(): void {
-    this._submitButtons.forEach((button) => {
+    this._buttons.forEach((button) => {
       button.reset();
+    });
+  }
+
+  private _resetActiveButtons(): void {
+    this._buttons.forEach((button) => {
+      button.resetActive();
     });
   }
 
@@ -722,7 +733,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _registerDirtySubmitButton(): void {
-
     if (!this.ngForm) {
       return;
     }
@@ -735,7 +745,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       this._updateDirtySubmitButtons();
     });
 
-    this._submitButtons.changes
+    this._buttons.changes
     .pipe(
       takeUntil(this._destroy$),
     )
@@ -745,8 +755,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _updateDirtySubmitButtons(): void {
-    this._submitButtons
-    .forEach((submitButton: FsSubmitButtonDirective) => {
+    this._buttons
+    .filter((button) => button.submit)
+    .forEach((submitButton: FsButtonDirective) => {
       if (!this.confirm || !this.dirtySubmitButton || this.ngForm.dirty || !submitButton.dirtySubmit) {
           submitButton.enable();
         } else {
@@ -770,12 +781,18 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _setupActiveSubmitButton(): void {
-    this._activeSubmitButton = this._getActiveButton();
+    this._activeSubmitButton = this._getActiveSubmitButton();
     this._resetButtons();
 
     if (this._activeSubmitButton) {
       this._activeSubmitButton.process();
     }
+  }
+
+  private _disableButtons(): void {
+    this._buttons.forEach((button) => {
+      button.disable();
+    });
   }
 
   private _waitUntilStatusPending(): Observable<string> {

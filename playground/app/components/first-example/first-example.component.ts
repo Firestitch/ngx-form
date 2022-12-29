@@ -44,6 +44,8 @@ export class FirstExampleComponent {
   public greaterInput;
   public model: any = {};
   public disabled = false;
+  public maxLengthInput;
+  public minLengthInput;
 
   public items = [
     { name: 'Item 1', id: 1 },
