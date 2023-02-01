@@ -68,7 +68,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     protected injector: Injector,
     @Self() @Inject(VALIDATE_MESSAGES) protected _validateMessages,
     @Optional() protected ngControl: NgControl,
-    @Optional() @Inject(FsFormDirective) private formDirective: FsFormDirective,
+    @Optional() @Inject(FsFormDirective) protected formDirective: FsFormDirective,
   ) {
 
     if (ngControl) {

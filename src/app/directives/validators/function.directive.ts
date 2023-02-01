@@ -1,7 +1,7 @@
 import { Directive, Input, OnChanges } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { FsControlDirective } from './control.directive';
 import { FsValidators } from '../../validators/validators';
@@ -23,11 +23,18 @@ export class FsFormFunctionDirective extends FsControlDirective implements OnCha
   @Input()
   public fsFormFunctionData;
 
+  @Input()
+  public validateOnSubmit = false;
+
   public ngOnChanges(): void {
     this._control.updateValueAndValidity();
   }
 
   public validateAsync(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
+    if(this.validateOnSubmit && !this.formDirective.validating) {
+      return of(null);
+    }
+    
     return FsValidators.func(this._control, this.fsFormFunction, this.fsFormFunctionData);
   }
 

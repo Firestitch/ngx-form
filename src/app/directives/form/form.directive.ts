@@ -41,6 +41,7 @@ import {
   catchError,
   delay,
   filter,
+  finalize,
   first,
   map,
   mergeMap,
@@ -135,7 +136,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   public cleared: EventEmitter<SubmitEvent> = new EventEmitter();
 
   @HostBinding('class.fs-form')
-  public fsformClass = true;
+  public fsFormClass = true;
 
   @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
   public formDialogClose: QueryList<FsFormDialogCloseDirective>;
@@ -169,6 +170,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   public get submitting(): boolean {
     return this._status$.getValue() === FormStatus.Submitting;
+  }
+
+  public get validating(): boolean {
+    return this._status$.getValue() === FormStatus.Validating;
   }
 
   public get completing(): boolean {
@@ -243,6 +248,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     this._listenHotKeys();
     this._listenWindowClose();
     this._listenSubmit();
+    this._listenFormStatus();
 
     if (!this.autocomplete) {
       this._registerAutocomplete();
@@ -354,6 +360,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
           return [ FormStatus.Valid, FormStatus.Invalid ]
             .includes(this._status$.getValue());
         }),
+        tap(() => this._broadcasValidatingEvents()),
         tap(() => this._markControlsAsTouchedAndUpdateValidity()),
         tap(() => this._broadcastSubmittingEvents()),
         switchMap(() => this._waitUntilStatusPending()),
@@ -375,6 +382,22 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         takeUntil(this._destroy$)
       )
       .subscribe(() => {});
+  }
+
+  private _listenFormStatus(): void {
+    this._status$
+    .pipe(
+      takeUntil(this._destroy$),
+    )
+    .subscribe((formStatus: FormStatus) => {
+      const cls = [FormStatus.Submitting, FormStatus.Validating];
+      const classList = this._element.nativeElement.classList;
+      classList.remove(...cls);
+      if(cls.indexOf(formStatus) !== -1) {
+        classList.add(formStatus);
+      }
+    });
+
   }
 
   private _listenWindowClose(): void {
@@ -769,6 +792,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _broadcastSubmittingEvents(): void {
     this._status$.next(FormStatus.Submitting);
     this._form.broadcast('submit', this.ngForm);
+  }
+
+  private _broadcasValidatingEvents(): void {
+    this._status$.next(FormStatus.Validating);
   }
 
   private _markControlsAsTouchedAndUpdateValidity(): void {
