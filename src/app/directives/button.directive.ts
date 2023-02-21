@@ -83,17 +83,23 @@ export class FsButtonDirective implements OnInit, OnDestroy {
 
   public process() {
     this.setClass('process');
-    this._matButton.disableRipple = true;
+    if (this._matButton) {
+      this._matButton.disableRipple = true;
+    }
   }
 
   public success() {
     this.setClass('success');
-    this._matButton.disableRipple = false;
+    if (this._matButton) {
+      this._matButton.disableRipple = false;
+    }
   }
 
   public error() {
     this.setClass('error');
-    this._matButton.disableRipple = false;
+    if (this._matButton) {
+      this._matButton.disableRipple = false;
+    }
   }
 
   public setClass(cls) {
@@ -122,7 +128,9 @@ export class FsButtonDirective implements OnInit, OnDestroy {
         el.remove();
       });
 
-    this._matButton.disableRipple = false;
+    if (this._matButton) {
+      this._matButton.disableRipple = false;
+    }
     this._resetClass();
   }
 
