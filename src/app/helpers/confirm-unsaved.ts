@@ -7,8 +7,10 @@ import { FsFormDirective } from '../directives/form/form.directive';
 import { ConfirmResult } from '../enums/confirm-result';
 
 
-export function confirmUnsaved(form: FsFormDirective, prompt: FsPrompt): Observable<ConfirmResult> {
+export function confirmUnsaved(directives: FsFormDirective[], prompt: FsPrompt): Observable<ConfirmResult> {
   return new Observable(observer => {
+    // TODO support for multiple directives per page
+    const form = directives[0];
 
     if (!form.confirm || !form.ngForm.dirty) {
       observer.next(ConfirmResult.Pristine);

@@ -1,41 +1,52 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
+import { ActivatedRoute, CanDeactivate } from '@angular/router';
+
 import { FsPrompt } from '@firestitch/prompt';
+
 import { Observable, of } from 'rxjs';
-import { FsFormDirective } from '../directives/form/form.directive';
-import { FormDeactivate } from '../interfaces/form-deactivate';
-import { confirmUnsaved } from '../helpers/confirm-unsaved';
 import { map } from 'rxjs/operators';
+
+import { FsFormDirective } from '../directives/form/form.directive';
+import { confirmUnsaved } from '../helpers/confirm-unsaved';
 import { confirmResultContinue } from '../helpers';
+import { FsForm } from '../services/fsform.service';
+import { getActiveRoute } from '../helpers/get-active-route';
+
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FormDeactivateGuard implements CanDeactivate<any> {
 
-  constructor(private _prompt: FsPrompt) {}
+  constructor(
+    private _prompt: FsPrompt,
+    private _fsForm: FsForm,
+    private _route: ActivatedRoute,
+  ) {}
 
-  canDeactivate(directive: FormDeactivate): Observable<boolean> {
+  canDeactivate(): Observable<boolean> {
+    const route = getActiveRoute(this._route);
 
-    if (!('getForm' in directive)) {
-      const error = `Directive ${(<any>directive).constructor.name} does not property implement interface FormDeactivate`;
-      console.error(error);
+    if (!route) {
+      console.error(`Can not find route for FormDeactivateGuard checks`);
+
       return of(true);
     }
 
-    const form: FsFormDirective = directive.getForm();
+    const directives: FsFormDirective[] = this._fsForm.getFormDirectives(route.routeConfig.component);
 
-    if (!(form instanceof FsFormDirective)) {
-      const error = `Directive ${directive.constructor.name}.getForm() does not return a valid FsFormDirective`;
-      console.error(error);
+    if (!Array.isArray(directives) || directives.length === 0) {
+      console.error(`Can not find a valid FsFormDirective`);
+
       return of(true);
     }
 
-    return confirmUnsaved(form, this._prompt)
+    return confirmUnsaved(directives, this._prompt)
       .pipe(
         map((result) => {
           return confirmResultContinue(result);
         }),
       );
   }
+
 }

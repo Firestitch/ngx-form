@@ -34,7 +34,6 @@ export { FsFormNoFsValidatorsDirective } from './app/directives/validators/no-fs
 export { FsFormDialogActionsComponent } from './app/components/form-dialog-actions/form-dialog-actions.component';
 
 export { FsValidators } from './app/validators/validators';
-export { FormDeactivate } from './app/interfaces/form-deactivate';
 
 export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
 

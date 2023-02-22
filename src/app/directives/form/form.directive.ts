@@ -17,6 +17,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { AbstractControl, NgForm } from '@angular/forms';
+import { ActivatedRoute, Route } from '@angular/router';
 
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
@@ -41,7 +42,6 @@ import {
   catchError,
   delay,
   filter,
-  finalize,
   first,
   map,
   mergeMap,
@@ -62,6 +62,8 @@ import { SubmitEvent } from './../../interfaces/submit-event';
 import { FormStatus } from './../../enums/form-status';
 import { confirmResultContinue } from '../../helpers/confirm-result-continue';
 import { getFormErrors } from '../../helpers/get-form-errors';
+import { FormDeactivateGuard } from '../../guards/form-deactivate.guard';
+import { getActiveRoute } from '../../helpers/get-active-route';
 
 
 @Directive({
@@ -117,6 +119,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   @Input()
   public tabGroup: MatTabGroup;
 
+  @Input()
+  public deactivationGuard = true;
+
   @Output('fsForm')
   public submitEvent: EventEmitter<SubmitEvent> = new EventEmitter();
 
@@ -149,6 +154,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _activeSubmitButton: FsButtonDirective;
   private _dialogBackdropEscape = false;
   private _snapshot: { [key: string]: any } = {};
+  private _activatedRouteConfig: Route | null;
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _destroy$ = new Subject();
 
@@ -166,6 +172,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
     @Optional() @Inject(DrawerRef)
     private _drawerRef: DrawerRef<any>,
+
+    private _route: ActivatedRoute,
   ) {}
 
   public get submitting(): boolean {
@@ -244,6 +252,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   public ngOnInit() {
+    if (this.deactivationGuard) {
+      this._registerCanDeactivateGuard();
+    }
+
     this._registerConfirmDialogBackdropEscape();
     this._listenHotKeys();
     this._listenWindowClose();
@@ -271,6 +283,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   public ngOnDestroy(): void {
+    this._cleanupCanDeactivate();
     this._destroy$.next();
     this._destroy$.complete();
   }
@@ -291,7 +304,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         const control = this.ngForm.controls[name];
         control.reset(this._snapshot[name]);
       });
-    
+
     this.reseted.emit();
   }
 
@@ -315,7 +328,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     return submitted
       .pipe(
         take(1),
-        mergeMap(() => confirmUnsaved(this, this._prompt)),
+        mergeMap(() => confirmUnsaved([this], this._prompt)),
       );
   }
 
@@ -482,14 +495,14 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _getActiveSubmitButton(): FsButtonDirective {
-    const submitButtons = this._buttons    
+    const submitButtons = this._buttons
       .filter((button) => button.submit);
 
     const activeButton = submitButtons
       .find(button => {
         return button.active;
       });
-      
+
     return activeButton ? activeButton : submitButtons[0];
   }
 
@@ -506,8 +519,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _completeSubmit(success, submitEvent: SubmittedEvent): void {
     if (success) {
       this.ngForm.control.markAsPristine();
-      this.createSnapshot();  
-      this.submitted.emit(submitEvent);    
+      this.createSnapshot();
+      this.submitted.emit(submitEvent);
     } else {
       this._resetButtons();
     }
@@ -517,7 +530,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         this._activeSubmitButton.success();
       } else {
         this._activeSubmitButton.error();
-      }      
+      }
     }
 
     this._status$.next(FormStatus.Submitted);
@@ -845,6 +858,32 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     console.groupEnd();
 
     this._completeSubmit(false, null);
+  }
+
+  private _registerCanDeactivateGuard(): void {
+    this._activatedRouteConfig = getActiveRoute(this._route).routeConfig;
+
+    if (!this._activatedRouteConfig) {
+      return;
+    }
+
+    this._form.registerFormDirective(this._activatedRouteConfig.component, this);
+
+    if (!Array.isArray(this._activatedRouteConfig.canDeactivate)) {
+      this._activatedRouteConfig.canDeactivate = [];
+    }
+
+    if (this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard) == -1) {
+      this._activatedRouteConfig.canDeactivate.push(FormDeactivateGuard);
+    }
+  }
+
+  private _cleanupCanDeactivate(): void {
+    if (!this._activatedRouteConfig) {
+      return
+    }
+
+    this._form.removeFormDirective(this._activatedRouteConfig.component);
   }
 
 }
