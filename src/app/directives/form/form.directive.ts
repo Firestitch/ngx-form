@@ -44,6 +44,7 @@ import {
   filter,
   first,
   map,
+  mapTo,
   mergeMap,
   startWith,
   switchMap,
@@ -157,6 +158,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _activatedRouteConfig: Route | null;
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _destroy$ = new Subject();
+  private _confirmSubmit = false;
 
   constructor(
     @Inject(NgForm)
@@ -318,8 +320,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     this._updateDirtySubmitButtons();
   }
 
-  public triggerSubmit(): void {
-    this.ngForm.ngSubmit.next();
+  public triggerSubmit(options?: { confirmSubmit: boolean }): void {
+    this._confirmSubmit = options?.confirmSubmit;
+    this.ngForm.ngSubmit.emit();
   }
 
   public triggerConfirm(): Observable<ConfirmResult> {
@@ -369,6 +372,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         tap((event) => {
           event?.preventDefault();
         }),
+        map((event) => { 
+          return { event, confirmSubmit: this._confirmSubmit };
+        }),
+        tap(() => this._confirmSubmit = false),
         filter(() => {
           return [ FormStatus.Valid, FormStatus.Invalid ]
             .includes(this._status$.getValue());
@@ -376,13 +383,25 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         tap(() => this._broadcasValidatingEvents()),
         tap(() => this._markControlsAsTouchedAndUpdateValidity()),
         tap(() => this._broadcastSubmittingEvents()),
-        switchMap(() => this._waitUntilStatusPending()),
+        switchMap((data) => this._waitUntilStatusPending()
+          .pipe(
+            mapTo(data),
+          )),
         tap(() => this._setupActiveSubmitButton()),
         tap(() => this._disableButtons()),
-        mergeMap(() => {
-          return this.ngForm.status === 'INVALID'
-            ? this._formInvalidState$
-            : this._formValidState$;
+        mergeMap((data) => {
+          if(this.ngForm.status === 'INVALID') {
+            return this._formInvalidState$;
+          }
+          
+          return this._formValidState$
+          .pipe(
+            map((submitEvent) => ({
+             ...submitEvent,
+             confirmSubmit: data.confirmSubmit,
+            })
+            )
+          );
         }),
         catchError((e, source$) => {
           this._handleError(e);
