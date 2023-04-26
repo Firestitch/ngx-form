@@ -158,7 +158,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _activatedRouteConfig: Route | null;
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _destroy$ = new Subject();
-  private _confirmSubmit = false;
+  private _confirmed = false;
 
   constructor(
     @Inject(NgForm)
@@ -320,8 +320,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     this._updateDirtySubmitButtons();
   }
 
-  public triggerSubmit(options?: { confirmSubmit: boolean }): void {
-    this._confirmSubmit = options?.confirmSubmit;
+  public triggerSubmit(options?: { confirmed: boolean }): void {
+    this._confirmed = options?.confirmed;
     this.ngForm.ngSubmit.emit();
   }
 
@@ -373,9 +373,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
           event?.preventDefault();
         }),
         map((event) => { 
-          return { event, confirmSubmit: this._confirmSubmit };
+          return { event, confirmed: this._confirmed };
         }),
-        tap(() => this._confirmSubmit = false),
+        tap(() => this._confirmed = false),
         filter(() => {
           return [ FormStatus.Valid, FormStatus.Invalid ]
             .includes(this._status$.getValue());
@@ -398,10 +398,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
           .pipe(
             map((submitEvent) => ({
              ...submitEvent,
-             confirmSubmit: data.confirmSubmit,
+             confirmed: data.confirmed
             })
-            )
-          );
+          )
+          )
         }),
         catchError((e, source$) => {
           this._handleError(e);

@@ -80,7 +80,7 @@ export function confirmUnsaved(directives: FsFormDirective[], prompt: FsPrompt):
         });
 
         form.ngForm.control.markAsPristine();
-        form.triggerSubmit({ confirmSubmit: true });
+        form.triggerSubmit({ confirmed: true });
       }
 
     }, (error: any) => {
