@@ -20,6 +20,7 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   @Input() public save = true;
   @Input() public create = false;
   @Input() public close = false;
+  @Input() public done = false;
   @Input() public closeData = null;
   @Input() public name: string;
 

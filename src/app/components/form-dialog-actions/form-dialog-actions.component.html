@@ -16,6 +16,16 @@
     </button>
   </ng-container>
 
+  <ng-container *ngIf="done">
+    <button
+        mat-button
+        type="button"
+        color="primary"
+        [matDialogClose]="null">
+      Done
+    </button>
+  </ng-container>
+
   <ng-container *ngIf="save || create">
     <ng-template [ngTemplateOutlet]="content"></ng-template>
   </ng-container>
