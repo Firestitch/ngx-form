@@ -381,7 +381,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
             .includes(this._status$.getValue());
         }),
         tap(() => this._broadcasValidatingEvents()),
-        tap(() => this._markControlsAsTouchedAndUpdateValidity()),
+        tap(() => this.validate()),
         tap(() => this._broadcastSubmittingEvents()),
         switchMap((data) => this._waitUntilStatusPending()
           .pipe(
@@ -414,6 +414,15 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         takeUntil(this._destroy$)
       )
       .subscribe(() => {});
+  }
+
+  public validate(): void {
+    Object.values(this.ngForm.controls)
+    .forEach((control) => {
+      control.markAsDirty();
+      control.markAsTouched();
+      control.updateValueAndValidity();
+    });
   }
 
   private _listenFormStatus(): void {
@@ -828,15 +837,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   private _broadcasValidatingEvents(): void {
     this._status$.next(FormStatus.Validating);
-  }
-
-  private _markControlsAsTouchedAndUpdateValidity(): void {
-    Object.values(this.ngForm.controls)
-    .forEach(control => {
-      control.markAsDirty();
-      control.markAsTouched();
-      control.updateValueAndValidity();
-    });
   }
 
   private _setupActiveSubmitButton(): void {
