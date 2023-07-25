@@ -116,7 +116,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.messageSelector) {
       return this.messageSelector;
 
-    } else if (this.formDirective && this.formDirective.messageSelector) {
+    } else if (this.formDirective?.messageSelector) {
       return this.formDirective.messageSelector;
     }
   }
@@ -130,7 +130,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.hintSelector) {
       return this.hintSelector;
 
-    } else if (this.formDirective && this.formDirective.hintSelector) {
+    } else if (this.formDirective?.hintSelector) {
       return this.formDirective.hintSelector;
     }
   }
@@ -144,7 +144,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.wrapperSelector) {
       return this.wrapperSelector;
 
-    } else if (this.formDirective && this.formDirective.wrapperSelector) {
+    } else if (this.formDirective?.wrapperSelector) {
       return this.formDirective.wrapperSelector;
     }
   }
@@ -158,7 +158,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.labelSelector) {
       return this.labelSelector;
 
-    } else if (this.formDirective && this.formDirective.labelSelector) {
+    } else if (this.formDirective?.labelSelector) {
       return this.formDirective.labelSelector;
     }
   }
@@ -190,7 +190,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       const wrapper = this.getWrapperElement();
       const error = this.ngControl.dirty ? this.getError(this.ngControl) : null;
       const shouldErrorBeRendered = this.ngControl.invalid
-        && (this.ngControl.dirty || this.formDirective.ngForm?.submitted);
+        && (this.ngControl.dirty || this.formDirective?.ngForm?.submitted);
 
       if (shouldErrorBeRendered && error) {
         wrapper.classList.add('ng-invalid', 'ng-dirty');
