@@ -372,7 +372,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         tap((event) => {
           event?.preventDefault();
         }),
-        map((event) => { 
+        map((event) => {
           return { event, confirmed: this._confirmed };
         }),
         tap(() => this._confirmed = false),
@@ -393,7 +393,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
           if(this.ngForm.status === 'INVALID') {
             return this._formInvalidState$;
           }
-          
+
           return this._formValidState$
           .pipe(
             map((submitEvent) => ({
@@ -901,6 +901,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     if (!this._activatedRouteConfig) {
       return
     }
+
+    const guardIndex = this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard);
+    this._activatedRouteConfig.canDeactivate.splice(guardIndex, 1);
 
     this._form.removeFormDirective(this._activatedRouteConfig.component);
   }
