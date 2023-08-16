@@ -241,7 +241,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     const el = this._element.nativeElement.querySelector('.ng-invalid');
 
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     return throwError('Form validation error');
