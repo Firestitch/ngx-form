@@ -18,6 +18,9 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   @Input()
   public dirtySubmit = true;
 
+  @Input()
+  public form: FsFormDirective;
+
   @HostBinding('style.transition')
   public transitionStyle = null;
 
@@ -36,9 +39,10 @@ export class FsButtonDirective implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.submit = this._elementRef.nativeElement.getAttribute('type') === 'submit';
+    this.form = this.form || this._form;
 
-    if (this._form) {
-      this._form.addButton(this);
+    if (this.form) {
+      this.form.addButton(this);
 
       if(this.submit) {
         fromEvent(this.element, 'click')
@@ -50,8 +54,8 @@ export class FsButtonDirective implements OnInit, OnDestroy {
           });
 
         if (this.dirtySubmit) {
-          if (this._form.dirtySubmitButton) {
-            if(!this._form.ngForm.dirty) {
+          if (this.form.dirtySubmitButton) {
+            if(!this.form.ngForm.dirty) {
               this.disable();
             }
           }
@@ -137,7 +141,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-    this._form?.removeButton(this);
+    this.form?.removeButton(this);
   }
 
   private _disableShadowAnimation() {
