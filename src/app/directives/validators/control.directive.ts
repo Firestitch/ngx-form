@@ -89,21 +89,11 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
   ngAfterContentInit() {
     if (this._control) {
-
-      /*
-        Ensure that statusChanges has one subscription per control. Multiple can happen
-        when multiple fsForm validation directives are applied to the same element
-      */
-      if (!(<any>this._control).statusChangesSubscribe) {
-
-        this._control.statusChanges
+      this._control.statusChanges
         .pipe(
-            takeUntil(this._destroy$)
+          takeUntil(this._destroy$)
         )
         .subscribe(this.render.bind(this));
-
-        (<any>this._control).statusChangesSubscribe = true;
-      }
     }
   }
 
@@ -185,6 +175,12 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   */
 
   protected render() {
+    if ((<any>this._control).statusChangesSubscribe) {
+      return;
+    }
+
+    (<any>this._control).statusChangesSubscribe = true;
+
     if (this.ngControl) {
       const renderer = this.renderer2;
       const wrapper = this.getWrapperElement();
