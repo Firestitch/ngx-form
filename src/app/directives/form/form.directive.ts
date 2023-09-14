@@ -235,7 +235,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       this.invalid.emit(this._submitEvent);
     }
 
-    const message = 'Changes not saved. Please review errors highlighted in red.';
+    const message = 'Please review errors highlighted in red';
     this._message.error(message, { mode: MessageMode.Toast });
 
     const el = this._element.nativeElement.querySelector('.ng-invalid');
