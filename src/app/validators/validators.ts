@@ -2,8 +2,8 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { email, isEmpty, isNumeric, phone, url } from '@firestitch/common';
 import { isValid } from 'date-fns';
 import { isObject } from 'lodash-es';
-import { catchError, map, take } from 'rxjs/operators';
-import { from, isObservable, Observable, of, throwError } from 'rxjs';
+import { Observable, from, isObservable, of, throwError } from 'rxjs';
+import { catchError, mapTo, take } from 'rxjs/operators';
 
 export class FsValidators {
 
@@ -111,21 +111,11 @@ export class FsValidators {
 
     return stream$
       .pipe(
-        map(() => null),
+        mapTo(null),
         catchError((err) => {
           return of({ validationError: err });
         }),
         take(1),
       );
   }
-
-  // static compare(a, b): ValidatorFn {
-  //   return (control: AbstractControl): ValidationErrors | null => {
-  //     if (a === b) {
-  //       return null;
-  //     } else {
-  //       return { compare: true };
-  //     }
-  //   }
-  // }
 }

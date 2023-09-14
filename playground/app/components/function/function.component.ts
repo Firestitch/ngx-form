@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
+import { of, throwError } from 'rxjs';
 
 @Component({
   selector: 'function',
@@ -8,7 +9,7 @@ import { FsMessage } from '@firestitch/message';
 })
 export class FunctionComponent {
 
-  constructor(private fsMessage: FsMessage) {}
+  constructor(private fsMessage: FsMessage) { }
 
   @ViewChild('form', { static: true }) form;
 
@@ -21,28 +22,18 @@ export class FunctionComponent {
   public functionException = null;
   public functionAnonymous = null;
 
-  public functionPromiseFn = ((formControl) => {
+  public validateObservable = (formControl) => {
+    if (formControl.value !== this.email) {
+      return throwError('Email should match ' + this.email);
+    }
 
-    return new Promise((resolve, reject) => {
+    return of(true);
+  };
 
-      setTimeout(() => {
-        const testValue = formControl.value;
-        if (testValue !== this.email) {
-          reject('Email should match ' + this.email);
-        } else {
-          resolve(false);
-        }
-      }, 300);
-    });
-
-  });
-
-
-  public functionExceptionFn = (formControl, data) => {
+  public validateException = (formControl, data) => {
     if (String(formControl.value).length <= this.minLength) {
       throw new Error('The length must be greater then 3 characters');
     }
-
   }
 
   public anonymousFunctionException(formControl) {
@@ -63,17 +54,17 @@ export class FunctionComponent {
     }
 
     if (this.form.controls.radioFunctionDate &&
-        this.form.controls.radioFunctionDate.dirty &&
-        this.radioFunctionModel==='date' &&
-        !this.radioFunctionDate) {
-          throw 'Invalid date selection.';
+      this.form.controls.radioFunctionDate.dirty &&
+      this.radioFunctionModel === 'date' &&
+      !this.radioFunctionDate) {
+      throw 'Invalid date selection.';
     }
 
     if (this.form.controls.radioFunctionWeeks &&
-        this.form.controls.radioFunctionWeeks.dirty &&
-        this.radioFunctionModel==='weeks' &&
-        !this.radioFunctionWeeks) {
-          throw 'Invalid week selection.';
+      this.form.controls.radioFunctionWeeks.dirty &&
+      this.radioFunctionModel === 'weeks' &&
+      !this.radioFunctionWeeks) {
+      throw 'Invalid week selection.';
     }
 
   });

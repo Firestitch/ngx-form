@@ -1,54 +1,44 @@
 <form (fsForm)="save()" #form="ngForm">
   <div fxLayout="column">
     <mat-form-field>
-      <input placeholder="Function Promise Validation"
+      <input 
+        placeholder="Exception Validation"
+        [(ngModel)]="functionException"
+        name="validateException"
+        matInput
+        [validate]="validateException"
+        [validateData]="{ test: 'data' }"/>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input 
+        placeholder="Observable Validation On Submit (match existing@email.com)"
         [(ngModel)]="functionPromise"
-        name="function_promise"
+        name="validateObservable"
         matInput
         [validateOnSubmit]="true"
-        [validate]="functionPromiseFn"
-        />
-    </mat-form-field>
-
-    <mat-form-field>
-      <input placeholder="Function Exception Validation"
-        [(ngModel)]="functionException"
-        name="function_exception"
-        matInput
-        [validate]="functionExceptionFn"
-        [validateData]="{ test: 'data' }"
-        />
-    </mat-form-field>
-
-    <mat-form-field>
-      <input placeholder="Anonymous Function Exception Validation"
-        [(ngModel)]="functionAnonymous"
-        name="function_anonymous"
-        matInput
-        [validate]="anonymousFunctionException"
-        />
-        <mat-hint>The same anonymous pattern can be applied to the function promise example</mat-hint>
+        [validate]="validateObservable"/>
     </mat-form-field>
 
     <fs-radio-group
-      [(ngModel)]="radioFunctionModel"
-      label="Radio Button Group Custom Validation"
-      orientation="vertical"
-      name="radio_function"
-      [validate]="radioFunction">
-        <mat-radio-button [value]="'weeks'">
-            After
-            <mat-form-field>
-              <input [(ngModel)]="radioFunctionWeeks" name="radioFunctionWeeks" matInput fsFormNumeric (change)="radioFunctionChange()"/>
-            </mat-form-field>
-            Weeks
-        </mat-radio-button>
-        <mat-radio-button [value]="'date'">
-          On
+        [(ngModel)]="radioFunctionModel"
+        label="Radio Button Group Custom Validation"
+        orientation="vertical"
+        name="radio_function"
+        [validate]="radioFunction">
+      <mat-radio-button [value]="'weeks'">
+          After
           <mat-form-field>
-            <input matInput fsDatePicker [(ngModel)]="radioFunctionDate" name="radioFunctionDate" (change)="radioFunctionChange()">
+            <input [(ngModel)]="radioFunctionWeeks" name="radioFunctionWeeks" matInput fsFormNumeric (change)="radioFunctionChange()"/>
           </mat-form-field>
-        </mat-radio-button>
+          Weeks
+      </mat-radio-button>
+      <mat-radio-button [value]="'date'">
+        On
+        <mat-form-field>
+          <input matInput fsDatePicker [(ngModel)]="radioFunctionDate" name="radioFunctionDate" (change)="radioFunctionChange()">
+        </mat-form-field>
+      </mat-radio-button>
     </fs-radio-group>
 
     <fieldset>
