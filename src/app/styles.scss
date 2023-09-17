@@ -1,7 +1,7 @@
 @use 'node_modules/@angular/material' as mat;
 
 .fs-form-label-required:after {
-  content: " *";
+  content: "*";
   white-space: pre-wrap;
 }
 
