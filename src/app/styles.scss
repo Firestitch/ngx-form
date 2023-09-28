@@ -6,11 +6,11 @@
 }
 
 .fs-form .fs-form-wrapper.ng-invalid.ng-dirty .fs-form-label,
-.fs-form .ng-invalid.ng-dirty .fs-form-label {
+.fs-form .ng-invalid.ng-dirty:not(form) .fs-form-label {
   color: #f44336;
 }
 
-.fs-form .ng-invalid.ng-dirty .mat-form-field-underline {
+.fs-form .ng-invalid.ng-dirty:not(form) .mat-form-field-underline {
   background-color: #f44336;
 }
 
