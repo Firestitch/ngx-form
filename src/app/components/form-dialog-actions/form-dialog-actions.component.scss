@@ -1,17 +1,9 @@
-.buttons {
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-
-  &.save-create .close {
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-  }
+:host {
+  width: 100%;
 }
 
-@media only screen and (max-width: 599px) {
-  .buttons {
-    flex-direction: column;
+.form-buttons {
+  &.save-create .close {
+    float: right;
   }
 }
