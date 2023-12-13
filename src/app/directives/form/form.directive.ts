@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  ChangeDetectorRef,
   ContentChildren,
   Directive,
   ElementRef,
@@ -22,10 +23,10 @@ import { ActivatedRoute, Route } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 
-import { FsMessage, MessageMode } from '@firestitch/message';
-import { FsPrompt } from '@firestitch/prompt';
 import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
+import { FsMessage, MessageMode } from '@firestitch/message';
+import { FsPrompt } from '@firestitch/prompt';
 
 import {
   BehaviorSubject,
@@ -53,18 +54,18 @@ import {
   tap
 } from 'rxjs/operators';
 
-import { confirmUnsaved } from '../../helpers/confirm-unsaved';
-import { FsFormDialogCloseDirective } from '../form-dialog-close.directive';
-import { FsButtonDirective } from '../button.directive';
-import { ConfirmConfig, SubmittedEvent, ConfirmTabGroup } from './../../interfaces';
-import { ConfirmResult } from './../../enums/confirm-result';
-import { FsForm } from '../../services/fsform.service';
-import { SubmitEvent } from './../../interfaces/submit-event';
-import { FormStatus } from './../../enums/form-status';
-import { confirmResultContinue } from '../../helpers/confirm-result-continue';
-import { getFormErrors } from '../../helpers/get-form-errors';
 import { FormDeactivateGuard } from '../../guards/form-deactivate.guard';
+import { confirmResultContinue } from '../../helpers/confirm-result-continue';
+import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { getActiveRoute } from '../../helpers/get-active-route';
+import { getFormErrors } from '../../helpers/get-form-errors';
+import { FsForm } from '../../services/fsform.service';
+import { FsButtonDirective } from '../button.directive';
+import { FsFormDialogCloseDirective } from '../form-dialog-close.directive';
+import { ConfirmResult } from './../../enums/confirm-result';
+import { FormStatus } from './../../enums/form-status';
+import { ConfirmConfig, ConfirmTabGroup, SubmittedEvent } from './../../interfaces';
+import { SubmitEvent } from './../../interfaces/submit-event';
 
 
 @Directive({
@@ -141,6 +142,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   @Output()
   public cleared: EventEmitter<SubmitEvent> = new EventEmitter();
 
+  @Output()
+  public submitRegistered: EventEmitter<any> = new EventEmitter();
+
   @HostBinding('class.fs-form')
   public fsFormClass = true;
 
@@ -168,6 +172,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     private _message: FsMessage,
     private _prompt: FsPrompt,
     private _ngZone: NgZone,
+    private _cdRef: ChangeDetectorRef,
 
     @Optional() @Inject(MatDialogRef)
     private _dialogRef: MatDialogRef<any>,
@@ -176,7 +181,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     private _drawerRef: DrawerRef<any>,
 
     private _route: ActivatedRoute,
-  ) {}
+  ) { }
 
   public get submitting(): boolean {
     return this._status$.getValue() === FormStatus.Submitting;
@@ -275,6 +280,12 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
   }
 
+  public registerSubmit(fn: () => Observable<any>): void {
+    this.submit = fn;
+    this.submitRegistered.emit();
+    this._cdRef.markForCheck();
+  }
+
   public ngAfterContentInit(): void {
     this._registerConfirm();
     this._registerConfirmDialogClose();
@@ -361,7 +372,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     this._buttons.reset(
       [
         ...this._buttons.toArray()
-        .filter((item) => (button !== item)),
+          .filter((item) => (button !== item)),
       ]);
   }
 
@@ -377,7 +388,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         }),
         tap(() => this._confirmed = false),
         filter(() => {
-          return [ FormStatus.Valid, FormStatus.Invalid ]
+          return [FormStatus.Valid, FormStatus.Invalid]
             .includes(this._status$.getValue());
         }),
         tap(() => this._broadcasValidatingEvents()),
@@ -390,18 +401,18 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         tap(() => this._setupActiveSubmitButton()),
         tap(() => this._disableButtons()),
         mergeMap((data) => {
-          if(this.ngForm.status === 'INVALID') {
+          if (this.ngForm.status === 'INVALID') {
             return this._formInvalidState$;
           }
 
           return this._formValidState$
-          .pipe(
-            map((submitEvent) => ({
-             ...submitEvent,
-             confirmed: data.confirmed
-            })
-          )
-          )
+            .pipe(
+              map((submitEvent) => ({
+                ...submitEvent,
+                confirmed: data.confirmed
+              })
+              )
+            )
         }),
         catchError((e, source$) => {
           this._handleError(e);
@@ -413,31 +424,31 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         }),
         takeUntil(this._destroy$)
       )
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
 
   public validate(): void {
     Object.values(this.ngForm.controls)
-    .forEach((control) => {
-      control.markAsDirty();
-      control.markAsTouched();
-      control.updateValueAndValidity();
-    });
+      .forEach((control) => {
+        control.markAsDirty();
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
   }
 
   private _listenFormStatus(): void {
     this._status$
-    .pipe(
-      takeUntil(this._destroy$),
-    )
-    .subscribe((formStatus: FormStatus) => {
-      const cls = [FormStatus.Submitting, FormStatus.Validating];
-      const classList = this._element.nativeElement.classList;
-      classList.remove(...cls);
-      if(cls.indexOf(formStatus) !== -1) {
-        classList.add(formStatus);
-      }
-    });
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe((formStatus: FormStatus) => {
+        const cls = [FormStatus.Submitting, FormStatus.Validating];
+        const classList = this._element.nativeElement.classList;
+        classList.remove(...cls);
+        if (cls.indexOf(formStatus) !== -1) {
+          classList.add(formStatus);
+        }
+      });
 
   }
 
@@ -574,21 +585,21 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     const resetDelay = success ? this.successDelay : this.errorDelay;
 
     of(true)
-    .pipe(
-      delay(resetDelay),
-      first(),
-      takeUntil(this._destroy$),
-    ).subscribe(() => {
-      if (this.ngForm.form.status === 'VALID') {
-        this._status$.next(FormStatus.Valid);
-      } else {
-        this._status$.next(FormStatus.Invalid);
-      }
+      .pipe(
+        delay(resetDelay),
+        first(),
+        takeUntil(this._destroy$),
+      ).subscribe(() => {
+        if (this.ngForm.form.status === 'VALID') {
+          this._status$.next(FormStatus.Valid);
+        } else {
+          this._status$.next(FormStatus.Invalid);
+        }
 
-      this._resetButtons();
-      this._resetActiveButtons();
-      this._updateDirtySubmitButtons();
-    });
+        this._resetButtons();
+        this._resetActiveButtons();
+        this._updateDirtySubmitButtons();
+      });
   }
 
   private _resetButtons(): void {
@@ -625,75 +636,75 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _registerDrawerClose(): void {
     if (this._drawerRef) {
       this._drawerRef.closeStart$
-      .pipe(
-        takeUntil(this._destroy$),
-      )
-      .subscribe((subscriber) => {
-        if (this.submitting) {
-          this._status$
-            .pipe(
-              filter((status) => status === FormStatus.Success || status === FormStatus.Error),
-              takeUntil(this._destroy$),
-            )
-            .subscribe((status) => {
-              if (status === FormStatus.Success) {
-                subscriber.next();
-                subscriber.complete();
-              } else {
-                subscriber.error();
-              }
-            });
-        } else {
-          subscriber.next();
-          subscriber.complete();
-        }
-      });
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe((subscriber) => {
+          if (this.submitting) {
+            this._status$
+              .pipe(
+                filter((status) => status === FormStatus.Success || status === FormStatus.Error),
+                takeUntil(this._destroy$),
+              )
+              .subscribe((status) => {
+                if (status === FormStatus.Success) {
+                  subscriber.next();
+                  subscriber.complete();
+                } else {
+                  subscriber.error();
+                }
+              });
+          } else {
+            subscriber.next();
+            subscriber.complete();
+          }
+        });
     }
   }
 
   private _registerConfirmDrawerClose(): void {
     if (this._drawerRef) {
       this._drawerRef.closeStart$
-      .pipe(
-        switchMap((subscriber) => {
-          return iif(
-            () => this.confirm && this.confirmDrawer,
-            this.triggerConfirm()
-              .pipe(
-                map((result) => confirmResultContinue(result)),
-                tap((result) => {
-                  if (result) {
-                    subscriber.next();
-                    subscriber.complete();
-                  }
-                })
-              ),
-            defer(() => {
-              subscriber.next();
-              subscriber.complete();
-            }),
-          )
-        }),
-        takeUntil(this._destroy$),
-      )
-      .subscribe();
+        .pipe(
+          switchMap((subscriber) => {
+            return iif(
+              () => this.confirm && this.confirmDrawer,
+              this.triggerConfirm()
+                .pipe(
+                  map((result) => confirmResultContinue(result)),
+                  tap((result) => {
+                    if (result) {
+                      subscriber.next();
+                      subscriber.complete();
+                    }
+                  })
+                ),
+              defer(() => {
+                subscriber.next();
+                subscriber.complete();
+              }),
+            )
+          }),
+          takeUntil(this._destroy$),
+        )
+        .subscribe();
     }
   }
 
   private _registerConfirmTabs(): void {
-    if(this.tabGroup) {
+    if (this.tabGroup) {
       this.registerConfirmTabGroup(this.tabGroup);
     }
 
     this.registerConfirmTabGroups(this._tabGroups.toArray());
 
     this._tabGroups.changes
-    .pipe(
-      takeUntil(this._destroy$)
-    )
-    .subscribe(() => {
-      this.registerConfirmTabGroups(this._tabGroups.toArray());
-    });
+      .pipe(
+        takeUntil(this._destroy$)
+      )
+      .subscribe(() => {
+        this.registerConfirmTabGroups(this._tabGroups.toArray());
+      });
   }
 
   public registerConfirmTabGroups(tabGroups: MatTabGroup[]): void {
@@ -708,8 +719,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       confirmTabGroup._originalHandleClick = tabGroup._handleClick;
       confirmTabGroup._handlClick$ = new Subject<{ tab: MatTab; tabHeader: MatTabHeader; idx: number }>();
       confirmTabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
-        if(confirmTabGroup._handlClick$.observers.length) {
-          confirmTabGroup._handlClick$.next({ tab, tabHeader, idx});
+        if (confirmTabGroup._handlClick$.observers.length) {
+          confirmTabGroup._handlClick$.next({ tab, tabHeader, idx });
         } else {
           confirmTabGroup._originalHandleClick(tab, tabHeader, idx);
         }
@@ -717,26 +728,26 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
 
     confirmTabGroup._handlClick$
-    .pipe(
-      takeUntil(this._destroy$),
-    )
-    .subscribe((event) => {
-      if (!this.submitting) {
-        if (this.confirm && this.confirmTabs) {
-          this.triggerConfirm()
-            .pipe(
-              takeUntil(this._destroy$),
-            )
-            .subscribe((result) => {
-              if (confirmResultContinue(result)) {
-                confirmTabGroup.selectedIndex = event.idx;
-              }
-            });
-        } else {
-          confirmTabGroup._originalHandleClick(event.tab, event.tabHeader, event.idx);
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe((event) => {
+        if (!this.submitting) {
+          if (this.confirm && this.confirmTabs) {
+            this.triggerConfirm()
+              .pipe(
+                takeUntil(this._destroy$),
+              )
+              .subscribe((result) => {
+                if (confirmResultContinue(result)) {
+                  confirmTabGroup.selectedIndex = event.idx;
+                }
+              });
+          } else {
+            confirmTabGroup._originalHandleClick(event.tab, event.tabHeader, event.idx);
+          }
         }
-      }
-    });
+      });
   }
 
   private _registerConfirmDialogClose(): void {
@@ -746,14 +757,14 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       });
 
       this.formDialogClose.changes
-      .pipe(
-        takeUntil(this._destroy$),
-      )
-      .subscribe((e) => {
-        e.forEach(item => {
-          this._registerDialogClose(item);
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe((e) => {
+          e.forEach(item => {
+            this._registerDialogClose(item);
+          });
         });
-      });
     }
   }
 
@@ -763,17 +774,17 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     if (this._dialogRef && !this._dialogRef.disableClose) {
       this._dialogRef.disableClose = true;
       this._dialogRef.backdropClick()
-      .pipe(
-        takeUntil(this._destroy$)
-      )
-      .subscribe(() => {
-        this._formClose();
-      });
+        .pipe(
+          takeUntil(this._destroy$)
+        )
+        .subscribe(() => {
+          this._formClose();
+        });
 
       this._destroy$
-      .subscribe(() => {
-        this._dialogRef.disableClose = false;
-      });
+        .subscribe(() => {
+          this._dialogRef.disableClose = false;
+        });
     }
   }
 
@@ -802,27 +813,27 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
 
     this.ngForm.form.valueChanges
-    .pipe(
-      takeUntil(this._destroy$),
-    )
-    .subscribe(() => {
-      this._updateDirtySubmitButtons();
-    });
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        this._updateDirtySubmitButtons();
+      });
 
     this._buttons.changes
-    .pipe(
-      takeUntil(this._destroy$),
-    )
-    .subscribe(() => {
-      this._updateDirtySubmitButtons();
-    });
+      .pipe(
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        this._updateDirtySubmitButtons();
+      });
   }
 
   private _updateDirtySubmitButtons(): void {
     this._buttons
-    .filter((button) => button.submit)
-    .forEach((submitButton: FsButtonDirective) => {
-      if (!this.confirm || !this.dirtySubmitButton || this.ngForm.dirty || !submitButton.dirtySubmit) {
+      .filter((button) => button.submit)
+      .forEach((submitButton: FsButtonDirective) => {
+        if (!this.confirm || !this.dirtySubmitButton || this.ngForm.dirty || !submitButton.dirtySubmit) {
           submitButton.enable();
         } else {
           submitButton.disable();
@@ -863,7 +874,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _handleError(e: SubmittedEvent) {
-    console.log('%c Form Submit ',  'color: white; background-color: #D33F49',  'Error occured');
+    console.log('%c Form Submit ', 'color: white; background-color: #D33F49', 'Error occured');
 
     console.group('Error Details:');
     console.log('Message: ', e);
