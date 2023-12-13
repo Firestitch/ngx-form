@@ -282,8 +282,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   public registerSubmit(fn: () => Observable<any>): void {
     this.submit = fn;
-    this.submitRegistered.emit();
-    this._cdRef.markForCheck();
+    setTimeout(() => {
+      this.submitRegistered.emit();
+      this._cdRef.markForCheck();
+    });
   }
 
   public ngAfterContentInit(): void {
