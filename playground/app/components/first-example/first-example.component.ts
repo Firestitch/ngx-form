@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
-import { delay, switchMap, tap } from 'rxjs/operators';
+
 
 import { filter } from '@firestitch/common';
 import { FsForm, FsFormDirective } from '@firestitch/form';
 import { FsMessage } from '@firestitch/message';
 
 import { of, throwError } from 'rxjs';
+import { delay, switchMap, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -52,24 +53,24 @@ export class FirstExampleComponent implements OnInit {
     { name: 'Item 1', id: 1 },
     { name: 'Item 2', id: 2 },
     { name: 'Item 3', id: 3 },
-    { name: 'Item 4', id: 4 }
+    { name: 'Item 4', id: 4 },
   ];
 
   public selectedAccounts = [];
 
-  public searchAccounts = query => {
+  public searchAccounts = (query) => {
     const accounts: any[] = [
       { name: 'Bob', email: 'bob@gmail.com', id: 1 },
       { name: 'Ryan', email: 'ryan@gmail.com', id: 2 },
       { name: 'Jane', email: 'jane@gmail.com', id: 3 },
-      { name: 'Dave', email: 'dave@gmail.com', id: 4 }
+      { name: 'Dave', email: 'dave@gmail.com', id: 4 },
     ];
 
-    accounts.forEach(item => {
-      item.avatar = 'https://randomuser.me/api/portraits/men/' + Math.floor((Math.random() * 99) + 1) + '.jpg';
+    accounts.forEach((item) => {
+      item.avatar = `https://randomuser.me/api/portraits/men/${Math.floor((Math.random() * 99) + 1)}.jpg`;
     });
 
-    return of(filter(accounts, item => {
+    return of(filter(accounts, (item) => {
       return item.email.toLowerCase().match(new RegExp(query.keyword.toLowerCase()));
     }));
   };
@@ -81,13 +82,13 @@ export class FirstExampleComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    const v = of(true)
+    const submit = () => of(true)
       .pipe(
         delay(3000),
         switchMap(() => throwError('bad')),
       );
     setTimeout(() => {
-      this.form.registerSubmit(v);
+      this.form.registerSubmit(submit);
     });
   }
 
@@ -95,7 +96,7 @@ export class FirstExampleComponent implements OnInit {
     this.form.ngForm.ngSubmit.next();
   }
 
-  public fetchChips = keyword => {
+  public fetchChips = (keyword) => {
     return of(this.items);
   };
 
@@ -111,7 +112,7 @@ export class FirstExampleComponent implements OnInit {
           this.fsMessage.success('Validation successful');
         }),
       );
-  }
+  };
 
   public toggleDisable() {
     this.disabled = !this.disabled;
