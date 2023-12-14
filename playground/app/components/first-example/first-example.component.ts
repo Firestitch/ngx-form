@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 
 import { filter } from '@firestitch/common';
-import { FsForm, FsFormDirective } from '@firestitch/form';
+import { FsFormDirective } from '@firestitch/form';
 import { FsMessage } from '@firestitch/message';
 
-import { of, throwError } from 'rxjs';
-import { delay, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -15,7 +15,7 @@ import { delay, switchMap, tap } from 'rxjs/operators';
   styleUrls: ['./first-example.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FirstExampleComponent implements OnInit {
+export class FirstExampleComponent {
 
   @ViewChild(FsFormDirective)
   public form: FsFormDirective;
@@ -26,7 +26,7 @@ export class FirstExampleComponent implements OnInit {
   public validations = true;
   public lengthInput = '';
   public datepicker = null;
-  public checkbox: object[] = [];
+  public checkbox: any[] = [];
   public password = null;
   public passwordConfirm = null;
   public emails = null;
@@ -58,6 +58,14 @@ export class FirstExampleComponent implements OnInit {
 
   public selectedAccounts = [];
 
+  constructor(
+    private _message: FsMessage,
+  ) {
+    setTimeout(() => {
+      this.skeleton = true;
+    }, 2000);
+  }
+
   public searchAccounts = (query) => {
     const accounts: any[] = [
       { name: 'Bob', email: 'bob@gmail.com', id: 1 },
@@ -75,23 +83,6 @@ export class FirstExampleComponent implements OnInit {
     }));
   };
 
-  constructor(private fsMessage: FsMessage, private fsForm: FsForm) {
-    setTimeout(() => {
-      this.skeleton = true;
-    }, 2000);
-  }
-
-  public ngOnInit(): void {
-    const submit = () => of(true)
-      .pipe(
-        delay(3000),
-        switchMap(() => throwError('bad')),
-      );
-    setTimeout(() => {
-      this.form.registerSubmit(submit);
-    });
-  }
-
   public submit() {
     this.form.ngForm.ngSubmit.next();
   }
@@ -101,7 +92,7 @@ export class FirstExampleComponent implements OnInit {
   };
 
   public submitting() {
-    this.fsMessage.info('Submitting validation');
+    this._message.info('Submitting validation');
   }
 
   public save = () => {
@@ -109,7 +100,7 @@ export class FirstExampleComponent implements OnInit {
       .pipe(
         delay(2000),
         tap(() => {
-          this.fsMessage.success('Validation successful');
+          this._message.success('Validation successful');
         }),
       );
   };

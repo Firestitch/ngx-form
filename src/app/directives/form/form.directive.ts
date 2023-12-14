@@ -115,6 +115,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     this._submit$ = submit$;
   }
 
+  public get submit(): (event: SubmitEvent) => Observable<any> {
+    return this._submit$;
+  }
+
   @Input()
   public successDelay = 0;
 
@@ -273,10 +277,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     if (changes.confirm) {
       this._updateDirtySubmitButtons();
     }
-  }
-
-  public get hasSubmit(): boolean {
-    return this._submit$ !== null;
   }
 
   public clearSubmit(): void {
