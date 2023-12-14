@@ -1,22 +1,23 @@
-import { delay, tap } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { delay, switchMap, tap } from 'rxjs/operators';
 
-import { FsMessage } from '@firestitch/message';
-import { FsForm, FsFormDirective } from '@firestitch/form';
 import { filter } from '@firestitch/common';
+import { FsForm, FsFormDirective } from '@firestitch/form';
+import { FsMessage } from '@firestitch/message';
 
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 
 @Component({
   selector: 'first-example',
-  templateUrl: 'first-example.component.html',
-  styleUrls: ['first-example.component.css'],
+  templateUrl: './first-example.component.html',
+  styleUrls: ['./first-example.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FirstExampleComponent {
+export class FirstExampleComponent implements OnInit {
 
-  @ViewChild(FsFormDirective) form: FsFormDirective;
+  @ViewChild(FsFormDirective)
+  public form: FsFormDirective;
 
   public required = true;
   public hidden = false;
@@ -74,10 +75,20 @@ export class FirstExampleComponent {
   };
 
   constructor(private fsMessage: FsMessage, private fsForm: FsForm) {
-
     setTimeout(() => {
       this.skeleton = true;
-    }, 2000)
+    }, 2000);
+  }
+
+  public ngOnInit(): void {
+    const v = of(true)
+      .pipe(
+        delay(3000),
+        switchMap(() => throwError('bad')),
+      );
+    setTimeout(() => {
+      this.form.registerSubmit(v);
+    });
   }
 
   public submit() {
@@ -93,14 +104,13 @@ export class FirstExampleComponent {
   }
 
   public save = () => {
-    this.fsMessage.success('Validation successful');
     return of(true)
-    .pipe(
-      delay(2000),
-      tap(() => {
-        //(undefined as any).testConsoleError()
-      }),
-    );
+      .pipe(
+        delay(2000),
+        tap(() => {
+          this.fsMessage.success('Validation successful');
+        }),
+      );
   }
 
   public toggleDisable() {
