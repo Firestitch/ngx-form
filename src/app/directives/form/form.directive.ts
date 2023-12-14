@@ -70,6 +70,7 @@ import { SubmitEvent } from './../../interfaces/submit-event';
 
 @Directive({
   selector: '[fsForm]',
+  exportAs: 'fsForm',
 })
 export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnChanges {
 
