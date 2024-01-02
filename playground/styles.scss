@@ -1,10 +1,10 @@
-@use '~@angular/material' as mat;
-@import './~@firestitch/component-tools/assets/playground.scss';
-@import '~@firestitch/message/styles.scss';
-@import '~@firestitch/prompt/styles';
-@import '~@firestitch/datepicker/styles';
-@import '~@firestitch/dialog/styles';
-@import '~@firestitch/drawer/styles';
+@use 'node_modules/@angular/material' as mat;
+@import 'node_modules/@firestitch/component-tools/assets/playground.scss';
+@import 'node_modules/@firestitch/message/styles.scss';
+@import 'node_modules/@firestitch/prompt/styles';
+@import 'node_modules/@firestitch/datepicker/styles';
+@import 'node_modules/@firestitch/dialog/styles';
+@import 'node_modules/@firestitch/drawer/styles';
 @import '../src/app/styles';
 
 //@include fs-date-picker(mat.$blue-palette);
