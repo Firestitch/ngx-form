@@ -88,6 +88,10 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
+    this._subscribeToStatusChagnes();
+  }
+
+  protected _subscribeToStatusChagnes():void {
     if (this._control) {
       this._control.statusChanges
         .pipe(

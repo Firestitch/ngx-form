@@ -1,4 +1,4 @@
-import { Directive, Input, OnChanges } from '@angular/core';
+import { Directive, OnChanges } from '@angular/core';
 
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
@@ -38,6 +38,12 @@ export class FsFormNoFsValidatorsDirective extends FsControlDirective implements
 
   public ngOnChanges(): void {
     this._control.updateValueAndValidity();
+  }
+
+  protected _subscribeToStatusChagnes(): void {
+    if (!!this._control.validator || !!this._control.asyncValidator) {
+      super._subscribeToStatusChagnes();
+    }
   }
 
 }
