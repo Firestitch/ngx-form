@@ -1,20 +1,9 @@
-@use 'node_modules/@angular/material' as mat;
-@import 'node_modules/@firestitch/component-tools/assets/playground.scss';
-@import 'node_modules/@firestitch/message/styles.scss';
-@import 'node_modules/@firestitch/prompt/styles';
-@import 'node_modules/@firestitch/datepicker/styles';
-@import 'node_modules/@firestitch/dialog/styles';
-@import 'node_modules/@firestitch/drawer/styles';
+@use '@angular/material' as mat;
+@import '~@firestitch/component-tools/assets/playground.scss';
+@import "~@firestitch/form/styles";
+@import "~@firestitch/message/styles";
+@import "~@firestitch/skeleton/styles";
 @import '../src/app/styles';
 
-//@include fs-date-picker(mat.$blue-palette);
+
 @include fs-form($app-theme);
-@include fs-drawer(mat.$blue-palette);
-
-fieldset button {
-  margin-right: 5px !important;
-
-  &:last-child {
-    margin-right: 0px !important;
-  }
-}

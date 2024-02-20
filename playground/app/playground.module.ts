@@ -5,10 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FsFormModule, FormDeactivateGuard } from '@firestitch/form';
+import { FsFormModule } from '@firestitch/form';
 import { FsExampleModule } from '@firestitch/example';
 import { FsMessageModule } from '@firestitch/message';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
 import { FsSkeletonModule } from '@firestitch/skeleton';
@@ -19,8 +18,6 @@ import { FsApiModule } from '@firestitch/api';
 import { FsPromptModule } from '@firestitch/prompt';
 import { FsDialogModule } from '@firestitch/dialog';
 import { FsTabsModule } from '@firestitch/tabs';
-
-import { ToastrModule } from 'ngx-toastr';
 
 import { AppMaterialModule } from './material.module';
 
@@ -57,13 +54,10 @@ import { DialogSaveComponent } from './components/dialog-save/dialog-save.compon
         FsExampleModule.forRoot(),
         FsMessageModule.forRoot(),
         FsDialogModule.forRoot(),
-        ToastrModule.forRoot({ preventDuplicates: true }),
         FsDatePickerModule.forRoot(),
         FsCheckboxGroupModule,
         FsRadioGroupModule,
-        FlexLayoutModule,
         FsApiModule,
-        FlexLayoutModule,
         FsPromptModule,
         FsTabsModule.forRoot(),
         FsPhoneModule.forRoot(),
