@@ -29,9 +29,10 @@ export { FsButtonDirective } from './app/directives/button.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';
 export { FsFormValidateDirective } from './app/directives/validators/validate.directive';
 export { FsFormNoFsValidatorsDirective } from './app/directives/validators/no-fs-validators.directive';
+export { FsFormTemplateDirective } from './app/directives';
 
 // Components
-export { FsFormDialogActionsComponent } from './app/components/form-dialog-actions/form-dialog-actions.component';
+export { FsFormDialogActionsComponent, FsFormTemplateComponent, FsFormTemplateOutletComponent } from './app/components';
 
 export { FsValidators } from './app/validators/validators';
 

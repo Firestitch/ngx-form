@@ -10,6 +10,7 @@
     <button
         mat-button
         type="button"
+        class="close-button"
         [disabled]="close && !dirty && !create"
         [matDialogClose]="null">
       Cancel
@@ -34,9 +35,10 @@
     <button
         mat-button
         type="button"
-        class="close"
-        [color]="dirty ? 'basic' : 'primary'"
-        (click)="closeClick()">
+        class="close-button"
+        fsFormDialogClose
+        [closeData]="closeData"
+        [color]="dirty ? 'basic' : 'primary'">
       Close
     </button>
   </ng-container>

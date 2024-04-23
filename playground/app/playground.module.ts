@@ -21,74 +21,61 @@ import { FsTabsModule } from '@firestitch/tabs';
 
 import { AppMaterialModule } from './material.module';
 
-import { TabsExampleComponent } from './components/tabs-example/tabs-example.component';
-import { DrawerExampleComponent } from './components/drawer-example/drawer-example.component';
-import { DrawerComponent } from './components/drawer/drawer.component';
-import { FirstExampleComponent } from './components/first-example/first-example.component';
-import { EmitExampleComponent } from './components/emit-example/emit-example.component';
-import { BroadcastExampleComponent } from './components/broadcast-example/broadcast-example.component';
-import { FunctionComponent } from './components/function/function.component';
-import { NestedComponent } from './components/nested/nested.component';
-import { NestedLevel1Component } from './components/nested-level-1/nested-level-1.component';
-import { ExamplesComponent } from './components/examples';
-import { NonMaterialComponent } from './components/non-material/non-material.component';
-import { NestedLevel2Component } from './components/nested-level-2/nested-level-2.component';
-import { SubmitObservableComponent } from './components/submit-observable/submit-observable.component';
-import { DeactivateComponent } from './components/deactivate/deactivate.component';
-import { DeactivateLeaveComponent } from './components/deactivate-leave/deactivate-leave.component';
-import { DialogExampleComponent } from './components/dialog-example/dialog-example.component';
-import { DialogComponent } from './components/dialog/dialog.component';
-import { DialogCreateComponent } from './components/dialog-create/dialog-create.component';
-import { DialogSaveComponent } from './components/dialog-save/dialog-save.component';
+
+import { BroadcastExampleComponent, DeactivateComponent, DeactivateLeaveComponent, DialogComponent, DialogCreateComponent, DialogExampleComponent, DialogSaveComponent, DrawerComponent, DrawerExampleComponent, EmitExampleComponent, ExamplesComponent, FirstExampleComponent, FunctionComponent, NestedComponent, NestedLevel1Component, NestedLevel2Component, NonMaterialComponent, SubmitObservableComponent, TabsExampleComponent, TemplateComponent } from './components';
+import { FsStoreModule } from '@firestitch/store';
 
 
 @NgModule({
-    bootstrap: [AppComponent],
-    imports: [
-        BrowserModule,
-        FsFormModule,
-        BrowserAnimationsModule,
-        AppMaterialModule,
-        FormsModule,
-        FsSkeletonModule,
-        FsExampleModule.forRoot(),
-        FsMessageModule.forRoot(),
-        FsDialogModule.forRoot(),
-        FsDatePickerModule.forRoot(),
-        FsCheckboxGroupModule,
-        FsRadioGroupModule,
-        FsApiModule,
-        FsPromptModule,
-        FsTabsModule.forRoot(),
-        FsPhoneModule.forRoot(),
-        FsAutocompleteChipsModule.forRoot(),
-        RouterModule.forRoot([
-            { path: '', component: ExamplesComponent },
-            { path: 'leave', component: DeactivateLeaveComponent },
-        ], { relativeLinkResolution: 'legacy' }),
-    ],
-    declarations: [
-        AppComponent,
-        FirstExampleComponent,
-        EmitExampleComponent,
-        BroadcastExampleComponent,
-        FunctionComponent,
-        NestedComponent,
-        NestedLevel1Component,
-        NestedLevel2Component,
-        ExamplesComponent,
-        NonMaterialComponent,
-        SubmitObservableComponent,
-        DeactivateComponent,
-        DeactivateLeaveComponent,
-        DialogExampleComponent,
-        DialogComponent,
-        DrawerComponent,
-        DrawerExampleComponent,
-        TabsExampleComponent,
-        DialogCreateComponent,
-        DialogSaveComponent,
-    ]
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    FsFormModule,
+    FsStoreModule.forRoot(),
+    BrowserAnimationsModule,
+    AppMaterialModule,
+    FormsModule,
+    FsSkeletonModule,
+    FsExampleModule.forRoot(),
+    FsMessageModule.forRoot(),
+    FsDialogModule.forRoot(),
+    FsDatePickerModule.forRoot(),
+    FsCheckboxGroupModule,
+    FsRadioGroupModule,
+    FsApiModule,
+    FsPromptModule,
+    FsTabsModule.forRoot(),
+    FsPhoneModule.forRoot(),
+    FsAutocompleteChipsModule.forRoot(),
+    RouterModule.forRoot([
+        { path: '', component: ExamplesComponent },
+        { path: 'leave', component: DeactivateLeaveComponent },
+    ], 
+    { relativeLinkResolution: 'legacy' }),
+  ],
+  declarations: [
+    AppComponent,
+    FirstExampleComponent,
+    EmitExampleComponent,
+    BroadcastExampleComponent,
+    FunctionComponent,
+    NestedComponent,
+    NestedLevel1Component,
+    NestedLevel2Component,
+    ExamplesComponent,
+    NonMaterialComponent,
+    SubmitObservableComponent,
+    DeactivateComponent,
+    DeactivateLeaveComponent,
+    DialogExampleComponent,
+    DialogComponent,
+    DrawerComponent,
+    DrawerExampleComponent,
+    TabsExampleComponent,
+    DialogCreateComponent,
+    DialogSaveComponent,
+    TemplateComponent,
+  ]
 })
 export class PlaygroundModule {
 }

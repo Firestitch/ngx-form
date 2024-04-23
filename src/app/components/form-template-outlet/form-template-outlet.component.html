@@ -1,0 +1,6 @@
+
+{{formTemplate.templateRef|json}}
+
+<ng-container *ngIf="formTemplate">
+  <ng-container [ngTemplateOutlet]="formTemplate.templateRef"></ng-container> 
+</ng-container>

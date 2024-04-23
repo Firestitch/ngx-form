@@ -1,7 +1,6 @@
 
 <form fsForm [submit]="save" (submit)="submitting()" (invalid)="invalid()">
-  <div fxLayout="column">
-
+  <div class="fs-column">
     <fs-radio-group
       *ngIf="render"
       [(ngModel)]="radioRequired"
@@ -33,7 +32,7 @@
         </ng-template>
     </fs-autocomplete-chips>
 
-    <div fxLayout="row" *ngIf="render">
+    <div class="fs-row" *ngIf="render">
       <mat-form-field>
           <input placeholder="Password"
             #passwordInput
@@ -168,7 +167,7 @@
         placeholder="Date">
     </mat-form-field>
 
-    <div fxLayout="row" fxLayoutAlign="start center" *ngIf="render">
+    <div class="fs-row.gap-xs" *ngIf="render">
       <mat-form-field>
         <input
           matInput
@@ -191,7 +190,7 @@
       </mat-form-field>
     </div>
 
-    <div fxLayout="row wrap" fxLayoutGap="5px">
+    <div class="fs-row.gap-xs">
       <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>

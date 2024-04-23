@@ -60,7 +60,6 @@ import { getActiveRoute } from '../../helpers/get-active-route';
 import { getFormErrors } from '../../helpers/get-form-errors';
 import { FsForm } from '../../services/fsform.service';
 import { FsButtonDirective } from '../button.directive';
-import { FsFormDialogCloseDirective } from '../form-dialog-close.directive';
 
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FormStatus } from './../../enums/form-status';
@@ -151,9 +150,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   @HostBinding('class.fs-form')
   public fsFormClass = true;
-
-  @ContentChildren(FsFormDialogCloseDirective, { descendants: true })
-  public formDialogClose: QueryList<FsFormDialogCloseDirective>;
 
   @ContentChildren(MatTabGroup, { descendants: true })
   private _tabGroups: QueryList<MatTabGroup> = new QueryList();
@@ -297,7 +293,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   public ngAfterContentInit(): void {
     this._registerConfirm();
-    this._registerConfirmDialogClose();
     this._registerConfirmDrawerClose();
     this._registerConfirmTabs();
     this._registerDrawerClose();
@@ -528,20 +523,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
   }
 
-  private _registerDialogClose(directive: FsFormDialogCloseDirective): void {
-    if (!directive.registered) {
-      directive.registered = true;
-
-      directive.clicked$
-        .pipe(
-          takeUntil(this._destroy$),
-        )
-        .subscribe(() => {
-          this._formClose();
-        });
-    }
-  }
-
   private _getActiveSubmitButton(): FsButtonDirective {
     const submitButtons = this._buttons
       .filter((button) => button.submit);
@@ -706,7 +687,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
 
     this.registerConfirmTabGroups(this._tabGroups.toArray());
-
     this._tabGroups.changes
       .pipe(
         takeUntil(this._destroy$),
@@ -757,24 +737,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
           }
         }
       });
-  }
-
-  private _registerConfirmDialogClose(): void {
-    if (this._dialogRef) {
-      this.formDialogClose.forEach((item) => {
-        this._registerDialogClose(item);
-      });
-
-      this.formDialogClose.changes
-        .pipe(
-          takeUntil(this._destroy$),
-        )
-        .subscribe((e) => {
-          e.forEach((item) => {
-            this._registerDialogClose(item);
-          });
-        });
-    }
   }
 
   private _registerConfirmDialogBackdropEscape(): void {

@@ -66,21 +66,6 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
-  public closeClick(): void {
-    if(this._form) {
-      this._form.triggerConfirm()
-      .pipe(
-        filter((confirmResult: ConfirmResult) => (confirmResult !== ConfirmResult.Review)),
-        takeUntil(this._destroy$),
-      )
-      .subscribe(() => {
-        this._dialogRef.close(this.closeData);
-      });
-    } else {
-      this._dialogRef.close(this.closeData);
-    }
-  }
 
   public ngOnDestroy(): void {
     this._destroy$.next();

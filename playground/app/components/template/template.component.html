@@ -1,0 +1,28 @@
+<form (fsForm)="save()">
+  <div class="fs-column">
+    <mat-form-field>
+      <input placeholder="Firstname"
+        [(ngModel)]="firstname"
+        name="firstname"
+        matInput
+        fsFormRequired="true"/>
+    </mat-form-field>
+    <fs-form-template-outlet [formTemplate]="emailTemplate"></fs-form-template-outlet>
+    <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit">
+      Submit
+    </button>
+  </div>
+</form>
+<fs-form-template #emailTemplate>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      [(ngModel)]="email"
+      name="email">
+  </mat-form-field>
+</fs-form-template>
+

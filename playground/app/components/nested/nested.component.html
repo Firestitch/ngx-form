@@ -8,8 +8,13 @@
   </mat-form-field>
   <br>
 
-  <nested-level-1></nested-level-1>
-
   <br>
+
+  <ng-container [ngTemplateOutlet]="emailTemplate"></ng-container>
+  <br>
+  <ng-template #emailTemplate>
+      <nested-level-1></nested-level-1> 
+  </ng-template>
+
   <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>

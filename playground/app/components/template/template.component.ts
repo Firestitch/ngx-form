@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { FsMessage } from '@firestitch/message';
 
 @Component({
-  selector: 'nested',
-  templateUrl: 'nested.component.html',
-  styleUrls: ['nested.component.scss'],
+  selector: 'app-template',
+  templateUrl: './template.component.html',
+  styleUrls: ['./template.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NestedComponent {
+export class TemplateComponent {
 
   public firstname;
   public email;
