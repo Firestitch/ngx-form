@@ -30,7 +30,7 @@ import { FsButtonDirective } from './directives/button.directive';
 import { FsFormValidateDirective } from './directives/validators/validate.directive';
 import { FsFormDialogActionsComponent } from './components/form-dialog-actions/form-dialog-actions.component';
 import { FsFormNoFsValidatorsDirective } from './directives/validators/no-fs-validators.directive';
-import { FsFormTemplateDirective, FsSubmitButtonDirective } from './directives';
+import { FsFormGreaterEqualDirective, FsFormLesserEqualDirective, FsFormTemplateDirective, FsSubmitButtonDirective } from './directives';
 import { FsFormTemplateComponent, FsFormTemplateOutletComponent } from './components';
 
 
@@ -60,7 +60,9 @@ import { FsFormTemplateComponent, FsFormTemplateOutletComponent } from './compon
     FsFormFunctionDirective,
     FsFormDateRangeDirective,
     FsFormGreaterDirective,
+    FsFormGreaterEqualDirective,
     FsFormLesserDirective,
+    FsFormLesserEqualDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective,
     FsFormValidateDirective,
@@ -90,7 +92,9 @@ import { FsFormTemplateComponent, FsFormTemplateOutletComponent } from './compon
     FsFormFunctionDirective,
     FsFormDateRangeDirective,
     FsFormGreaterDirective,
+    FsFormGreaterEqualDirective,
     FsFormLesserDirective,
+    FsFormLesserEqualDirective,
     FsFormUrlDirective,
     FsFormDialogCloseDirective,
     FsFormValidateDirective,

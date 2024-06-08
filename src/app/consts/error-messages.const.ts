@@ -16,4 +16,6 @@ export const ERROR_MESSAGES = {
   urlProtocol: 'Invalid URL. Proper http protocol is required. eg. https://google.com',
   greater: 'Value must be greater than $(1)',
   lesser: 'Value must be less than $(1)',
+  greaterEqual: 'Value must be greater than or equal $(1)',
+  lesserEqual: 'Value must be less than or equal $(1)',
 };

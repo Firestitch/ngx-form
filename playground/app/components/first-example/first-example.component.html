@@ -73,7 +73,7 @@
     <mat-form-field *ngIf="render">
       <input placeholder="Phone"
         [(ngModel)]="phone"
-        name="phone_input"
+        name="phoneInput"
         matInput
         [fsFormPhone]="validations"
         fsPhone
@@ -83,7 +83,7 @@
     <mat-form-field *ngIf="render">
       <input placeholder="Url"
         [(ngModel)]="url"
-        name="url_input"
+        name="urlInput"
         matInput
         [fsFormUrl]="validations"
       />
@@ -92,7 +92,7 @@
     <mat-form-field *ngIf="render">
       <input placeholder="Numeric"
         [(ngModel)]="numeric"
-        name="numeric_input"
+        name="numericInput"
         matInput
         [fsFormNumeric]="validations"
         />
@@ -104,7 +104,16 @@
         [(ngModel)]="model.greater"
         name="greater"
         matInput
-        fsFormGreater="0"/>
+        [fsFormGreater]="0"/>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="render">
+      <input
+        placeholder="Greater or equal"
+        [(ngModel)]="model.greaterEqual"
+        name="greaterEqual"
+        matInput
+        [fsFormGreaterEqual]="0"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -113,7 +122,16 @@
         [(ngModel)]="model.lesser"
         name="lesser"
         matInput
-        fsFormLesser="10"/>
+        [fsFormLesser]="10"/>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="render">
+      <input
+        placeholder="Lesser or equal"
+        [(ngModel)]="model.lesserEqual"
+        name="lesserEqual"
+        matInput
+        [fsFormLesserEqual]="10"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -122,7 +140,7 @@
         [(ngModel)]="model.min"
         name="min"
         matInput
-        fsFormMin="10"/>
+        [fsFormMin]="10"/>
     </mat-form-field>
 
     <mat-form-field *ngIf="render">
@@ -190,7 +208,7 @@
       </mat-form-field>
     </div>
 
-    <div class="fs-row.gap-xs">
+    <div class="fs-row.gap-xs.wrap">
       <button mat-raised-button color="primary" type="submit">Submit</button>
       <button mat-raised-button color="primary" type="button" (click)="required = !(!!required)">{{required ? 'Disable Required' : 'Enable Required'}}</button>
       <button mat-raised-button color="primary" type="button" (click)="validations = !validations">{{validations ? 'Disable Validations' : 'Enable Validations'}}</button>

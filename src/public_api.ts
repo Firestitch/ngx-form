@@ -21,7 +21,6 @@ export { FsFormNumericDirective } from './app/directives/validators/numeric.dire
 export { FsFormPatternDirective } from './app/directives/validators/pattern.directive';
 export { FsFormFunctionDirective } from './app/directives/validators/function.directive';
 export { FsFormDateRangeDirective } from './app/directives/validators/daterange.directive';
-export { FsFormGreaterDirective } from './app/directives/validators/greater.directive';
 export { FsFormLesserDirective } from './app/directives/validators/lesser.directive';
 export { FsFormUrlDirective } from './app/directives/validators/url.directive';
 export { FsFormDialogCloseDirective } from './app/directives/form-dialog-close.directive';
@@ -29,7 +28,7 @@ export { FsButtonDirective } from './app/directives/button.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';
 export { FsFormValidateDirective } from './app/directives/validators/validate.directive';
 export { FsFormNoFsValidatorsDirective } from './app/directives/validators/no-fs-validators.directive';
-export { FsFormTemplateDirective } from './app/directives';
+export { FsFormTemplateDirective, FsFormGreaterEqualDirective, FsFormLesserEqualDirective, FsFormGreaterDirective } from './app/directives';
 
 // Components
 export { FsFormDialogActionsComponent, FsFormTemplateComponent, FsFormTemplateOutletComponent } from './app/components';

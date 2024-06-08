@@ -19,6 +19,7 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
     ':not([fsFormEmails])' +
     ':not([fsFormFunction])' +
     ':not([fsFormGreater])' +
+    ':not([fsFormGreaterEqual])' +
     ':not([fsFormInteger])' +
     ':not([fsFormLesser])' +
     ':not([fsFormMax])' +
