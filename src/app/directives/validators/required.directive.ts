@@ -1,16 +1,17 @@
 import { Directive, Input, OnChanges } from '@angular/core';
 import { AbstractControl, ValidationErrors, Validators } from '@angular/forms';
 
-import { FsControlDirective } from './control.directive';
-import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 import { isEnabled } from '../../helpers/is-enabled';
 import { FsValidator } from '../../interfaces/validator';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
   selector: '[fsFormRequired],[ngModel][required]',
   providers: [
-    VALIDATE_MESSAGE_PROVIDER
+    VALIDATE_MESSAGE_PROVIDER,
   ],
 })
 export class FsFormRequiredDirective extends FsControlDirective implements OnChanges, FsValidator {
@@ -38,9 +39,10 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
   public validate(control: AbstractControl): ValidationErrors | null {
     if (this.required) {
       return Validators.required(this._control);
-    } else {
-      return null;
     }
+ 
+    return null;
+    
   }
 
   protected render() {

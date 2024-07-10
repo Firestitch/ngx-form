@@ -7,7 +7,7 @@ export function getFormErrors(control: AbstractControl, key: string): Validation
   if (control.invalid && control.errors) {
     errors = {
       [key]: { ...control.errors },
-    }
+    };
   }
 
   if (control instanceof FormGroup) {

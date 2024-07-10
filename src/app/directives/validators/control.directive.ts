@@ -1,28 +1,28 @@
 import {
-  Input,
-  ElementRef,
-  Renderer2,
-  Directive,
-  Injector,
-  Optional,
-  Inject,
-  Self,
-  OnInit,
-  OnDestroy,
   AfterContentInit,
+  Directive,
+  ElementRef,
+  Inject,
+  Injector,
+  Input,
+  OnDestroy,
+  OnInit,
+  Optional,
+  Renderer2,
+  Self,
 } from '@angular/core';
-import { NgControl, AbstractControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, NgControl, ValidationErrors } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { values, keys } from 'lodash-es';
+import { keys, values } from 'lodash-es';
 
-import { FsFormDirective } from '../form/form.directive';
 import {
   VALIDATE_MESSAGE_PROVIDER,
-  VALIDATE_MESSAGES
+  VALIDATE_MESSAGES,
 } from '../../providers/validate-messages.provider';
+import { FsFormDirective } from '../form/form.directive';
 
 
 export interface FsControlDirective {
@@ -34,19 +34,19 @@ export interface FsControlDirective {
 @Directive({
   selector: '[fsFormControl]',
   providers: [
-    VALIDATE_MESSAGE_PROVIDER
+    VALIDATE_MESSAGE_PROVIDER,
   ],
 })
 export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
-  @Input() wrapperSelector: string | false;
-  @Input() messageSelector: string | false;
-  @Input() hintSelector: string | false;
-  @Input() labelSelector: string | false;
-  @Input() appendMessageClass = 'fs-form-message';
-  @Input() appendLabelClass = 'fs-form-label';
-  @Input() appendErrorClass = 'fs-form-error';
-  @Input() appendHintClass = 'fs-form-hint';
+  @Input() public wrapperSelector: string | false;
+  @Input() public messageSelector: string | false;
+  @Input() public hintSelector: string | false;
+  @Input() public labelSelector: string | false;
+  @Input() public appendMessageClass = 'fs-form-message';
+  @Input() public appendLabelClass = 'fs-form-label';
+  @Input() public appendErrorClass = 'fs-form-error';
+  @Input() public appendHintClass = 'fs-form-hint';
 
   @Input()
   public set validateMessages(messages: Record<string, string>) {
@@ -58,12 +58,12 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
   public errors = [];
 
-  // protected _validateMessages = { ...ERROR_MESSAGES };
-  protected _destroy$ = new Subject();
   protected _control: AbstractControl;
 
+  private _destroy$ = new Subject();
+
   constructor(
-    protected elementRef: ElementRef,
+    protected _elementRef: ElementRef,
     protected renderer2: Renderer2,
     protected injector: Injector,
     @Self() @Inject(VALIDATE_MESSAGES) protected _validateMessages,
@@ -74,35 +74,24 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (ngControl) {
       this._control = ngControl.control;
     } else {
-      console.error('The element does not have a valid ngModel', this.elementRef.nativeElement);
+      console.error('The element does not have a valid ngModel', this._elementRef.nativeElement);
     }
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     this._setupValidators();
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this._destroy$.next();
     this._destroy$.complete();
   }
 
-  ngAfterContentInit() {
+  public ngAfterContentInit() {
     this._subscribeToStatusChagnes();
   }
 
-  protected _subscribeToStatusChagnes():void {
-    if (this._control) {
-      this._control.statusChanges
-        .pipe(
-          takeUntil(this._destroy$)
-        )
-        .subscribe(this.render.bind(this));
-    }
-  }
-
-  protected getMessageSelector(): string {
-
+  public getMessageSelector(): string {
     if (this.messageSelector === false) {
       return '';
     }
@@ -115,8 +104,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-  protected getHintWrapperSelector(): string {
-
+  public getHintWrapperSelector(): string {
     if (this.hintSelector === false) {
       return '';
     }
@@ -129,8 +117,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-  protected getWrapperSelector(): string {
-
+  public getWrapperSelector(): string {
     if (this.wrapperSelector === false) {
       return '';
     }
@@ -143,7 +130,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-  protected getlabelSelector(): string {
+  public getlabelSelector(): string {
 
     if (this.labelSelector === false) {
       return '';
@@ -157,15 +144,15 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-  protected getWrapperElement() {
+  public getWrapperElement() {
 
-    const wrapper = this.getWrapper(this.elementRef.nativeElement);
+    const wrapper = this.getWrapper(this._elementRef.nativeElement);
 
     if (wrapper) {
       return wrapper;
     }
 
-    return this.elementRef.nativeElement;
+    return this._elementRef.nativeElement;
   }
 
   /*
@@ -177,7 +164,6 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       </div>
     </mat-form-field>
   */
-
   protected render() {
     if (this.ngControl) {
       const renderer = this.renderer2;
@@ -199,7 +185,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       const messageWrapper = wrapper.querySelector(this.getMessageSelector());
 
       if (!messageWrapper) {
-        return console.warn('Failed to locate ' + this.getMessageSelector(), this.elementRef.nativeElement);
+        return console.warn(`Failed to locate ${  this.getMessageSelector()}`, this._elementRef.nativeElement);
       }
 
       if (this.getlabelSelector()) {
@@ -240,7 +226,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       errorWrapper = renderer.createElement('div');
       renderer.addClass(errorWrapper, 'fs-form-error-target');
       renderer.addClass(errorWrapper, this.appendErrorClass);
-      renderer.addClass(errorWrapper, this.appendErrorClass + '-' + error.name);
+      renderer.addClass(errorWrapper, `${this.appendErrorClass  }-${  error.name}`);
 
       const errorText = renderer.createText(error.message);
 
@@ -249,8 +235,18 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-  protected getWrapper(node, count = 0) {
+  protected _subscribeToStatusChagnes():void {
+    if (this._control) {
+      this._control.statusChanges
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe(this.render.bind(this));
+    }
+  }
 
+
+  protected getWrapper(node, count = 0) {
     if (!node || count > 10) {
       return null;
     }
@@ -265,7 +261,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   protected parseErrorMessage(message, args): string {
     values(args)
       .forEach((name) => {
-          message = message.replace(/\$\(\d\)/, name);
+        message = message.replace(/\$\(\d\)/, name);
       });
 
     return message;
@@ -293,7 +289,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
     if (this.validate) {
       const validators = control.validator
-        ? [ control.validator, this.validate.bind(this)]
+        ? [control.validator, this.validate.bind(this)]
         : this.validate.bind(this);
 
       control.setValidators(validators);
@@ -301,7 +297,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
     if (this.validateAsync) {
       const asyncValidators = control.asyncValidator
-        ? [ control.asyncValidator, this.validateAsync.bind(this)]
+        ? [control.asyncValidator, this.validateAsync.bind(this)]
         : this.validateAsync.bind(this);
 
       control.setAsyncValidators(asyncValidators);

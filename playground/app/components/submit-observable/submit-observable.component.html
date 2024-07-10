@@ -11,18 +11,20 @@
 
     <mat-form-field>
       <input placeholder="Delay"
-        [(ngModel)]="delay"
-        name="delay"
-        matInput/>
+          [(ngModel)]="delay"
+          name="delay"
+          matInput/>
         <div matSuffix>ms</div>
     </mat-form-field>
   </div>
 
   <fieldset>
     <legend>Actions</legend>
-    <button mat-raised-button color="primary" type="submit" (click)="status(true)">Successful Submit</button>
-    <button mat-raised-button color="primary" type="submit" (click)="status(false)">Unsuccessful Submit</button>
-    <button mat-button color="primary" type="submit" (click)="status(true)">Successful Submit</button>
-    <button mat-button color="primary" type="submit" (click)="status(false)">Unsuccessful Submit</button>
+    <div class="fs-row.gap-sm.wrap">
+      <button mat-raised-button color="primary" type="submit" (click)="status(true)">Successful Submit</button>
+      <button mat-raised-button color="primary" type="submit" (click)="status(false)">Unsuccessful Submit</button>
+      <button mat-button color="primary" type="submit" (click)="status(true)">Successful Submit</button>
+      <button mat-button color="primary" type="submit" (click)="status(false)">Unsuccessful Submit</button>
+    </div>
   </fieldset>
 </form>

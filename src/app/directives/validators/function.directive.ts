@@ -3,16 +3,17 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { Observable, of } from 'rxjs';
 
-import { FsControlDirective } from './control.directive';
-import { FsValidators } from '../../validators/validators';
-import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 import { FsAsyncValidator } from '../../interfaces/async-validator';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidators } from '../../validators/validators';
+
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
   selector: '[fsFormFunction]',
   providers: [
-    VALIDATE_MESSAGE_PROVIDER
+    VALIDATE_MESSAGE_PROVIDER,
   ],
 })
 export class FsFormFunctionDirective extends FsControlDirective implements OnChanges, FsAsyncValidator {

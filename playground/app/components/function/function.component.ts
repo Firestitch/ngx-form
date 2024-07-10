@@ -1,15 +1,16 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+
 import { FsMessage } from '@firestitch/message';
+
 import { of, throwError } from 'rxjs';
 
 @Component({
   selector: 'function',
-  templateUrl: 'function.component.html',
-  styleUrls: ['function.component.scss']
+  templateUrl: './function.component.html',
+  styleUrls: ['./function.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FunctionComponent {
-
-  constructor(private fsMessage: FsMessage) { }
 
   @ViewChild('form', { static: true }) form;
 
@@ -22,9 +23,14 @@ export class FunctionComponent {
   public functionException = null;
   public functionAnonymous = null;
 
+
+  constructor(
+    private _message: FsMessage,
+  ) { }
+
   public validateObservable = (formControl) => {
     if (formControl.value !== this.email) {
-      return throwError('Email should match ' + this.email);
+      return throwError(`Email should match ${  this.email}`);
     }
 
     return of(true);
@@ -34,10 +40,9 @@ export class FunctionComponent {
     if (String(formControl.value).length <= this.minLength) {
       throw new Error('The length must be greater then 3 characters');
     }
-  }
+  };
 
   public anonymousFunctionException(formControl) {
-
     if (String(formControl.value).length <= 3) {
       throw 'The length must be greater then 3 characters';
     }
@@ -45,10 +50,9 @@ export class FunctionComponent {
 
   public radioFunctionChange() {
     this.form.controls.radio_function.updateValueAndValidity();
-  };
+  }
 
   public radioFunction = ((formControl) => {
-
     if (formControl.dirty && !this.radioFunctionModel) {
       throw 'Invalid selection.';
     }
@@ -70,6 +74,6 @@ export class FunctionComponent {
   });
 
   public save() {
-    this.fsMessage.success('Validation successful');
+    this._message.success('Validation successful');
   }
 }

@@ -380,6 +380,15 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       ]);
   }
 
+  public validate(): void {
+    Object.values(this.ngForm.controls)
+      .forEach((control) => {
+        control.markAsDirty();
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      });
+  }
+
   private _listenSubmit(): void {
     this.ngForm
       .ngSubmit
@@ -428,16 +437,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         }),
         takeUntil(this._destroy$),
       )
-      .subscribe(() => { });
-  }
-
-  public validate(): void {
-    Object.values(this.ngForm.controls)
-      .forEach((control) => {
-        control.markAsDirty();
-        control.markAsTouched();
-        control.updateValueAndValidity();
-      });
+      .subscribe();
   }
 
   private _listenFormStatus(): void {
@@ -683,26 +683,26 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   private _registerConfirmTabs(): void {
     if (this.tabGroup) {
-      this.registerConfirmTabGroup(this.tabGroup);
+      this._registerConfirmTabGroup(this.tabGroup);
     }
 
-    this.registerConfirmTabGroups(this._tabGroups.toArray());
+    this._registerConfirmTabGroups(this._tabGroups.toArray());
     this._tabGroups.changes
       .pipe(
         takeUntil(this._destroy$),
       )
       .subscribe(() => {
-        this.registerConfirmTabGroups(this._tabGroups.toArray());
+        this._registerConfirmTabGroups(this._tabGroups.toArray());
       });
   }
 
-  public registerConfirmTabGroups(tabGroups: MatTabGroup[]): void {
+  private _registerConfirmTabGroups(tabGroups: MatTabGroup[]): void {
     tabGroups.forEach((tabGroup: MatTabGroup) => {
-      this.registerConfirmTabGroup(tabGroup);
+      this._registerConfirmTabGroup(tabGroup);
     });
   }
 
-  public registerConfirmTabGroup(tabGroup: MatTabGroup): void {
+  private _registerConfirmTabGroup(tabGroup: MatTabGroup): void {
     const confirmTabGroup = tabGroup as ConfirmTabGroup;
     if (!confirmTabGroup._originalHandleClick) {
       confirmTabGroup._originalHandleClick = tabGroup._handleClick;
@@ -872,7 +872,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       this._activatedRouteConfig.canDeactivate = [];
     }
 
-    if (this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard) == -1) {
+    if (this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard) === -1) {
       this._activatedRouteConfig.canDeactivate.push(FormDeactivateGuard);
     }
   }

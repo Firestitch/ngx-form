@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 
-import { Subject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { FsFormDirective } from '../directives/form/form.directive';
@@ -27,15 +27,15 @@ export class FsForm {
 
   // @deprecated
   public broadcast(key: any, data?: any) {
-    this._eventBus.next({key, data});
+    this._eventBus.next({ key, data });
   }
 
   // @deprecated
   public on<T>(key: any): Observable<T> {
     return this._eventBus.asObservable()
       .pipe(
-        filter(event => event.key === key),
-        map(event => <T>event.data)
+        filter((event) => event.key === key),
+        map((event) => <T>event.data),
       );
   }
 

@@ -1,8 +1,10 @@
-import { Directive, Input, OnDestroy, AfterViewInit, OnChanges } from '@angular/core';
-import { FsControlDirective } from './control.directive';
-import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { AfterViewInit, Directive, Input, OnChanges, OnDestroy } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+
 import { FsValidator } from '../../interfaces/validator';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
@@ -27,11 +29,12 @@ export class FsFormCompareDirective extends FsControlDirective
   }
 
   public validate(control: AbstractControl): ValidationErrors | null {
-    if (this.fsFormCompare.value === this.elementRef.nativeElement.value) {
+    if (this.fsFormCompare.value === this._elementRef.nativeElement.value) {
       return null;
-    } else {
-      return { compare: true };
     }
+ 
+    return { compare: true };
+    
   }
 
   public ngAfterViewInit() {
