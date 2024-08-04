@@ -1,29 +1,28 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppComponent } from './app.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { FsFormModule } from '@firestitch/form';
-import { FsExampleModule } from '@firestitch/example';
-import { FsMessageModule } from '@firestitch/message';
-import { FsDatePickerModule } from '@firestitch/datepicker';
-import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
-import { FsSkeletonModule } from '@firestitch/skeleton';
-import { FsRadioGroupModule } from '@firestitch/radiogroup';
-import { FsPhoneModule } from '@firestitch/phone';
-import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
+
 import { FsApiModule } from '@firestitch/api';
-import { FsPromptModule } from '@firestitch/prompt';
+import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
+import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
+import { FsDatePickerModule } from '@firestitch/datepicker';
 import { FsDialogModule } from '@firestitch/dialog';
+import { FsExampleModule } from '@firestitch/example';
+import { FsFormModule } from '@firestitch/form';
+import { FsMessageModule } from '@firestitch/message';
+import { FsPhoneModule } from '@firestitch/phone';
+import { FsRadioGroupModule } from '@firestitch/radiogroup';
+import { FsSkeletonModule } from '@firestitch/skeleton';
+import { FsStoreModule } from '@firestitch/store';
 import { FsTabsModule } from '@firestitch/tabs';
 
-import { AppMaterialModule } from './material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-
+import { AppComponent } from './app.component';
 import { BroadcastExampleComponent, DeactivateComponent, DeactivateLeaveComponent, DialogComponent, DialogCreateComponent, DialogExampleComponent, DialogSaveComponent, DrawerComponent, DrawerExampleComponent, EmitExampleComponent, ExamplesComponent, FirstExampleComponent, FunctionComponent, NestedComponent, NestedLevel1Component, NestedLevel2Component, NonMaterialComponent, SubmitObservableComponent, TabsExampleComponent, TemplateComponent } from './components';
-import { FsStoreModule } from '@firestitch/store';
+import { AppMaterialModule } from './material.module';
 
 
 @NgModule({
@@ -43,13 +42,12 @@ import { FsStoreModule } from '@firestitch/store';
     FsCheckboxGroupModule,
     FsRadioGroupModule,
     FsApiModule,
-    FsPromptModule,
     FsTabsModule.forRoot(),
     FsPhoneModule.forRoot(),
     FsAutocompleteChipsModule.forRoot(),
     RouterModule.forRoot([
-        { path: '', component: ExamplesComponent },
-        { path: 'leave', component: DeactivateLeaveComponent },
+      { path: '', component: ExamplesComponent },
+      { path: 'leave', component: DeactivateLeaveComponent },
     ], 
     { relativeLinkResolution: 'legacy' }),
   ],
@@ -75,7 +73,7 @@ import { FsStoreModule } from '@firestitch/store';
     DialogCreateComponent,
     DialogSaveComponent,
     TemplateComponent,
-  ]
+  ],
 })
 export class PlaygroundModule {
 }

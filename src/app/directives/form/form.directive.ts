@@ -26,7 +26,6 @@ import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 import { guid } from '@firestitch/common';
 import { DrawerRef } from '@firestitch/drawer';
 import { FsMessage, MessageMode } from '@firestitch/message';
-import { FsPrompt } from '@firestitch/prompt';
 
 import {
   BehaviorSubject,
@@ -55,7 +54,6 @@ import {
 
 import { FormDeactivateGuard } from '../../guards/form-deactivate.guard';
 import { confirmResultContinue } from '../../helpers/confirm-result-continue';
-import { confirmUnsaved } from '../../helpers/confirm-unsaved';
 import { getActiveRoute } from '../../helpers/get-active-route';
 import { getFormErrors } from '../../helpers/get-form-errors';
 import { FsForm } from '../../services/fsform.service';
@@ -171,7 +169,6 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     private _form: FsForm,
     private _element: ElementRef,
     private _message: FsMessage,
-    private _prompt: FsPrompt,
     private _ngZone: NgZone,
     private _cdRef: ChangeDetectorRef,
 
@@ -346,7 +343,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     return submitted
       .pipe(
         take(1),
-        mergeMap(() => confirmUnsaved([this], this._prompt)),
+        mergeMap(() => this._form.confirmUnsaved([this])),
       );
   }
 

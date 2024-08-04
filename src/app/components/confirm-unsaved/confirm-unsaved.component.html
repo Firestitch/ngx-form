@@ -1,0 +1,30 @@
+<fs-dialog>
+  <h1 mat-dialog-title>{{title}}</h1>
+  <mat-dialog-content>
+    {{message}}
+  </mat-dialog-content>  
+  <mat-dialog-actions>
+    <button
+        type="button"
+        color="primary"
+        (click)="save()"
+        fsFormButtonStandalone
+        mat-button>
+      {{saveLabel}}
+    </button>
+    <button
+        type="button"
+        (click)="discard()"
+        fsFormButtonStandalone
+        mat-button>
+      {{discardLabel}}
+    </button>  
+    <button
+        type="button"
+        (click)="cancel()"
+        fsFormButtonStandalone
+        mat-button>
+      {{cancelLabel}}
+    </button>    
+  </mat-dialog-actions>
+</fs-dialog>

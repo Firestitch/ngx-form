@@ -1,0 +1,9 @@
+:host {
+  width: 100%;
+}
+
+.form-buttons {
+  &.save-create .close-button:not(.cancel-button) {
+    float: right;
+  }
+}

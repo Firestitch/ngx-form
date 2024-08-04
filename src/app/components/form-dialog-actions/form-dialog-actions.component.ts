@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Optional, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Optional } from '@angular/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -6,7 +6,6 @@ import { Subject } from 'rxjs';
 import { delay, filter, takeUntil } from 'rxjs/operators';
 
 import { FsFormDirective } from '../../directives/form/form.directive';
-import { ConfirmResult } from '../../enums/confirm-result';
 
 
 @Component({
@@ -37,33 +36,33 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     if(this._form) {
       this._form.ngForm.valueChanges
-      .pipe(  
-        filter(() => (!this.dirty)),
-        takeUntil(this._destroy$),
-      )
-      .subscribe(() => {
-        this.dirty = this._form.ngForm.dirty;
-        this._cdRef.markForCheck();
-      });
+        .pipe(  
+          filter(() => (!this.dirty)),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(() => {
+          this.dirty = this._form.ngForm.dirty;
+          this._cdRef.markForCheck();
+        });
 
       this._form.submitted
-      .pipe(
-        delay(50),
-        takeUntil(this._destroy$),
-      )
-      .subscribe(() => {
-        this.dirty = false;
-        this._cdRef.markForCheck();
-      });
+        .pipe(
+          delay(50),
+          takeUntil(this._destroy$),
+        )
+        .subscribe(() => {
+          this.dirty = false;
+          this._cdRef.markForCheck();
+        });
 
       this._form.reseted
-      .pipe(
-        takeUntil(this._destroy$),
-      )
-      .subscribe(() => {
-        this.dirty = false;
-        this._cdRef.markForCheck();
-      });
+        .pipe(
+          takeUntil(this._destroy$),
+        )
+        .subscribe(() => {
+          this.dirty = false;
+          this._cdRef.markForCheck();
+        });
     }
   }
 

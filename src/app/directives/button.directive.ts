@@ -1,14 +1,18 @@
-import { Directive, OnInit, Host, ElementRef, HostBinding, Optional, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  ChangeDetectorRef, Directive, ElementRef, Host, HostBinding, Input, OnDestroy, OnInit, Optional,
+} from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
-import { FsFormDirective } from './form/form.directive';
+
 
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { FsFormDirective } from './form/form.directive';
+
 
 @Directive({
-  selector: '[mat-raised-button],[mat-button],[mat-flat-button],[mat-stroked-button]',
+  selector: '[mat-raised-button]:not([fsFormButtonStandalone]),[mat-button]:not([fsFormButtonStandalone]),[mat-flat-button]:not([fsFormButtonStandalone]),[mat-stroked-button]:not([fsFormButtonStandalone])',
 })
 export class FsButtonDirective implements OnInit, OnDestroy {
 
@@ -177,7 +181,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
     }
 
     if (type === 'error') {
-      return new DOMParser().parseFromString(`<svg class="svg-icon svg-icon-error" xmlns="http://www.w3.org/2000/svg" width="38px" height="38px" viewBox="0 0 16 16"><g><path d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z" data-original="#444444" data-old_color="#444444"/><path d="M12.2 10.8l-2.8-2.8 2.8-2.8-1.4-1.4-2.8 2.8-2.8-2.8-1.4 1.4 2.8 2.8-2.8 2.8 1.4 1.4 2.8-2.8 2.8 2.8z"/></g> </svg>`, 'text/xml').firstChild;
+      return new DOMParser().parseFromString('<svg class="svg-icon svg-icon-error" xmlns="http://www.w3.org/2000/svg" width="38px" height="38px" viewBox="0 0 16 16"><g><path d="M8 1c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zM8 0c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8v0z" data-original="#444444" data-old_color="#444444"/><path d="M12.2 10.8l-2.8-2.8 2.8-2.8-1.4-1.4-2.8 2.8-2.8-2.8-1.4 1.4 2.8 2.8-2.8 2.8 1.4 1.4 2.8-2.8 2.8 2.8z"/></g> </svg>', 'text/xml').firstChild;
     }
   }
 }
