@@ -1,17 +1,18 @@
 import { Directive, Input, OnChanges } from '@angular/core';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 
-import { FsControlDirective } from './control.directive';
-import { FsValidators } from '../../validators/validators';
-import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
-import { FsValidator } from '../../interfaces/validator';
 import { isEnabled } from '../../helpers/is-enabled';
+import { FsValidator } from '../../interfaces/validator';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidators } from '../../validators/validators';
+
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
   selector: '[fsFormUrl]',
   providers: [
-    VALIDATE_MESSAGE_PROVIDER
+    VALIDATE_MESSAGE_PROVIDER,
   ],
 })
 export class FsFormUrlDirective extends FsControlDirective implements OnChanges, FsValidator {
@@ -20,7 +21,7 @@ export class FsFormUrlDirective extends FsControlDirective implements OnChanges,
   public fsFormUrl;
 
   @Input()
-  public fsFormUrlProtocol = false;
+  public fsFormUrlProtocol = true;
 
   @Input('fsFormUrlMessage')
   public set validationMessage(value: string) {
@@ -34,9 +35,10 @@ export class FsFormUrlDirective extends FsControlDirective implements OnChanges,
   public validate(control: AbstractControl): ValidationErrors | null {
     if (isEnabled(this.fsFormUrl)) {
       return FsValidators.url(this._control, this.fsFormUrlProtocol);
-    } else {
-      return null;
     }
+ 
+    return null;
+    
   }
 
 }
