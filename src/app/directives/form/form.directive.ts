@@ -764,10 +764,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       const el: Element = this._element.nativeElement.querySelector(`input[name='${name}']`);
 
       if (el) {
-        el.setAttribute('name', `${name}_${guid()}`);
-
         if (!el.getAttribute('autocomplete')) {
           el.setAttribute('autocomplete', 'none');
+          el.setAttribute('name', `${name}-${guid()}`);
         }
       }
 
