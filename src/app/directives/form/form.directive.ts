@@ -310,13 +310,20 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     return this._snapshot || {};
   }
 
-  public reset(): void {
+  public reset(discard = false): void {
     this.ngForm.resetForm();
+
+    const options: { emitModelToViewChange?: boolean } = {};
+
+    // in case when user clicks discard changes – we should prevent firing ngModelChange event
+    if (discard) {
+      options.emitModelToViewChange = true;
+    }
 
     Object.keys(this.ngForm.controls)
       .forEach((name: string) => {
         const control = this.ngForm.controls[name];
-        control.reset(this._snapshot[name]);
+        control.reset(this._snapshot[name], options);
       });
 
     this.reseted.emit();

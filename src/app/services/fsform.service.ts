@@ -101,11 +101,11 @@ export class FsForm {
           if(!result) {
             return of(ConfirmResult.Review);
           }
-          
-          if (result === 'discard') {
-            form.reset();
 
-            return of(ConfirmResult.Discard); 
+          if (result === 'discard') {
+            form.reset(true);
+
+            return of(ConfirmResult.Discard);
           }
 
           if (result === 'save') {
