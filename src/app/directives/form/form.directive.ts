@@ -607,6 +607,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         takeUntil(this._destroy$),
       )
       .subscribe((changes) => {
+        if(this._dialogBackdropEscape && this._dialogRef) {
+          this._dialogRef.disableClose = true;
+        }
+
         if (this.confirm) {
           const existing = Object.keys(this._snapshot);
 
@@ -737,10 +741,9 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _registerConfirmDialogBackdropEscape(): void {
-    this._dialogBackdropEscape = this._dialogRef && !this._dialogRef.disableClose;
+    this._dialogBackdropEscape = !this._dialogRef?.disableClose;
 
-    if (this._dialogRef && !this._dialogRef.disableClose) {
-      this._dialogRef.disableClose = true;
+    if (this._dialogBackdropEscape) {
       this._dialogRef.backdropClick()
         .pipe(
           takeUntil(this._destroy$),
