@@ -465,6 +465,16 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
       });
   }
 
+  private _activeDialog(el, dialog: HTMLElement): boolean {
+    if (el.isSameNode(dialog)) {
+      return true;
+    } else if (el.parentElement) {
+      return this._activeDialog(el.parentElement, dialog);
+    }
+
+    return false;
+  }
+
   private _listenHotKeys(): void {
     this._ngZone.runOutsideAngular(() => {
       fromEvent(document, 'keydown')
@@ -473,16 +483,12 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         )
         .subscribe((event: KeyboardEvent) => {
           if (this._dialogBackdropEscape && event.code === 'Escape') {
-            const dialog = document.getElementById(this._dialogRef.id);
-            const paths = event.composedPath();
+            const activeDialog = this
+              ._activeDialog(document.activeElement, document.getElementById(this._dialogRef.id));
 
-            if (paths) {
-              paths.forEach((item) => {
-                if (dialog === item) {
-                  this._ngZone.run(() => {
-                    this._formClose();
-                  });
-                }
+            if (activeDialog) {
+              this._ngZone.run(() => {
+                this._formClose();
               });
             }
           }
