@@ -483,8 +483,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         )
         .subscribe((event: KeyboardEvent) => {
           if (this._dialogBackdropEscape && event.code === 'Escape') {
+            const cdkOverlayPane = Array
+              .from(document.querySelectorAll<HTMLElement>('.cdk-overlay-pane')).pop();
+    
             const activeDialog = this
-              ._activeDialog(document.activeElement, document.getElementById(this._dialogRef.id));
+              ._activeDialog(document.getElementById(this._dialogRef.id), cdkOverlayPane);
 
             if (activeDialog) {
               this._ngZone.run(() => {
