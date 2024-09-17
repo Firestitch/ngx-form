@@ -716,7 +716,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     const confirmTabGroup = tabGroup as ConfirmTabGroup;
     if (!confirmTabGroup._originalHandleClick) {
       confirmTabGroup._originalHandleClick = tabGroup._handleClick;
-      confirmTabGroup._handlClick$ = new Subject<{ tab: MatTab; tabHeader: MatTabHeader; idx: number }>();
+      confirmTabGroup._handlClick$ = new Subject<{
+         tab: MatTab; 
+         tabHeader: MatTabHeader; 
+         idx: number 
+        }>();
       confirmTabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
         if (confirmTabGroup._handlClick$.observers.length) {
           confirmTabGroup._handlClick$.next({ tab, tabHeader, idx });
@@ -728,43 +732,46 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
     confirmTabGroup._handlClick$
       .pipe(
+        filter(() => !this.submitting),
+        switchMap((event) => {
+          if(this.confirm && this.confirmTabs) {
+            return this.triggerConfirm()
+              .pipe(
+                tap((result) => {
+                  if (confirmResultContinue(result)) {
+                    confirmTabGroup.selectedIndex = event.idx;
+                  }
+                }),
+              );
+          }
+
+          confirmTabGroup._originalHandleClick(event.tab, event.tabHeader, event.idx);
+
+          return of(null);
+        }),
         takeUntil(this._destroy$),
       )
-      .subscribe((event) => {
-        if (!this.submitting) {
-          if (this.confirm && this.confirmTabs) {
-            this.triggerConfirm()
-              .pipe(
-                takeUntil(this._destroy$),
-              )
-              .subscribe((result) => {
-                if (confirmResultContinue(result)) {
-                  confirmTabGroup.selectedIndex = event.idx;
-                }
-              });
-          } else {
-            confirmTabGroup._originalHandleClick(event.tab, event.tabHeader, event.idx);
-          }
-        }
-      });
+      .subscribe();
   }
 
   private _registerConfirmDialogBackdropEscape(): void {
-    this._dialogBackdropEscape = !this._dialogRef?.disableClose;
+    if(this._dialogRef) {
+      this._dialogBackdropEscape = !this._dialogRef?.disableClose;
 
-    if (this._dialogBackdropEscape) {
-      this._dialogRef.backdropClick()
-        .pipe(
-          takeUntil(this._destroy$),
-        )
-        .subscribe(() => {
-          this._formClose();
-        });
+      if (this._dialogBackdropEscape) {
+        this._dialogRef.backdropClick()
+          .pipe(
+            takeUntil(this._destroy$),
+          )
+          .subscribe(() => {
+            this._formClose();
+          });
 
-      this._destroy$
-        .subscribe(() => {
-          this._dialogRef.disableClose = false;
-        });
+        this._destroy$
+          .subscribe(() => {
+            this._dialogRef.disableClose = false;
+          });
+      }
     }
   }
 

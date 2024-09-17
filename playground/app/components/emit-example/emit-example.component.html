@@ -17,8 +17,10 @@
 
     <fieldset>
       <legend>Actions</legend>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
-      <button mat-raised-button color="primary" type="button" (click)="emitSubmit()">Emit Submit</button>
+      <div class="fs-row.gap-xs">
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <button mat-raised-button color="primary" type="button" (click)="emitSubmit()">Emit Submit</button>
+      </div>
     </fieldset>
 
     <fieldset>

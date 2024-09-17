@@ -1,33 +1,31 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'emit-example',
-  templateUrl: 'emit-example.component.html'
+  templateUrl: './emit-example.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmitExampleComponent implements OnInit {
-  @ViewChild('form') form;
+export class EmitExampleComponent {
+  
+  @ViewChild('form') public form;
 
-  status = 'Not Submitted';
-  minMaxInput = null;
-  required = null;
+  public status = 'Not Submitted';
+  public minMaxInput = null;
+  public required = null;
 
-  constructor() {  }
-
-  ngOnInit() {  }
-
-  submitting() {
+  public submitting() {
     this.status = 'Submitting...';
   }
 
-  save() {
+  public save() {
     this.status = 'Valid';
   }
 
-  invalid() {
+  public invalid() {
     this.status = 'Invalid';
   }
 
-  emitSubmit() {
+  public emitSubmit() {
     this.form.ngSubmit.emit();
   }
 
