@@ -750,7 +750,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   }
 
   private _registerConfirmDialogBackdropEscape(): void {
-    this._dialogBackdropEscape = !this._dialogRef?.disableClose;
+    this._dialogBackdropEscape = this._dialogRef
+      && !this._dialogRef.disableClose;
 
     if (this._dialogBackdropEscape) {
       this._dialogRef.backdropClick()
