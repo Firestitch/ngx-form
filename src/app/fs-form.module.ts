@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { FormControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
+import { UntypedFormControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
@@ -132,7 +132,7 @@ export class FsFormModule {
      */
     ErrorStateMatcher.prototype
       .isErrorState = (
-        control: FormControl | null, 
+        control: UntypedFormControl | null, 
         form: FormGroupDirective | NgForm | null,
       ): boolean => {
         return control?.invalid && control?.touched && control?.dirty;

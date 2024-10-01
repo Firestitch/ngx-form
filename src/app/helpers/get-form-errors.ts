@@ -1,4 +1,4 @@
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 
 
 export function getFormErrors(control: AbstractControl, key: string): ValidationErrors | null {
@@ -10,7 +10,7 @@ export function getFormErrors(control: AbstractControl, key: string): Validation
     };
   }
 
-  if (control instanceof FormGroup) {
+  if (control instanceof UntypedFormGroup) {
     Object.entries(control.controls)
       .forEach(([name, childControl]) => {
         const childErrors = getFormErrors(childControl, name);
