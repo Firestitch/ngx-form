@@ -49,7 +49,7 @@ import { AppMaterialModule } from './material.module';
       { path: '', component: ExamplesComponent },
       { path: 'leave', component: DeactivateLeaveComponent },
     ], 
-    { relativeLinkResolution: 'legacy' }),
+    {}),
   ],
   declarations: [
     AppComponent,
