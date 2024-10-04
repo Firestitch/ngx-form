@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, CanDeactivate } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 
 import { Observable, of } from 'rxjs';
@@ -14,7 +14,7 @@ import { FsForm } from '../services/fsform.service';
 @Injectable({
   providedIn: 'root',
 })
-export class FormDeactivateGuard implements CanDeactivate<any> {
+export class FormDeactivateGuard  {
 
   constructor(
     private _form: FsForm,
