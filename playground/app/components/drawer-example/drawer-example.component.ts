@@ -39,17 +39,17 @@ export class DrawerExampleComponent implements OnDestroy {
 
     // drawerRef.closeStart().subscribe((result) => {
     //   console.log('close starts');
-    //   result.next();
+    //   result.next(null);
     // });
 
     // drawerRef.openStart().subscribe((result) => {
     //   console.log('open starts');
-    //   result.next();
+    //   result.next(null);
     // });
   }
 
   public ngOnDestroy() {
-    this._destroy$.next();
+    this._destroy$.next(null);
     this._destroy$.complete();
   }
 }

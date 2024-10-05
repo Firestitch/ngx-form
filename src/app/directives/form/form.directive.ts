@@ -298,7 +298,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
   public ngOnDestroy(): void {
     this._cleanupCanDeactivate();
-    this._destroy$.next();
+    this._destroy$.next(null);
     this._destroy$.complete();
   }
 
@@ -501,7 +501,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
 
             if (this.shortcuts) {
               if (this._elementInForm(document.activeElement)) {
-                this.ngForm.ngSubmit.next();
+                this.ngForm.ngSubmit.next(null);
               }
             }
           }
@@ -648,14 +648,14 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
               )
               .subscribe((status) => {
                 if (status === FormStatus.Success) {
-                  subscriber.next();
+                  subscriber.next(null);
                   subscriber.complete();
                 } else {
                   subscriber.error();
                 }
               });
           } else {
-            subscriber.next();
+            subscriber.next(null);
             subscriber.complete();
           }
         });
@@ -674,13 +674,13 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
                   map((result) => confirmResultContinue(result)),
                   tap((result) => {
                     if (result) {
-                      subscriber.next();
+                      subscriber.next(null);
                       subscriber.complete();
                     }
                   }),
                 ),
               defer(() => {
-                subscriber.next();
+                subscriber.next(null);
                 subscriber.complete();
               }),
             );
