@@ -682,6 +682,8 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
               defer(() => {
                 subscriber.next(null);
                 subscriber.complete();
+
+                return of(null);
               }),
             );
           }),
