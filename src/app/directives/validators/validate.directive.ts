@@ -3,22 +3,23 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { Observable, of } from 'rxjs';
 
-import { FsControlDirective } from './control.directive';
-import { FsValidators } from '../../validators/validators';
-import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
 import { FsAsyncValidator } from '../../interfaces/async-validator';
+import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
+import { FsValidators } from '../../validators/validators';
+
+import { FsControlDirective } from './control.directive';
 
 
 @Directive({
   selector: '[validate]',
   providers: [
-    VALIDATE_MESSAGE_PROVIDER
+    VALIDATE_MESSAGE_PROVIDER,
   ],
 })
 export class FsFormValidateDirective extends FsControlDirective implements OnChanges, FsAsyncValidator {
 
   @Input('validate')
-  public validateFn;
+  public validateFn: (control: AbstractControl, data: any) => Observable<unknown> | Promise<unknown> | void;
 
   @Input('validateData')
   public validateFnData;
@@ -31,7 +32,7 @@ export class FsFormValidateDirective extends FsControlDirective implements OnCha
   }
 
   public validateAsync(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    if(this.validateOnSubmit && !this.formDirective.validating) {
+    if(this.validateOnSubmit && !this._formDirective.validating) {
       return of(null);
     }
 

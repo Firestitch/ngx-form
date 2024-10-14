@@ -45,8 +45,7 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
     
   }
 
-  protected render() {
-
+  public render() {
     const wrapper = this.getWrapperElement();
 
     if (wrapper && this.getlabelSelector()) {
@@ -55,9 +54,9 @@ export class FsFormRequiredDirective extends FsControlDirective implements OnCha
       // Adding class fs-form-label-requried adds the * to the label
       if (labelWrapper) {
         if (this.required) {
-          this.renderer2.addClass(labelWrapper, 'fs-form-label-required');
+          this._renderer2.addClass(labelWrapper, 'fs-form-label-required');
         } else {
-          this.renderer2.removeClass(labelWrapper, 'fs-form-label-required');
+          this._renderer2.removeClass(labelWrapper, 'fs-form-label-required');
         }
       }
     }

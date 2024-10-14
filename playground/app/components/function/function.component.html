@@ -3,47 +3,41 @@
     <mat-form-field>
       <input 
         placeholder="Exception Validation"
-        [(ngModel)]="functionException"
+        [(ngModel)]="models.exception"
         name="validateException"
         matInput
         [validate]="validateException"
         [validateData]="{ test: 'data' }"/>
+      <mat-hint>Valid email: {{email}}</mat-hint>
     </mat-form-field>
 
     <mat-form-field>
       <input 
-        placeholder="Observable Validation On Submit (match existing@email.com)"
-        [(ngModel)]="functionPromise"
+        placeholder="Promise Validation"
+        [(ngModel)]="models.promise"
+        name="validatePromise"
+        matInput
+        [validate]="validatePromise"
+        [validateData]="{ test: 'data' }"/>
+        <mat-hint>Valid email: {{email}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input 
+        placeholder="Observable Validation On Submit"
+        [(ngModel)]="models.observable"
         name="validateObservable"
         matInput
         [validateOnSubmit]="true"
         [validate]="validateObservable"/>
+        <mat-hint>Valid email: {{email}}</mat-hint>
     </mat-form-field>
-
-    <fs-radio-group
-        [(ngModel)]="radioFunctionModel"
-        label="Radio Button Group Custom Validation"
-        orientation="vertical"
-        name="radio_function"
-        [validate]="radioFunction">
-      <mat-radio-button [value]="'weeks'">
-          After
-          <mat-form-field>
-            <input [(ngModel)]="radioFunctionWeeks" name="radioFunctionWeeks" matInput fsFormNumeric (change)="radioFunctionChange()"/>
-          </mat-form-field>
-          Weeks
-      </mat-radio-button>
-      <mat-radio-button [value]="'date'">
-        On
-        <mat-form-field>
-          <input matInput fsDatePicker [(ngModel)]="radioFunctionDate" name="radioFunctionDate" (change)="radioFunctionChange()">
-        </mat-form-field>
-      </mat-radio-button>
-    </fs-radio-group>
-
-    <fieldset>
-      <legend>Actions</legend>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
-    </fieldset>
+    <br>
+    <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit">
+      Submit
+    </button>
   </div>
 </form>

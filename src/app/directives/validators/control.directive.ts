@@ -64,15 +64,15 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
   constructor(
     protected _elementRef: ElementRef,
-    protected renderer2: Renderer2,
-    protected injector: Injector,
+    protected _renderer2: Renderer2,
+    protected _injector: Injector,
     @Self() @Inject(VALIDATE_MESSAGES) protected _validateMessages,
-    @Optional() protected ngControl: NgControl,
-    @Optional() @Inject(FsFormDirective) protected formDirective: FsFormDirective,
+    @Optional() protected _ngControl: NgControl,
+    @Optional() @Inject(FsFormDirective) protected _formDirective: FsFormDirective,
   ) {
 
-    if (ngControl) {
-      this._control = ngControl.control;
+    if (_ngControl) {
+      this._control = _ngControl.control;
     } else {
       console.error('The element does not have a valid ngModel', this._elementRef.nativeElement);
     }
@@ -99,8 +99,8 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.messageSelector) {
       return this.messageSelector;
 
-    } else if (this.formDirective?.messageSelector) {
-      return this.formDirective.messageSelector;
+    } else if (this._formDirective?.messageSelector) {
+      return this._formDirective.messageSelector;
     }
   }
 
@@ -112,8 +112,8 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.hintSelector) {
       return this.hintSelector;
 
-    } else if (this.formDirective?.hintSelector) {
-      return this.formDirective.hintSelector;
+    } else if (this._formDirective?.hintSelector) {
+      return this._formDirective.hintSelector;
     }
   }
 
@@ -125,8 +125,8 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.wrapperSelector) {
       return this.wrapperSelector;
 
-    } else if (this.formDirective?.wrapperSelector) {
-      return this.formDirective.wrapperSelector;
+    } else if (this._formDirective?.wrapperSelector) {
+      return this._formDirective.wrapperSelector;
     }
   }
 
@@ -139,14 +139,13 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     if (this.labelSelector) {
       return this.labelSelector;
 
-    } else if (this.formDirective?.labelSelector) {
-      return this.formDirective.labelSelector;
+    } else if (this._formDirective?.labelSelector) {
+      return this._formDirective.labelSelector;
     }
   }
 
   public getWrapperElement() {
-
-    const wrapper = this.getWrapper(this._elementRef.nativeElement);
+    const wrapper = this._getWrapper(this._elementRef.nativeElement);
 
     if (wrapper) {
       return wrapper;
@@ -164,15 +163,19 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       </div>
     </mat-form-field>
   */
-  protected render() {
-    if (this.ngControl) {
-      const renderer = this.renderer2;
-      const wrapper = this.getWrapperElement();
-      const error = this.ngControl.dirty ? this.getError(this.ngControl) : null;
-      const shouldErrorBeRendered = this.ngControl.invalid
-        && (this.ngControl.dirty || this.formDirective?.ngForm?.submitted);
 
-      if (shouldErrorBeRendered && error) {
+  private get _shouldErrorBeRendered() {
+    return this._ngControl.invalid
+      && (this._ngControl.dirty || this._formDirective?.ngForm?.submitted);
+  }
+
+  public render() {
+    if (this._ngControl) {
+      const renderer = this._renderer2;
+      const wrapper = this.getWrapperElement();
+      const error = this._ngControl.dirty ? this._getError(this._ngControl) : null;
+
+      if (this._shouldErrorBeRendered && error) {
         wrapper.classList.add('ng-invalid', 'ng-dirty');
       } else {
         wrapper.classList.remove('ng-invalid');
@@ -183,56 +186,54 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       }
 
       const messageWrapper = wrapper.querySelector(this.getMessageSelector());
-
+   
       if (!messageWrapper) {
-        return console.warn(`Failed to locate ${  this.getMessageSelector()}`, this._elementRef.nativeElement);
-      }
-
-      if (this.getlabelSelector()) {
-        const labelWrapper = wrapper.querySelector(this.getlabelSelector());
-
-        if (labelWrapper) {
-          if (this.appendLabelClass) {
-            this.renderer2.addClass(labelWrapper, this.appendLabelClass);
-          }
-        }
+        return console
+          .warn(`Failed to locate ${  this.getMessageSelector()}`, this._elementRef.nativeElement);
       }
 
       if (this.appendMessageClass) {
         renderer.addClass(messageWrapper, this.appendMessageClass);
       }
 
-      if (this.getHintWrapperSelector()) {
-        const hint = messageWrapper.querySelector(this.getHintWrapperSelector());
-
-        if (hint) {
-          renderer.setStyle(hint, 'display', error ? 'none' : 'block');
-
-          if (this.appendHintClass) {
-            renderer.addClass(hint, this.appendHintClass);
-          }
-        }
-      }
-
-      let errorWrapper = wrapper.querySelector('.fs-form-error-target');
-      if (errorWrapper) {
-        errorWrapper.remove();
-      }
-
-      if (!shouldErrorBeRendered || !error) {
-        return;
-      }
-
-      errorWrapper = renderer.createElement('div');
-      renderer.addClass(errorWrapper, 'fs-form-error-target');
-      renderer.addClass(errorWrapper, this.appendErrorClass);
-      renderer.addClass(errorWrapper, `${this.appendErrorClass  }-${  error.name}`);
-
-      const errorText = renderer.createText(error.message);
-
-      renderer.appendChild(errorWrapper, errorText);
-      messageWrapper.appendChild(errorWrapper);
+      this._renderHint(error, messageWrapper);
+      this._renderError(wrapper, messageWrapper, error);
     }
+  }
+
+  protected _renderHint(error, messageWrapper) {
+    if (this.getHintWrapperSelector()) {
+      const hints = messageWrapper.querySelectorAll('.mat-mdc-form-field-hint');
+
+      hints.forEach((hint) => {
+        this._renderer2.setStyle(hint, 'display', error ? 'none' : 'block');
+
+        if (this.appendHintClass) {
+          this._renderer2.addClass(hint, this.appendHintClass);
+        }
+      });
+    }
+  }
+
+  protected _renderError(wrapper, messageWrapper, error) {
+    let errorWrapper = wrapper.querySelector('.fs-form-error-target');
+    if (errorWrapper) {
+      errorWrapper.remove();
+    }
+
+    if (!this._shouldErrorBeRendered || !error) {
+      return;
+    }
+
+    errorWrapper = this._renderer2.createElement('div');
+    this._renderer2.addClass(errorWrapper, 'fs-form-error-target');
+    this._renderer2.addClass(errorWrapper, this.appendErrorClass);
+    this._renderer2.addClass(errorWrapper, `${this.appendErrorClass  }-${  error.name}`);
+
+    const errorText = this._renderer2.createText(error.message);
+
+    this._renderer2.appendChild(errorWrapper, errorText);
+    messageWrapper.querySelector(this.getHintWrapperSelector()).prepend(errorWrapper);
   }
 
   protected _subscribeToStatusChagnes():void {
@@ -245,8 +246,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     }
   }
 
-
-  protected getWrapper(node, count = 0) {
+  protected _getWrapper(node, count = 0) {
     if (!node || count > 10) {
       return null;
     }
@@ -255,10 +255,10 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       return node;
     }
 
-    return this.getWrapper(node.parentNode, ++count);
+    return this._getWrapper(node.parentNode, ++count);
   }
 
-  protected parseErrorMessage(message, args): string {
+  protected _parseErrorMessage(message, args): string {
     values(args)
       .forEach((name) => {
         message = message.replace(/\$\(\d\)/, name);
@@ -267,7 +267,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     return message;
   }
 
-  protected getError(controlRef): { name: string, message: string } {
+  protected _getError(controlRef): { name: string, message: string } {
 
     const name = keys(controlRef.control.errors)[0];
 
@@ -278,7 +278,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     let message = controlRef.control.errors[name];
 
     if (this._validateMessages[name]) {
-      message = this.parseErrorMessage(this._validateMessages[name], message);
+      message = this._parseErrorMessage(this._validateMessages[name], message);
     }
 
     return { name: name, message: message };

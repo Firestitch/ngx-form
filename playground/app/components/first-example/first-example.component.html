@@ -2,22 +2,22 @@
 <form fsForm [submit]="save" (submit)="submitting()" (invalid)="invalid()">
   <div class="fs-column">
     <fs-radio-group
-      *ngIf="render"
-      [(ngModel)]="radioRequired"
-      label="Required"
-      name="radio_required"
-      [required]="required && validations"
-      requiredMessage="Custom: Please select at least one option">
-        <mat-radio-button *ngFor="let item of items" [value]="item.id">{{item.name}}</mat-radio-button>
+        *ngIf="render"
+        [(ngModel)]="radioRequired"
+        label="Required"
+        name="radio_required"
+        [required]="required && validations"
+        requiredMessage="Custom: Please select at least one option">
+      <mat-radio-button *ngFor="let item of items" [value]="item.id">{{item.name}}</mat-radio-button>
     </fs-radio-group>
 
     <fs-checkbox-group
-      [(ngModel)]="checkbox"
-      name="checkbox"
-      [required]="required && validations"
-      label="Checkboxes">
-        <mat-checkbox *ngFor="let item of items" [value]="$any(item)">{{item.name}}</mat-checkbox>
-        <mat-hint>Hint hint hint!!!</mat-hint>
+        [(ngModel)]="checkbox"
+        name="checkbox"
+        [required]="required && validations"
+        label="Checkboxes">
+      <mat-checkbox *ngFor="let item of items" [value]="$any(item)">{{item.name}}</mat-checkbox>
+      <mat-hint>Hint hint hint!!!</mat-hint>
     </fs-checkbox-group>
 
     <fs-autocomplete-chips
@@ -38,8 +38,7 @@
             #passwordInput
             name="password"
             [(ngModel)]="password"
-            matInput
-            />
+            matInput/>
         </mat-form-field>
       <mat-form-field>
         <input placeholder="Password Confirm"
@@ -47,8 +46,7 @@
           [(ngModel)]="passwordConfirm"
           [fsFormCompare]="passwordInput"
           [fsFormNumeric]="validations"
-          matInput
-          />
+          matInput/>
       </mat-form-field>
     </div>
 

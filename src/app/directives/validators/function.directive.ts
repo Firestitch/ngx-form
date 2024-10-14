@@ -32,7 +32,7 @@ export class FsFormFunctionDirective extends FsControlDirective implements OnCha
   }
 
   public validateAsync(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    if(this.validateOnSubmit && !this.formDirective.validating) {
+    if(this.validateOnSubmit && !this._formDirective.validating) {
       return of(null);
     }
     

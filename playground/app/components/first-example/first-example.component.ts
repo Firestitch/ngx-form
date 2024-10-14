@@ -87,7 +87,7 @@ export class FirstExampleComponent {
     this.form.ngForm.ngSubmit.next(null);
   }
 
-  public fetchChips = (keyword) => {
+  public fetchChips = () => {
     return of(this.items);
   };
 

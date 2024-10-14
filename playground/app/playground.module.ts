@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
 
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+
 import { FsApiModule } from '@firestitch/api';
 import { FsAutocompleteChipsModule } from '@firestitch/autocomplete-chips';
 import { FsCheckboxGroupModule } from '@firestitch/checkboxgroup';
@@ -21,7 +23,13 @@ import { FsTabsModule } from '@firestitch/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { BroadcastExampleComponent, DeactivateComponent, DeactivateLeaveComponent, DialogComponent, DialogCreateComponent, DialogExampleComponent, DialogSaveComponent, DrawerComponent, DrawerExampleComponent, EmitExampleComponent, ExamplesComponent, FirstExampleComponent, FunctionComponent, NestedComponent, NestedLevel1Component, NestedLevel2Component, NonMaterialComponent, SubmitObservableComponent, TabsExampleComponent, TemplateComponent } from './components';
+import {
+  BroadcastExampleComponent, DeactivateComponent, DeactivateLeaveComponent, DialogComponent,
+  DialogCreateComponent, DialogExampleComponent, DialogSaveComponent, DrawerComponent,
+  DrawerExampleComponent, EmitExampleComponent, ExamplesComponent, FirstExampleComponent,
+  FunctionComponent, NestedComponent, NestedLevel1Component, NestedLevel2Component,
+  NonMaterialComponent, SubmitObservableComponent, TabsExampleComponent, TemplateComponent,
+} from './components';
 import { AppMaterialModule } from './material.module';
 
 
@@ -48,8 +56,7 @@ import { AppMaterialModule } from './material.module';
     RouterModule.forRoot([
       { path: '', component: ExamplesComponent },
       { path: 'leave', component: DeactivateLeaveComponent },
-    ], 
-    {}),
+    ]),
   ],
   declarations: [
     AppComponent,
@@ -73,6 +80,12 @@ import { AppMaterialModule } from './material.module';
     DialogCreateComponent,
     DialogSaveComponent,
     TemplateComponent,
+  ],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline', floatLabel: 'auto' },
+    },
   ],
 })
 export class PlaygroundModule {

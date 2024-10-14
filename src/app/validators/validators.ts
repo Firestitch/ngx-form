@@ -93,7 +93,10 @@ export class FsValidators {
     return { dateRange: true };
   }
 
-  public static func(control: AbstractControl, formFunction, data: any) {
+  public static func(
+    control: AbstractControl, 
+    formFunction: (control: AbstractControl, data: any) => Observable<unknown> | Promise<unknown> | void, data: any,
+  ): Observable<unknown> {
     let result: unknown;
     let stream$: Observable<unknown>;
 
@@ -102,7 +105,7 @@ export class FsValidators {
     } catch (err) {
       const error = err instanceof Error ? err.message : err;
 
-      stream$ = throwError(error);
+      stream$ = throwError(() => error);
     }
 
     if (!stream$) {

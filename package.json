@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "title": "Form",
-  "version": "18.0.0",
+  "version": "18.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-form"
@@ -60,7 +60,7 @@
     "@firestitch/file": "^18.0.0",
     "@firestitch/html": "^18.0.0",
     "@firestitch/iframe": "^18.0.0",
-    "@firestitch/label": "^18.0.0",
+    "@firestitch/label": "^18.0.1",
     "@firestitch/lint": "^18.0.4",
     "@firestitch/mask": "^18.0.0",
     "@firestitch/menu": "^18.0.0",

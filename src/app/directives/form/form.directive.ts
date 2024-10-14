@@ -72,13 +72,13 @@ import { SubmitEvent } from './../../interfaces/submit-event';
 export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnChanges {
 
   @Input()
-  public wrapperSelector = '.fs-form-wrapper,.mat-form-field';
+  public wrapperSelector = '.fs-form-wrapper,.mat-mdc-form-field';
 
   @Input()
-  public messageSelector = '.fs-form-message,.mat-form-field-subscript-wrapper';
+  public messageSelector = '.fs-form-message,.mat-mdc-form-field-subscript-wrapper';
 
   @Input()
-  public hintSelector = '.fs-form-hint,.mat-form-field-hint-wrapper';
+  public hintSelector = '.fs-form-hint,.mat-mdc-form-field-hint-wrapper';
 
   @Input()
   public labelSelector = '.fs-form-label,.mat-form-field-label';
