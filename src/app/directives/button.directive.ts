@@ -77,6 +77,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
     if (this._matButton && !this.active) {
       this._previousDisabled = this._matButton.disabled;
       this._matButton.disabled = true;
+      this._matButton.disableRipple = true;
       this._cdRef.markForCheck(); 
     }
   }

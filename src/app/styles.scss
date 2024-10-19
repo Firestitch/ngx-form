@@ -1,15 +1,6 @@
 @use '@angular/material' as mat;
 
 .fs-form {
-
-  .mat-form-field.mat-form-field-should-float {
-    .fs-form-label-required:after {
-      content: " *";
-      white-space: pre-wrap;
-    }
-
-  }
-
   .fs-form-wrapper.ng-invalid.ng-dirty .fs-form-label,
   .ng-invalid.ng-dirty:not(form) .fs-form-label {
     color: #f44336;
@@ -83,10 +74,9 @@
   }
 
   .fs-form button {
-
-    &.mat-button,
-    &.mat-raised-button:not([color='primary']),
-    &.mat-flat-button:not([color='primary']) {
+    &.mdc-button,
+    &.mdc-button--raised:not([color='primary']),
+    &.mdc-button--flat:not([color='primary']) {
       svg.svg-icon-process {
         stroke: mat.m2-get-color-from-palette($primary);
       }
@@ -97,8 +87,8 @@
       }
     }
 
-    &.mat-raised-button[color='primary'],
-    &.mat-flat-button[color='primary'] {
+    &.mdc-button--raised[color='primary'],
+    &.mdc-button--flat[color='primary'] {
       svg.svg-icon-process {
         stroke: #fff;
       }

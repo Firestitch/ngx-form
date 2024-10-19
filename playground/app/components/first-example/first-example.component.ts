@@ -98,7 +98,7 @@ export class FirstExampleComponent {
   public save = () => {
     return of(true)
       .pipe(
-        delay(2000),
+        delay(3000),
         tap(() => {
           this._message.success('Validation successful');
         }),
