@@ -404,12 +404,12 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
         tap(() => this._broadcasValidatingEvents()),
         tap(() => this.validate()),
         tap(() => this._broadcastSubmittingEvents()),
+        tap(() => this._setupActiveSubmitButton()),
+        tap(() => this._disableButtons()),
         switchMap((data) => this._waitUntilStatusPending()
           .pipe(
             mapTo(data),
-          )),
-        tap(() => this._setupActiveSubmitButton()),
-        tap(() => this._disableButtons()),
+          )),       
         mergeMap((data) => {
           if (this.ngForm.status === 'INVALID') {
             return this._formInvalidState$;
