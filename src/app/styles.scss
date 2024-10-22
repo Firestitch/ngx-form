@@ -39,7 +39,7 @@
     }
   }
   
-  .mat-button {
+  .mdc-button {
     svg.svg-icon-process {
       stroke: #a3a3a3;
     }
@@ -76,7 +76,7 @@
   .fs-form button {
     &.mdc-button,
     &.mdc-button--raised:not([color='primary']),
-    &.mdc-button--flat:not([color='primary']) {
+    &.mdc-button--unelevated:not([color='primary']) {
       svg.svg-icon-process {
         stroke: mat.m2-get-color-from-palette($primary);
       }
@@ -88,7 +88,7 @@
     }
 
     &.mdc-button--raised[color='primary'],
-    &.mdc-button--flat[color='primary'] {
+    &.mdc-button--unelevated[color='primary'] {
       svg.svg-icon-process {
         stroke: #fff;
       }

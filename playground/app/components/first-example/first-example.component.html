@@ -16,7 +16,11 @@
         name="checkbox"
         [required]="required && validations"
         label="Checkboxes">
-      <mat-checkbox *ngFor="let item of items" [value]="$any(item)">{{item.name}}</mat-checkbox>
+      <mat-checkbox 
+            *ngFor="let item of items" 
+            [value]="$any(item)">
+          {{item.name}}
+        </mat-checkbox>
       <mat-hint>Hint hint hint!!!</mat-hint>
     </fs-checkbox-group>
 
