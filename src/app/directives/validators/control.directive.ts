@@ -233,7 +233,9 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
     const errorText = this._renderer2.createText(error.message);
 
     this._renderer2.appendChild(errorWrapper, errorText);
-    messageWrapper.querySelector(this.getHintWrapperSelector()).prepend(errorWrapper);
+    
+    const hintWrapper = messageWrapper.querySelector(this.getHintWrapperSelector());
+    hintWrapper?.prepend(errorWrapper);
   }
 
   protected _subscribeToStatusChagnes():void {
