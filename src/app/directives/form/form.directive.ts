@@ -332,6 +332,11 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     this._updateDirtySubmitButtons();
   }
 
+  public pristine(): void {
+    this.ngForm.form.markAsPristine();
+    this._updateDirtySubmitButtons();
+  }
+
   public triggerSubmit(options?: { confirmed: boolean }): void {
     this._confirmed = options?.confirmed;
     this.ngForm.ngSubmit.emit();
