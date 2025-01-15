@@ -161,7 +161,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _destroy$ = new Subject();
   private _confirmed = false;
-  private _submit$: (event: SubmitEvent) => Observable<any> = null;
+  private _submit$: (event?: SubmitEvent) => Observable<any> = null;
 
   constructor(
     @Inject(NgForm)
@@ -272,8 +272,10 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
     }
   }
 
-  public clearSubmit(): void {
-    this._submit$ = null;
+  public clearSubmit(submit: (event: SubmitEvent) => Observable<any> = null): void {
+    if(!submit || submit === this._submit$) {
+      this._submit$ = null;
+    }
 
     setTimeout(() => {
       this._cdRef.markForCheck();

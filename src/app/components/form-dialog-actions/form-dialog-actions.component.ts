@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, Input, OnDestroy, OnInit, Optional,
+} from '@angular/core';
 
-import { MatDialogRef } from '@angular/material/dialog';
 
 import { Subject } from 'rxjs';
 import { delay, filter, takeUntil } from 'rxjs/operators';
@@ -29,7 +31,6 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   
   constructor(
     @Optional() private _form: FsFormDirective,
-    @Optional() private _dialogRef: MatDialogRef<any>,
     private _cdRef: ChangeDetectorRef,   
   ) {}
 
