@@ -78,7 +78,7 @@ import { AppMaterialModule } from './material.module';
     DrawerExampleComponent,
     TabsExampleComponent,
     DialogCreateComponent,
-    DialogSaveComponent,
+    DialogSaveComponent,  
     TemplateComponent,
   ],
   providers: [
