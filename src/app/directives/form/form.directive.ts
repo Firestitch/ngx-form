@@ -81,7 +81,7 @@ export class FsFormDirective implements OnInit, OnDestroy, AfterContentInit, OnC
   public hintSelector = '.fs-form-hint,.mat-mdc-form-field-hint-wrapper';
 
   @Input()
-  public labelSelector = '.fs-form-label,.mat-form-field-label';
+  public labelSelector = '.fs-form-label,.mdc-floating-label>mat-label';
 
   @Input()
   public autocomplete = false;
