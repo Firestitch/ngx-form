@@ -45,7 +45,7 @@
       </ng-template>
     </fs-autocomplete-chips>
     <div
-        class="fs-row"
+        class="fs-row.gap-xs"
         *ngIf="render">
       <mat-form-field>
         <mat-label>
@@ -54,6 +54,7 @@
         <input
           #passwordInput
           name="password"
+          [required]="required && validations"
           [(ngModel)]="password"
           matInput>
       </mat-form-field>
@@ -64,6 +65,7 @@
         <input
           [(ngModel)]="passwordConfirm"
           name="confirm"
+          [required]="required && validations"
           [fsFormCompare]="passwordInput"
           [fsFormNumeric]="validations"
           matInput>

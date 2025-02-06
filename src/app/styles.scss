@@ -6,11 +6,16 @@
     but should not do that for simple matInputs, cuz since Material 18 its already added
     by mat-form-field, this is why first selector is such complicated
    */
-  mat-label:not(:has(+ .mat-mdc-form-field-required-marker)), .fs-form-label {
+  mat-label:not(:has(+ .mat-mdc-form-field-required-marker)), 
+  .fs-form-label {
     &.fs-form-label-required:after {
-      content: " *";
-      white-space: pre-wrap;
+      content: "*";
+      margin-left: 1px;
     }
+  }
+  
+  mat-label {
+    display: inline-flex;
   }
 
   .fs-form-wrapper.ng-invalid.ng-dirty .fs-form-label,
