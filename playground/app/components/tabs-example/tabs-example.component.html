@@ -1,65 +1,87 @@
-<form fsForm [submit]="submit" [confirm]="confirm">
+<form
+    fsForm
+    [submit]="submit"
+    [confirm]="confirm">
   <mat-tab-group *ngIf="delay">
     <mat-tab label="First">
       <ng-template matTabContent>
         <mat-form-field>
-          <input 
+          <input
             placeholder="Email"
             [(ngModel)]="email"
             name="email"
             matInput
-            required/>
+            required>
         </mat-form-field>
       </ng-template>
     </mat-tab>
-    <mat-tab label="Second"> 
+    <mat-tab label="Second">
       <ng-template matTabContent>
         <mat-form-field>
-          <input 
+          <input
             placeholder="Name"
             [(ngModel)]="name"
             name="name"
             matInput
-            required/>
+            required>
         </mat-form-field>
-      </ng-template>       
+      </ng-template>
     </mat-tab>
   </mat-tab-group>
-  <button mat-raised-button color="primary" type="submit">Save</button>
+  <button
+      mat-raised-button
+      color="primary"
+      type="submit">
+    Save
+  </button>
 </form>
-
 <mat-tab-group #matgroup>
   <mat-tab label="First">
     <ng-template matTabContent>
-      <form fsForm [submit]="submit" [confirm]="confirm" [tabGroup]="matgroup">
+      <form
+          fsForm
+          [submit]="submit"
+          [confirm]="confirm">
         <mat-form-field>
-          <input 
+          <input
             placeholder="Name"
             [(ngModel)]="name1"
             name="name1"
             matInput
-            required/>
+            required>
         </mat-form-field>
         <br>
-        <button mat-raised-button color="primary" type="submit">Save</button>
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit">
+          Save
+        </button>
       </form>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Second"> 
+  <mat-tab label="Second">
     <ng-template matTabContent>
-      <form fsForm [submit]="submit" [confirm]="confirm" [tabGroup]="matgroup">
+      <form
+          fsForm
+          [submit]="submit"
+          [confirm]="confirm">
         <mat-form-field>
-          <input 
+          <input
             placeholder="Email"
             [(ngModel)]="email1"
             name="email1"
             matInput
-            required/>
+            required>
         </mat-form-field>
         <br>
-        <button mat-raised-button color="primary" type="submit">Save</button>
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit">
+          Save
+        </button>
       </form>
     </ng-template>
   </mat-tab>
 </mat-tab-group>
-

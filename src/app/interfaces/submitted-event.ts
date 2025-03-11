@@ -1,9 +1,6 @@
-import { NgForm } from '@angular/forms';
 
+import { SubmitEvent } from './submit-event';
 
-export interface SubmittedEvent {
-  ngForm: NgForm,
-  submitter: string,
+export interface SubmittedEvent extends SubmitEvent {
   response: any,
-  confirmed?: boolean,
 }

@@ -1,12 +1,13 @@
-
 <form
-  (fsForm)="save()"
-  wrapperSelector=".form-group"
-  messageSelector=".messages"
-  labelSelector=".label"
-  hintSelector=".hint">
+    (fsForm)="save()"
+    wrapperSelector=".form-group"
+    messageSelector=".messages"
+    labelSelector=".label"
+    hintSelector=".hint">
   <div class="form-group">
-    <div class="label">Custom Selector Targeting</div>
+    <div class="label">
+      Custom Selector Targeting
+    </div>
     <input
       type="text"
       name="phone"
@@ -14,18 +15,24 @@
       fsFormPhone
       [(ngModel)]="phone1">
     <div class="messages">
-      <div class="hint">Format 9999999999</div>
+      <div class="hint">
+        Format 9999999999
+      </div>
     </div>
   </div>
-  <button mat-raised-button color="primary">Submit</button>
+  <button
+      mat-raised-button
+      color="primary">
+    Submit
+  </button>
 </form>
-
-<br><br>
-
-<form
-  (fsForm)="save()">
+<br>
+<br>
+<form (fsForm)="save()">
   <div class="fs-form-wrapper">
-    <div class="fs-form-label">Standard Class Targeting</div>
+    <div class="fs-form-label">
+      Standard Class Targeting
+    </div>
     <input
       type="text"
       name="phone"
@@ -33,9 +40,14 @@
       fsFormPhone
       [(ngModel)]="phone2">
     <div class="fs-form-message">
-      <div class="fs-form-hint">Format 9999999999</div>
+      <div class="fs-form-hint">
+        Format 9999999999
+      </div>
     </div>
   </div>
-  <button mat-raised-button color="primary">Submit</button>
+  <button
+      mat-raised-button
+      color="primary">
+    Submit
+  </button>
 </form>
-

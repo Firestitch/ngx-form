@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { UntypedFormControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
+import { FormGroupDirective, FormsModule, NgForm, UntypedFormControl } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
@@ -9,7 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FsDialogModule } from '@firestitch/dialog';
 
 import {
-  ConfirmUnsavedComponent, FsFormDialogActionsComponent,
+  FsFormDialogActionsComponent,
   FsFormTemplateComponent, FsFormTemplateOutletComponent,
 } from './components';
 import {
@@ -18,6 +18,7 @@ import {
 } from './directives';
 import { FsButtonDirective } from './directives/button.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
+import { FsFormGroupDirective } from './directives/form-group/form-group.directive';
 import { FsFormDirective } from './directives/form/form.directive';
 import { FsFormCompareDirective } from './directives/validators/compare.directive';
 import { FsControlDirective } from './directives/validators/control.directive';
@@ -83,7 +84,7 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     FsFormTemplateComponent,
     FsFormTemplateDirective,
     FsFormTemplateOutletComponent,
-    ConfirmUnsavedComponent,
+    FsFormGroupDirective,
   ],
   exports: [
     FsFormDirective,
@@ -116,6 +117,7 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     FsFormTemplateComponent,
     FsFormTemplateDirective,
     FsFormTemplateOutletComponent,
+    FsFormGroupDirective,
   ],
   providers: [
     {

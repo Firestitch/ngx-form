@@ -1,18 +1,20 @@
 import {
-  ChangeDetectorRef, Directive, ElementRef, Host, HostBinding, Input, OnDestroy, OnInit, Optional,
+  ChangeDetectorRef, Directive, ElementRef,
+  HostBinding, inject, Input, OnDestroy, OnInit,
 } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
 
-
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { FsFormDirective } from './form/form.directive';
+import { FsFormDirective } from './form';
+import { FsFormBaseDirective } from './form-base';
+import { FsFormGroupDirective } from './form-group';
 
 
 @Directive({
-  selector: '[mat-raised-button]:not([fsFormButtonStandalone]),[mat-button]:not([fsFormButtonStandalone]),[mat-flat-button]:not([fsFormButtonStandalone]),[mat-stroked-button]:not([fsFormButtonStandalone])',
+  selector: '[mat-raised-button],[mat-button],[mat-flat-button],[mat-stroked-button]',
 })
 export class FsButtonDirective implements OnInit, OnDestroy {
 
@@ -22,31 +24,27 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   @Input()
   public dirtySubmit = true;
 
-  @Input()
-  public form: FsFormDirective;
-
   @HostBinding('style.transition')
   public transitionStyle = null;
 
-  public active = false;
   public submit = false;
 
   private _previousDisabled = false;
   private _destroy$ = new Subject();
 
-  constructor(
-    @Optional() @Host() private _matButton: MatButton,
-    @Optional() private _form: FsFormDirective,
-    private _elementRef: ElementRef,
-    private _cdRef: ChangeDetectorRef,
-  ) {}
+  private _formGroup = inject(FsFormGroupDirective, { optional: true });
+  private _form = inject(FsFormDirective, { optional: true });
+  private _matButton = inject(MatButton, { optional: true, host: true });
+  private _elementRef = inject(ElementRef);
+  private _cdRef = inject(ChangeDetectorRef);
+  private _formBase: FsFormBaseDirective;
 
   public ngOnInit() {
     this.submit = this._elementRef.nativeElement.getAttribute('type') === 'submit';
-    this.form = this.form || this._form;
+    this._formBase = this._form || this._formGroup;
 
-    if (this.form) {
-      this.form.addButton(this);
+    if (this._formBase) {
+      this._formBase.addButton(this);
 
       if(this.submit) {
         fromEvent(this.element, 'click')
@@ -54,16 +52,9 @@ export class FsButtonDirective implements OnInit, OnDestroy {
             takeUntil(this._destroy$),
           )
           .subscribe(() => {
-            this.active = true;
+            this._formBase.activeSubmitButton = this;
+            this._formBase.triggerSubmit();
           });
-
-        if (this.dirtySubmit) {
-          if (this.form.dirtySubmitButton) {
-            if(!this.form.ngForm.dirty) {
-              this.disable();
-            }
-          }
-        }
 
         this.transitionStyle = 'none';
         setTimeout(() => {
@@ -74,7 +65,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   }
 
   public disable() {    
-    if (this._matButton && !this.active) {
+    if (this._matButton && !this._formBase.activeSubmitButton) {
       this._previousDisabled = this._matButton.disabled;
       this._matButton.disabled = true;
       this._matButton.disableRipple = true;
@@ -114,17 +105,12 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   public setClass(cls) {
     const svg = this._getSvg(cls);
     this._resetClass();
-    this._disableShadowAnimation();
-    this.element.classList.add(`submit-${cls}`);
+    this.element.classList.add(`fs-form-submit-button-${cls}`);
     this.element.append(svg);
   }
 
   public get element() {
     return this._elementRef.nativeElement;
-  }
-
-  public resetActive() {
-    this.active = false;
   }
 
   public reset() {
@@ -146,16 +132,16 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this._destroy$.next(null);
     this._destroy$.complete();
-    this.form?.removeButton(this);
-  }
-
-  private _disableShadowAnimation() {
-    // .mat-elevation-z2 removes the click shadow animation
-    //this.element.classList.add('mat-elevation-z2');
+    this._formBase?.removeButton(this);
   }
 
   private _resetClass() {
-    this.element.classList.remove('submit-success', 'submit-error', 'submit-process', 'mat-elevation-z2');
+    this.element.classList
+      .remove(
+        'fs-form-submit-button-success', 
+        'fs-form-submit-button-error', 
+        'fs-form-submit-button-process',
+      );
   }
 
   private _getSvg(type) {

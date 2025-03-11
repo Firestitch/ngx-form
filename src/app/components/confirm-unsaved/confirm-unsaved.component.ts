@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+
+import { FsDialogModule } from '@firestitch/dialog';
 
 import { Subject } from 'rxjs';
 
@@ -9,6 +12,13 @@ import { Subject } from 'rxjs';
   templateUrl: './confirm-unsaved.component.html',
   styleUrls: ['./confirm-unsaved.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    MatDialogModule,
+    MatButton,
+
+    FsDialogModule,
+  ],
 })
 export class ConfirmUnsavedComponent implements OnInit, OnDestroy {
 

@@ -39,7 +39,7 @@ export class FormDeactivateGuard  {
       return of(true);
     }
 
-    return this._form.confirmUnsaved(directives)
+    return this._form.confirmUnsaved(directives[0])
       .pipe(
         map((result) => {
           return confirmResultContinue(result);

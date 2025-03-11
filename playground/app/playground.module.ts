@@ -24,9 +24,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import {
-  BroadcastExampleComponent, DeactivateComponent, DeactivateLeaveComponent, DialogComponent,
+  DeactivateComponent, DeactivateLeaveComponent, DialogComponent,
   DialogCreateComponent, DialogExampleComponent, DialogSaveComponent, DrawerComponent,
   DrawerExampleComponent, EmitExampleComponent, ExamplesComponent, FirstExampleComponent,
+  FormGroupExampleComponent,
   FunctionComponent, NestedComponent, NestedLevel1Component, NestedLevel2Component,
   NonMaterialComponent, SubmitObservableComponent, TabsExampleComponent, TemplateComponent,
 } from './components';
@@ -62,7 +63,6 @@ import { AppMaterialModule } from './material.module';
     AppComponent,
     FirstExampleComponent,
     EmitExampleComponent,
-    BroadcastExampleComponent,
     FunctionComponent,
     NestedComponent,
     NestedLevel1Component,
@@ -80,6 +80,7 @@ import { AppMaterialModule } from './material.module';
     DialogCreateComponent,
     DialogSaveComponent,  
     TemplateComponent,
+    FormGroupExampleComponent,
   ],
   providers: [
     {

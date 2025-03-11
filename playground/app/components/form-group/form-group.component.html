@@ -1,0 +1,108 @@
+<ng-container fsFormGroup>
+  <mat-tab-group>
+    <mat-tab label="First">
+      <ng-template matTabContent>
+        <div class="fs-row.gap-xs">
+          <a
+              mat-stroked-button
+              (click)="form = 1">
+            Form 1
+          </a>
+          <a
+              mat-stroked-button
+              (click)="form = 2">
+            Form 2
+          </a>
+        </div>
+        @if (form === 1) {
+          <h2>
+            Form 1
+          </h2>
+          <form
+              fsForm
+              [submit]="submit">
+            <mat-form-field>
+              <input
+                [required]="true"
+                placeholder="Name"
+                [(ngModel)]="name"
+                name="name"
+                matInput>
+            </mat-form-field>
+          </form>
+          <button
+              type="submit"
+              color="primary"
+              mat-flat-button>
+            Submit
+          </button>
+        } @else {
+          <h2>
+            Form 2
+          </h2>
+          <form
+              fsForm
+              [submit]="submit">
+            <mat-form-field>
+              <input
+                [required]="true"
+                placeholder="Name"
+                [(ngModel)]="name"
+                name="name"
+                matInput>
+            </mat-form-field>
+          </form>
+          <button
+              type="submit"
+              color="primary"
+              mat-flat-button>
+            Submit
+          </button>
+        }
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Second">
+      <ng-template matTabContent>
+        <h2>
+          Second
+        </h2>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
+<br>
+<br>
+<form
+    fsForm
+    [submit]="submit">
+  <mat-tab-group>
+    <mat-tab label="First">
+      <ng-template matTabContent>
+        <h2>
+          Form 1
+        </h2>
+        <mat-form-field>
+          <input
+            placeholder="Name"
+            [required]="true"
+            [(ngModel)]="name"
+            name="name"
+            matInput>
+        </mat-form-field>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Second">
+      <ng-template matTabContent>
+        <h2>
+          Second
+        </h2>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+  <button
+      type="submit"
+      color="primary"
+      mat-flat-button>
+    Submit
+  </button>
+</form>

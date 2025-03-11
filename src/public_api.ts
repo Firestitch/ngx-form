@@ -8,6 +8,7 @@ export { FsForm } from './app/services/fsform.service';
 export { FsFormGreaterDirective, FsFormGreaterEqualDirective, FsFormLesserEqualDirective, FsFormTemplateDirective } from './app/directives';
 export { FsButtonDirective } from './app/directives/button.directive';
 export { FsFormDialogCloseDirective } from './app/directives/form-dialog-close.directive';
+export { FsFormGroupDirective } from './app/directives/form-group/form-group.directive';
 export { FsFormDirective } from './app/directives/form/form.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';
 export { FsFormCompareDirective } from './app/directives/validators/compare.directive';

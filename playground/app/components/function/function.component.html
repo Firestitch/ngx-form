@@ -1,43 +1,51 @@
-<form (fsForm)="save()" #form="ngForm">
-  <div class="fs-column">
-    <mat-form-field>
-      <input 
-        placeholder="Exception Validation"
-        [(ngModel)]="models.exception"
-        name="validateException"
-        matInput
-        [validate]="validateException"
-        [validateData]="{ test: 'data' }"/>
-      <mat-hint>Valid email: {{email}}</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input 
-        placeholder="Promise Validation"
-        [(ngModel)]="models.promise"
-        name="validatePromise"
-        matInput
-        [validate]="validatePromise"
-        [validateData]="{ test: 'data' }"/>
-        <mat-hint>Valid email: {{email}}</mat-hint>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input 
-        placeholder="Observable Validation On Submit"
-        [(ngModel)]="models.observable"
-        name="validateObservable"
-        matInput
-        [validateOnSubmit]="true"
-        [validate]="validateObservable"/>
-        <mat-hint>Valid email: {{email}}</mat-hint>
-    </mat-form-field>
+<ng-container fsFormGroup>
+  <form
+      (fsForm)="save()"
+      #form="ngForm">
+    <div class="fs-column">
+      <mat-form-field>
+        <input
+          placeholder="Exception Validation"
+          [(ngModel)]="models.exception"
+          name="validateException"
+          matInput
+          [validate]="validateException"
+          [validateData]="{ test: 'data' }">
+        <mat-hint>
+          Valid email: {{ email }}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          placeholder="Promise Validation"
+          [(ngModel)]="models.promise"
+          name="validatePromise"
+          matInput
+          [validate]="validatePromise"
+          [validateData]="{ test: 'data' }">
+        <mat-hint>
+          Valid email: {{ email }}
+        </mat-hint>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          placeholder="Observable Validation On Submit"
+          [(ngModel)]="models.observable"
+          name="validateObservable"
+          matInput
+          [validateOnSubmit]="true"
+          [validate]="validateObservable">
+        <mat-hint>
+          Valid email: {{ email }}
+        </mat-hint>
+      </mat-form-field>
+    </div>
     <br>
-    <button 
-        mat-raised-button 
-        color="primary" 
+    <button
+        mat-flat-button
+        color="primary"
         type="submit">
       Submit
     </button>
-  </div>
-</form>
+  </form>
+</ng-container>
