@@ -1,5 +1,4 @@
 import {
-  ContentChild,
   Directive,
 } from '@angular/core';
 
@@ -15,7 +14,6 @@ import { FsFormBaseDirective } from '../form-base';
 })
 export class FsFormGroupDirective extends FsFormBaseDirective {
 
-  @ContentChild(FsFormDirective)
   private _formDirective: FsFormDirective;
 
   public triggerSubmit() {
@@ -32,5 +30,13 @@ export class FsFormGroupDirective extends FsFormBaseDirective {
 
   public get confirm(): ConfirmConfig | boolean {
     return this._formDirective?.confirm;
+  }
+
+  public registerForm(formDirective: FsFormDirective) {
+    this._formDirective = formDirective;
+  }
+
+  public deregisterForm() {
+    this._formDirective = null;
   }
 }

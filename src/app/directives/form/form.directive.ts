@@ -234,6 +234,8 @@ export class FsFormDirective
   }
 
   public ngOnInit() {
+    this._formGroup?.deregisterForm();
+
     if (this.deactivationGuard) {
       this._registerCanDeactivateGuard();
     }
@@ -282,6 +284,8 @@ export class FsFormDirective
   }
 
   public ngOnDestroy(): void {
+    this._formGroup?.registerForm(null);
+
     super.ngOnDestroy();
     this._cleanupCanDeactivate();
   }
