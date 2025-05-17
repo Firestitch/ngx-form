@@ -10,7 +10,6 @@ import { FsDialogModule } from '@firestitch/dialog';
 
 import {
   FsFormDialogActionsComponent,
-  FsFormTemplateComponent, FsFormTemplateOutletComponent,
 } from './components';
 import {
   FsFormGreaterEqualDirective, FsFormLesserEqualDirective,
@@ -40,6 +39,7 @@ import { FsFormPhoneDirective } from './directives/validators/phone.directive';
 import { FsFormRequiredDirective } from './directives/validators/required.directive';
 import { FsFormUrlDirective } from './directives/validators/url.directive';
 import { FsFormValidateDirective } from './directives/validators/validate.directive';
+import { FsFormTemplateOutletDirective } from './directives/form-template-outlet.directive';
 
 
 @NgModule({
@@ -81,9 +81,9 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     FsFormNoFsValidatorsDirective,
     FsButtonDirective,
     FsSubmitButtonDirective,
-    FsFormTemplateComponent,
     FsFormTemplateDirective,
-    FsFormTemplateOutletComponent,
+    FsFormTemplateDirective,
+    FsFormTemplateOutletDirective,
     FsFormGroupDirective,
   ],
   exports: [
@@ -114,9 +114,9 @@ import { FsFormValidateDirective } from './directives/validators/validate.direct
     FsFormNoFsValidatorsDirective,
     FsButtonDirective,
     FsSubmitButtonDirective,
-    FsFormTemplateComponent,
     FsFormTemplateDirective,
-    FsFormTemplateOutletComponent,
+    FsFormTemplateDirective,
+    FsFormTemplateOutletDirective,
     FsFormGroupDirective,
   ],
   providers: [
@@ -134,7 +134,7 @@ export class FsFormModule {
      */
     ErrorStateMatcher.prototype
       .isErrorState = (
-        control: UntypedFormControl | null, 
+        control: UntypedFormControl | null,
         form: FormGroupDirective | NgForm | null,
       ): boolean => {
         return control?.invalid && control?.touched && control?.dirty;

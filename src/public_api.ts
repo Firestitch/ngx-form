@@ -30,9 +30,10 @@ export { FsFormPhoneDirective } from './app/directives/validators/phone.directiv
 export { FsFormRequiredDirective } from './app/directives/validators/required.directive';
 export { FsFormUrlDirective } from './app/directives/validators/url.directive';
 export { FsFormValidateDirective } from './app/directives/validators/validate.directive';
+export { FsFormTemplateOutletDirective } from './app/directives/form-template-outlet.directive';
 
 // Components
-export { FsFormDialogActionsComponent, FsFormTemplateComponent, FsFormTemplateOutletComponent } from './app/components';
+export { FsFormDialogActionsComponent } from './app/components';
 
 export { FsValidators } from './app/validators/validators';
 

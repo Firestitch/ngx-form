@@ -7,22 +7,28 @@
         matInput
         fsFormRequired="true"/>
     </mat-form-field>
-    <fs-form-template-outlet [formTemplate]="emailTemplate"></fs-form-template-outlet>
-    <button 
-        mat-raised-button 
-        color="primary" 
+
+    <ng-container fsFormTemplateOutlet
+                  [template]="tmpl" [context]="{label: 'Email'}">
+    </ng-container>
+
+    <button
+        mat-raised-button
+        color="primary"
         type="submit">
       Submit
     </button>
   </div>
 </form>
-<fs-form-template #emailTemplate>
-  <mat-form-field>
-    <mat-label>Email</mat-label>
+
+<ng-template #tmpl let-label="label">
+  <mat-form-field fsFormTemplate>
+    <mat-label>{{ label }}</mat-label>
     <input
       matInput
+      required
       [(ngModel)]="email"
       name="email">
   </mat-form-field>
-</fs-form-template>
+</ng-template>
 

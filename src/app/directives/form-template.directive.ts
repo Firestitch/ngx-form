@@ -1,20 +1,20 @@
-import { AfterContentInit, ContentChildren, Directive, QueryList, TemplateRef, ViewChildren } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { AfterContentInit, ContentChildren, Directive, inject } from '@angular/core';
+import { NgForm, NgModel } from '@angular/forms';
 
 
 @Directive({
-  selector: '[fsFormTemplate]',
+  selector: '[fsFormTemplate],fs-form-template',
 })
 export class FsFormTemplateDirective implements AfterContentInit {
 
-  constructor(
-   //public templateRef: TemplateRef<FsFormTemplateDirective>
-  ) {}
+  @ContentChildren(NgModel)
+  protected _projectedControls: NgModel[];
 
-  @ViewChildren(NgModel) 
-  public models: QueryList<NgModel>;
+  protected _ngForm: NgForm = inject(NgForm);
 
   public ngAfterContentInit(): void {
-
+    this._projectedControls.forEach((control: NgModel) => {
+      this._ngForm.addControl(control);
+    });
   }
 }
