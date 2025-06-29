@@ -385,10 +385,13 @@ export class FsFormDirective
         catchError((e) => {
           this._handleError(e);
 
-          return of(null);
+          return of({
+            ...this._submitEvent,
+            error: e.message,
+          });
         }),
         tap((submittedEvent: SubmittedEvent) => {
-          if(submittedEvent) {
+          if(!submittedEvent.error) {
             this._completeSubmit(true, submittedEvent);
           }
         }),

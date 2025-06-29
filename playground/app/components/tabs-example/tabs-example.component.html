@@ -2,28 +2,32 @@
     fsForm
     [submit]="submit"
     [confirm]="confirm">
-  <mat-tab-group *ngIf="delay">
+  <mat-tab-group *fsSkeleton="loaded">
     <mat-tab label="First">
       <ng-template matTabContent>
         <mat-form-field>
+          <mat-label>
+            Email
+          </mat-label>
           <input
-            placeholder="Email"
             [(ngModel)]="email"
             name="email"
             matInput
-            required>
+            [required]="true">
         </mat-form-field>
       </ng-template>
     </mat-tab>
     <mat-tab label="Second">
       <ng-template matTabContent>
         <mat-form-field>
+          <mat-label>
+            Name
+          </mat-label>
           <input
-            placeholder="Name"
             [(ngModel)]="name"
             name="name"
             matInput
-            required>
+            [required]="true">
         </mat-form-field>
       </ng-template>
     </mat-tab>
@@ -35,53 +39,3 @@
     Save
   </button>
 </form>
-<mat-tab-group #matgroup>
-  <mat-tab label="First">
-    <ng-template matTabContent>
-      <form
-          fsForm
-          [submit]="submit"
-          [confirm]="confirm">
-        <mat-form-field>
-          <input
-            placeholder="Name"
-            [(ngModel)]="name1"
-            name="name1"
-            matInput
-            required>
-        </mat-form-field>
-        <br>
-        <button
-            mat-raised-button
-            color="primary"
-            type="submit">
-          Save
-        </button>
-      </form>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Second">
-    <ng-template matTabContent>
-      <form
-          fsForm
-          [submit]="submit"
-          [confirm]="confirm">
-        <mat-form-field>
-          <input
-            placeholder="Email"
-            [(ngModel)]="email1"
-            name="email1"
-            matInput
-            required>
-        </mat-form-field>
-        <br>
-        <button
-            mat-raised-button
-            color="primary"
-            type="submit">
-          Save
-        </button>
-      </form>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>

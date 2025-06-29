@@ -38,7 +38,7 @@ export class FsForm {
   public confirmUnsaved(
     form: FsFormDirective, 
   ): Observable<ConfirmResult> {
-    if (!form.confirm || !form.ngForm.dirty) {
+    if (!form.confirm) {
       return of(ConfirmResult.Pristine);
     }
 
@@ -56,16 +56,17 @@ export class FsForm {
       cancelLabel = form.confirm.cancelLabel || cancelLabel;
     }
 
-    return this._dialog.open(ConfirmUnsavedComponent, {
-      data: {
-        title,
-        message,
-        saveLabel,
-        discardLabel,
-        cancelLabel,
-      },
-      width: 'auto', 
-    })
+    return this._dialog
+      .open(ConfirmUnsavedComponent, {
+        data: {
+          title,
+          message,
+          saveLabel,
+          discardLabel,
+          cancelLabel,
+        },
+        width: 'auto', 
+      })
       .afterClosed()
       .pipe(
         switchMap((result) => {
@@ -84,7 +85,13 @@ export class FsForm {
 
             return form.submit$({ confirmed: true })
               .pipe(
-                map(() => ConfirmResult.Save),
+                map((submitEvent) => {
+                  if(submitEvent.error) {
+                    return ConfirmResult.Invalid;
+                  }
+
+                  return ConfirmResult.Save;
+                }),
                 catchError(() => {
                   return of(ConfirmResult.Invalid);
                 }),
