@@ -43,7 +43,7 @@ export class FsForm {
         return (
           control.dirty ||
           (
-            control.errors.required && 
+            control.errors?.required && 
             (control.value === '' || control.value === null || control.value === undefined)
           ) 
         );
