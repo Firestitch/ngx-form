@@ -35,18 +35,33 @@ export class FsForm {
     this._formDirectiveStore.delete(routeComponent);
   }
 
+  public hasChanges(form: FsFormDirective): boolean {
+    return Object.keys(form.ngForm.control.controls)
+      .some((key) => {
+        const control = form.ngForm.control.controls[key];
+
+        return (
+          control.dirty ||
+          (
+            control.errors.required && 
+            (control.value === '' || control.value === null || control.value === undefined)
+          ) 
+        );
+      });
+  }
+
   public confirmUnsaved(
     form: FsFormDirective, 
   ): Observable<ConfirmResult> {
-    if (!form.confirm) {
-      return of(ConfirmResult.Pristine);
+    if (!form.confirm || !this.hasChanges(form)) {
+      return of(ConfirmResult.NoChanges);
     }
 
-    let title = 'You Have Unsaved Changes';
+    let title = 'You have unsaved changes';
     let message = 'What would you like to do with your changes?';
-    let saveLabel = 'Save & Continue';
-    let discardLabel = 'Discard Changes & Continue';
-    let cancelLabel = 'Review Changes';
+    let saveLabel = 'Save and continue';
+    let discardLabel = 'Discard changes and continue';
+    let cancelLabel = 'Review changes';
 
     if (typeof form.confirm === 'object') {
       title = form.confirm.title || title;

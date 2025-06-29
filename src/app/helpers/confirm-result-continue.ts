@@ -4,6 +4,6 @@ export function confirmResultContinue(result): boolean {
   return (
     result === ConfirmResult.Discard || 
     result === ConfirmResult.Save || 
-    result === ConfirmResult.Pristine
+    result === ConfirmResult.NoChanges
   );
 }

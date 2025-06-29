@@ -494,7 +494,7 @@ export class FsFormDirective
         .pipe(
           filter((result) => confirmResultContinue(result)),
           switchMap((result) => {
-            return result === ConfirmResult.Pristine || result === ConfirmResult.Discard
+            return result === ConfirmResult.NoChanges || result === ConfirmResult.Discard
               ? of(null)
               : this.submitted.asObservable();
           }),

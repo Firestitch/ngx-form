@@ -34,7 +34,9 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
 
   private _buttons = new QueryList<FsButtonDirective>();
   private _activeSubmitButton: FsButtonDirective;
-  
+  private _currentTabIndex: number;
+  private _tabConfirming: boolean;
+
   public abstract submitting: boolean;
   public abstract confirm: ConfirmConfig | boolean;  
 
@@ -101,9 +103,6 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
       this._registerConfirmTabGroup(tabGroup);
     });
   }
-
-  private _currentTabIndex: number;
-  private _tabConfirming: boolean;
 
   private _registerConfirmTabGroup(tabGroup: MatTabGroup): void {
     this._currentTabIndex = tabGroup.selectedIndex;

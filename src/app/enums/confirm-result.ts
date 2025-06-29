@@ -3,5 +3,5 @@ export enum ConfirmResult {
   Discard = 'discard',
   Review = 'review',
   Invalid = 'invalid',
-  Pristine = 'pristine',
+  NoChanges = 'noChanges',
 }
