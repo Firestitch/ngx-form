@@ -40,13 +40,7 @@ export class FsForm {
       .some((key) => {
         const control = form.ngForm.control.controls[key];
 
-        return (
-          control.dirty ||
-          (
-            control.errors?.required && 
-            (control.value === '' || control.value === null || control.value === undefined)
-          ) 
-        );
+        return control.dirty;
       });
   }
 
