@@ -10,17 +10,15 @@ import {
   QueryList,
 } from '@angular/core';
 
-import { MatTabGroup } from '@angular/material/tabs';
+import { MatTab, MatTabGroup, MatTabHeader } from '@angular/material/tabs';
 
 import { Observable, of, Subject } from 'rxjs';
-import { delay, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { ConfirmResult } from '../../enums';
 import { confirmResultContinue } from '../../helpers';
-import { ConfirmConfig } from '../../interfaces';
-import { FsForm } from '../../services';
+import { ConfirmConfig, ConfirmTabGroup } from '../../interfaces';
 import { FsButtonDirective } from '../button.directive';
-import { FsFormDirective } from '../form';
 
 
 @Directive()
@@ -40,10 +38,7 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
 
   private _buttons = new QueryList<FsButtonDirective>();
   private _activeSubmitButton: FsButtonDirective;
-  private _currentTabIndex: number;
-  private _tabConfirming: boolean;
   private _destroy$ = new Subject<void>();
-  private _formService = inject(FsForm);
   
   public abstract submitting: boolean;
   public abstract confirm: ConfirmConfig | boolean;  
@@ -113,51 +108,48 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
   }
 
   private _registerConfirmTabGroup(tabGroup: MatTabGroup): void {
-    this._currentTabIndex = tabGroup.selectedIndex;
+    const confirmTabGroup = tabGroup as ConfirmTabGroup;
+    if (!confirmTabGroup._originalHandleClick) {
+      confirmTabGroup._originalHandleClick = tabGroup._handleClick;
+      confirmTabGroup._handlClick$ = new Subject<{
+         tab: MatTab; 
+         tabHeader: MatTabHeader; 
+         idx: number 
+        }>();
 
-    tabGroup
-      .selectedIndexChange
+      confirmTabGroup._handleClick = (tab: MatTab, tabHeader: MatTabHeader, idx: number) => {
+        if (confirmTabGroup._handlClick$.observers.length) {
+          confirmTabGroup._handlClick$.next({ tab, tabHeader, idx });
+        } else {
+          confirmTabGroup._originalHandleClick(tab, tabHeader, idx);
+        }
+      };
+    }
+
+    confirmTabGroup._handlClick$
       .pipe(
-        filter(() => !this._tabConfirming),
-        switchMap((selectedIndex) => {
-          if(
-            this.confirm && 
-            this.confirmTabs && 
-            this instanceof FsFormDirective && this._formService.hasChanges(this)
-          ) {
-            this._tabConfirming = true;
-            setTimeout(() => {  
-              tabGroup.selectedIndex = this._currentTabIndex; 
-              this._cdRef.markForCheck();
-            });
-
+        filter(() => !this.submitting),
+        switchMap((event) => {
+          if(this.confirm && this.confirmTabs) {
             return this.triggerConfirm()
               .pipe(
-                map((result) => {
-                  if(confirmResultContinue(result)) {
-                    tabGroup.selectedIndex = selectedIndex;
-
-                    return selectedIndex;
+                tap((result) => {
+                  if (confirmResultContinue(result)) {
+                    confirmTabGroup.selectedIndex = event.idx;
                   }
-
-                  return this._currentTabIndex;
-                }),
-                delay(50),
-                tap(() => {
-                  this._tabConfirming = false;
                 }),
               );
-          } 
+          }
 
-          return of(selectedIndex);
-        }),
-        tap((selectedIndex) => {
-          this._currentTabIndex = selectedIndex;
+          confirmTabGroup._originalHandleClick(event.tab, event.tabHeader, event.idx);
+
+          return of(null);
         }),
         takeUntil(this._destroy$),
       )
       .subscribe();
   }
+  
   
   public abstract triggerSubmit(): void;
   public abstract triggerConfirm(): Observable<ConfirmResult>;
