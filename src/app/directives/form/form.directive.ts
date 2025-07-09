@@ -7,7 +7,6 @@ import {
   HostBinding,
   Inject,
   Input,
-  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -155,7 +154,6 @@ export class FsFormDirective
     private _form: FsForm,
     private _element: ElementRef,
     private _message: FsMessage,
-    private _ngZone: NgZone,
     private _cdRef: ChangeDetectorRef,
     @Optional() private _formGroup: FsFormGroupDirective,
     @Optional() @Inject(MatDialogRef)

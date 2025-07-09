@@ -2,7 +2,9 @@ import {
   AfterContentInit,
   ContentChildren,
   Directive,
+  inject,
   Input,
+  NgZone,
   OnDestroy,
   QueryList,
 } from '@angular/core';
@@ -36,7 +38,9 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
   private _activeSubmitButton: FsButtonDirective;
   private _currentTabIndex: number;
   private _tabConfirming: boolean;
-
+  
+  protected _ngZone = inject(NgZone);
+  
   public abstract submitting: boolean;
   public abstract confirm: ConfirmConfig | boolean;  
 
@@ -112,8 +116,10 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
         filter(() => !this._tabConfirming),
         switchMap((selectedIndex) => {
           if(this.confirm && this.confirmTabs) {
-            tabGroup.selectedIndex = this._currentTabIndex;
             this._tabConfirming = true;
+            this._ngZone.run(() => { 
+              tabGroup.selectedIndex = this._currentTabIndex; 
+            });  
 
             return this.triggerConfirm()
               .pipe(
