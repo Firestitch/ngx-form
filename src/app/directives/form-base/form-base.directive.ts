@@ -1,5 +1,6 @@
 import {
   AfterContentInit,
+  ChangeDetectorRef,
   ContentChildren,
   Directive,
   inject,
@@ -17,7 +18,9 @@ import { delay, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ConfirmResult } from '../../enums';
 import { confirmResultContinue } from '../../helpers';
 import { ConfirmConfig } from '../../interfaces';
+import { FsForm } from '../../services';
 import { FsButtonDirective } from '../button.directive';
+import { FsFormDirective } from '../form';
 
 
 @Directive()
@@ -29,7 +32,8 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
   @Input()
   public tabGroup: MatTabGroup;
 
-  private _destroy$ = new Subject<void>();
+  protected _ngZone = inject(NgZone);
+  protected _cdRef = inject(ChangeDetectorRef);
 
   @ContentChildren(MatTabGroup, { descendants: true })
   private _tabGroups: QueryList<MatTabGroup> = new QueryList();
@@ -38,8 +42,8 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
   private _activeSubmitButton: FsButtonDirective;
   private _currentTabIndex: number;
   private _tabConfirming: boolean;
-  
-  protected _ngZone = inject(NgZone);
+  private _destroy$ = new Subject<void>();
+  private _formService = inject(FsForm);
   
   public abstract submitting: boolean;
   public abstract confirm: ConfirmConfig | boolean;  
@@ -111,15 +115,21 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
   private _registerConfirmTabGroup(tabGroup: MatTabGroup): void {
     this._currentTabIndex = tabGroup.selectedIndex;
 
-    tabGroup.selectedIndexChange
+    tabGroup
+      .selectedIndexChange
       .pipe(
         filter(() => !this._tabConfirming),
         switchMap((selectedIndex) => {
-          if(this.confirm && this.confirmTabs) {
+          if(
+            this.confirm && 
+            this.confirmTabs && 
+            this instanceof FsFormDirective && this._formService.hasChanges(this)
+          ) {
             this._tabConfirming = true;
-            this._ngZone.run(() => { 
+            setTimeout(() => {  
               tabGroup.selectedIndex = this._currentTabIndex; 
-            });  
+              this._cdRef.markForCheck();
+            });
 
             return this.triggerConfirm()
               .pipe(
@@ -130,7 +140,7 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
                     return selectedIndex;
                   }
 
-                  return null;
+                  return this._currentTabIndex;
                 }),
                 delay(50),
                 tap(() => {
@@ -142,9 +152,7 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
           return of(selectedIndex);
         }),
         tap((selectedIndex) => {
-          if(selectedIndex !== null) {
-            this._currentTabIndex = selectedIndex;
-          }
+          this._currentTabIndex = selectedIndex;
         }),
         takeUntil(this._destroy$),
       )

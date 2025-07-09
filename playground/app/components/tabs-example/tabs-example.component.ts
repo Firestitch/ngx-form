@@ -19,6 +19,7 @@ export class TabsExampleComponent {
   public email1;
   public loaded = false;
   public confirm = true;
+  public tab = 'first';
   
   private _message = inject(FsMessage);
   private _cdref = inject(ChangeDetectorRef);

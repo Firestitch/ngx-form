@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  ChangeDetectorRef,
   Directive,
   ElementRef,
   EventEmitter,
@@ -154,7 +153,6 @@ export class FsFormDirective
     private _form: FsForm,
     private _element: ElementRef,
     private _message: FsMessage,
-    private _cdRef: ChangeDetectorRef,
     @Optional() private _formGroup: FsFormGroupDirective,
     @Optional() @Inject(MatDialogRef)
     private _dialogRef: MatDialogRef<any>,

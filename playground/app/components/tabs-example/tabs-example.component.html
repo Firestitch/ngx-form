@@ -2,8 +2,13 @@
     fsForm
     [submit]="submit"
     [confirm]="confirm">
-  <mat-tab-group *fsSkeleton="loaded">
-    <mat-tab label="First">
+  <mat-tab-group
+      *fsSkeleton="loaded"
+      [(selected)]="tab"
+      fsTabs>
+    <mat-tab
+        label="First"
+        name="first">
       <ng-template matTabContent>
         <mat-form-field>
           <mat-label>
