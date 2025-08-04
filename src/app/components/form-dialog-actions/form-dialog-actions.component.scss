@@ -3,7 +3,7 @@
 }
 
 .form-buttons {
-  &.save-create .close-button:not(.cancel-button) {
+  &.save-create .close-button{
     float: right;
   }
 }

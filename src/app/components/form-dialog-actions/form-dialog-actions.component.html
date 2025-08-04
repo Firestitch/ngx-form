@@ -1,22 +1,23 @@
-<div class="form-buttons" [ngClass]="{ 'save-create': save || create }">
+<div
+    class="form-buttons"
+    [ngClass]="{ 'save-create': save || create }">
   <ng-container *ngIf="save || create">
     <button
         mat-button
         type="submit"
         color="primary"
         [name]="name">
-      {{create ? 'Create' : 'Save'}}
+      {{ create ? 'Create' : 'Save' }}
     </button>
     <button
         mat-button
         type="button"
-        class="close-button cancel-button"
+        class="cancel-button"
         [disabled]="close && !dirty && !create"
         [mat-dialog-close]="null">
       Cancel
     </button>
   </ng-container>
-
   <ng-container *ngIf="done">
     <button
         mat-button
@@ -26,11 +27,9 @@
       Done
     </button>
   </ng-container>
-
   <ng-container *ngIf="save || create">
     <ng-template [ngTemplateOutlet]="content"></ng-template>
   </ng-container>
-
   <ng-container *ngIf="close">
     <button
         mat-button
@@ -42,12 +41,10 @@
       Close
     </button>
   </ng-container>
-
   <ng-container *ngIf="!(save || create)">
     <ng-template [ngTemplateOutlet]="content"></ng-template>
   </ng-container>
 </div>
-
 <ng-template #content>
   <ng-content></ng-content>
 </ng-template>
