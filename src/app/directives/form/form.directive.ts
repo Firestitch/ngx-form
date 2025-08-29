@@ -383,7 +383,7 @@ export class FsFormDirective
 
           return of({
             ...this._submitEvent,
-            error: e.message,
+            error: e?.message,
           });
         }),
         tap((submittedEvent: SubmittedEvent) => {
