@@ -1,6 +1,12 @@
-<button mat-raised-button color="primary" (click)="open()">Open</button>
-
+<button
+    mat-flat-button
+    color="primary"
+    (click)="open()">
+  Open
+</button>
 <fieldset *ngIf="response">
-  <legend>Response</legend>
-  {{response|json}}
+  <legend>
+    Response
+  </legend>
+  {{ response|json }}
 </fieldset>

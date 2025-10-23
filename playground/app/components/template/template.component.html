@@ -1,29 +1,33 @@
 <form (fsForm)="save()">
   <div class="fs-column">
     <mat-form-field>
-      <input placeholder="Firstname"
+      <input
+        placeholder="Firstname"
         [(ngModel)]="firstname"
         name="firstname"
         matInput
-        fsFormRequired="true"/>
+        fsFormRequired="true">
     </mat-form-field>
-
-    <ng-container fsFormTemplateOutlet
-                  [template]="tmpl" [context]="{label: 'Email'}">
+    <ng-container
+      fsFormTemplateOutlet
+      [template]="tmpl"
+      [context]="{label: 'Email'}">
     </ng-container>
-
     <button
-        mat-raised-button
+        mat-flat-button
         color="primary"
         type="submit">
       Submit
     </button>
   </div>
 </form>
-
-<ng-template #tmpl let-label="label">
+<ng-template
+    #tmpl
+    let-label="label">
   <mat-form-field fsFormTemplate>
-    <mat-label>{{ label }}</mat-label>
+    <mat-label>
+      {{ label }}
+    </mat-label>
     <input
       matInput
       required
@@ -31,4 +35,3 @@
       name="email">
   </mat-form-field>
 </ng-template>
-

@@ -1,6 +1,11 @@
-<form (fsForm)="save()" (submit)="submitting()" (invalid)="invalid()" #form="ngForm" [dirtySubmitButton]="false">
+<form
+    (fsForm)="save()"
+    (submit)="submitting()"
+    (invalid)="invalid()"
+    #form="ngForm"
+    [dirtySubmitButton]="false">
   <div class="fs-column">
-   <mat-form-field>
+    <mat-form-field>
       <input
         placeholder="Value >= 3 and <=8"
         [(ngModel)]="minMaxInput"
@@ -11,21 +16,35 @@
         [fsFormMax]="8"
         fsFormMinMessage="This is custom lesser than $(1) message"
         fsFormMaxMessage="This is custom greater than $(1) message"
-        [validateMessages]="{ required: 'This is custom required message' }"
-        />
+        [validateMessages]="{ required: 'This is custom required message' }">
     </mat-form-field>
-
     <fieldset>
-      <legend>Actions</legend>
+      <legend>
+        Actions
+      </legend>
       <div class="fs-row.gap-xs">
-        <button mat-raised-button color="primary" type="submit">Submit</button>
-        <button mat-raised-button color="primary" type="button" (click)="emitSubmit()">Emit Submit</button>
+        <button
+            mat-flat-button
+            color="primary"
+            type="submit">
+          Submit
+        </button>
+        <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="emitSubmit()">
+          Emit Submit
+        </button>
       </div>
     </fieldset>
-
     <fieldset>
-      <legend>Submit Validation Status</legend>
-      <div>{{status}}</div>
+      <legend>
+        Submit Validation Status
+      </legend>
+      <div>
+        {{ status }}
+      </div>
     </fieldset>
   </div>
 </form>

@@ -202,17 +202,18 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   }
 
   protected _renderHint(error, messageWrapper) {
-    if (this.getHintWrapperSelector()) {
-      const hints = messageWrapper.querySelectorAll('.mat-mdc-form-field-hint');
+    const hints = [
+      ...messageWrapper.querySelectorAll('.mat-mdc-form-field-hint'),
+      ...messageWrapper.querySelectorAll(this.getHintWrapperSelector()),
+    ];
 
-      hints.forEach((hint) => {
-        this._renderer2.setStyle(hint, 'display', error ? 'none' : 'block');
+    hints.forEach((hint) => {
+      this._renderer2.setStyle(hint, 'display', error ? 'none' : 'block');
 
-        if (this.appendHintClass) {
-          this._renderer2.addClass(hint, this.appendHintClass);
-        }
-      });
-    }
+      if (this.appendHintClass) {
+        this._renderer2.addClass(hint, this.appendHintClass);
+      }
+    });
   }
 
   protected _renderError(wrapper, messageWrapper, error) {
@@ -234,8 +235,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
     this._renderer2.appendChild(errorWrapper, errorText);
     
-    const hintWrapper = messageWrapper.querySelector(this.getHintWrapperSelector());
-    hintWrapper?.prepend(errorWrapper);
+    messageWrapper?.prepend(errorWrapper);
   }
 
   protected _subscribeToStatusChagnes():void {

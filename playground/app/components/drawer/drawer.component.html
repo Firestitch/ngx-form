@@ -1,7 +1,10 @@
 <div fsDrawerContent>
-  <form fsForm [submit]="save" (submitted)="close()">
+  <form
+      fsForm
+      [submit]="save"
+      (submitted)="close()">
     <div class="content">
-       <mat-form-field>
+      <mat-form-field>
         <input
           placeholder="Name"
           matInput
@@ -9,8 +12,16 @@
           name="name">
       </mat-form-field>
     </div>
-
-    <button mat-raised-button color="primary">Save</button>
-    <button mat-button type="button" (click)="close()">Cancel</button>
+    <button
+        mat-flat-button
+        color="primary">
+      Save
+    </button>
+    <button
+        mat-button
+        type="button"
+        (click)="close()">
+      Cancel
+    </button>
   </form>
 </div>

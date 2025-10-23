@@ -1,20 +1,23 @@
 <form (fsForm)="save()">
-   <mat-form-field>
-    <input placeholder="Firstname"
+  <mat-form-field>
+    <input
+      placeholder="Firstname"
       [(ngModel)]="firstname"
       name="firstname"
       matInput
-      fsFormRequired="true"/>
+      fsFormRequired="true">
   </mat-form-field>
   <br>
-
   <br>
-
   <ng-container [ngTemplateOutlet]="emailTemplate"></ng-container>
   <br>
   <ng-template #emailTemplate>
-      <nested-level-1></nested-level-1> 
+    <nested-level-1></nested-level-1>
   </ng-template>
-
-  <button mat-raised-button color="primary" type="submit">Submit</button>
+  <button
+      mat-flat-button
+      color="primary"
+      type="submit">
+    Submit
+  </button>
 </form>
