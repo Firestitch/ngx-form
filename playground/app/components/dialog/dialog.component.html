@@ -29,30 +29,31 @@
         </mat-tab>
         <mat-tab label="Tab 3" name="tab-3">
           <div class="content">
-            
+
           </div>
         </mat-tab>
       </mat-tab-group>
     </div>
     <div mat-dialog-actions>
       <fs-form-dialog-actions
-          [save]="tab === 'tab-1'"          
-          [close]="true"
-          [closeData]="{ test: true }">
-        <button 
-            *ngIf="tab === 'tab-1'"
-            mat-button 
+        [save]="tab === 'tab-1'"
+        [close]="true"
+        [closeData]="{ test: true }">
+        @if (tab === 'tab-1') {
+          <button
+            mat-button
             type="button"
             color="warn"
             [matDialogClose]="null">
-          Delete
-        </button>
+            Delete
+          </button>
+        }
         <button
-            mat-button
-            type="button">
+          mat-button
+          type="button">
           Other Action
-        </button>          
+        </button>
       </fs-form-dialog-actions>
     </div>
-</fs-dialog>
+  </fs-dialog>
 </form>

@@ -1,49 +1,49 @@
 <div
-    class="form-buttons"
-    [ngClass]="{ 'save-create': save || create }">
-  <ng-container *ngIf="save || create">
+  class="form-buttons"
+  [ngClass]="{ 'save-create': save || create }">
+  @if (save || create) {
     <button
-        mat-button
-        type="submit"
-        color="primary"
-        [name]="name">
+      mat-button
+      type="submit"
+      color="primary"
+      [name]="name">
       {{ create ? 'Create' : 'Save' }}
     </button>
     <button
-        mat-button
-        type="button"
-        class="cancel-button"
-        [disabled]="close && !dirty && !create"
-        [mat-dialog-close]="null">
+      mat-button
+      type="button"
+      class="cancel-button"
+      [disabled]="close && !dirty && !create"
+      [mat-dialog-close]="null">
       Cancel
     </button>
-  </ng-container>
-  <ng-container *ngIf="done">
+  }
+  @if (done) {
     <button
-        mat-button
-        type="button"
-        color="primary"
-        [mat-dialog-close]="null">
+      mat-button
+      type="button"
+      color="primary"
+      [mat-dialog-close]="null">
       Done
     </button>
-  </ng-container>
-  <ng-container *ngIf="save || create">
+  }
+  @if (save || create) {
     <ng-template [ngTemplateOutlet]="content"></ng-template>
-  </ng-container>
-  <ng-container *ngIf="close">
+  }
+  @if (close) {
     <button
-        mat-button
-        type="button"
-        class="close-button"
-        fsFormDialogClose
-        [closeData]="closeData"
-        [color]="dirty ? 'basic' : 'primary'">
+      mat-button
+      type="button"
+      class="close-button"
+      fsFormDialogClose
+      [closeData]="closeData"
+      [color]="dirty ? 'basic' : 'primary'">
       Close
     </button>
-  </ng-container>
-  <ng-container *ngIf="!(save || create)">
+  }
+  @if (!(save || create)) {
     <ng-template [ngTemplateOutlet]="content"></ng-template>
-  </ng-container>
+  }
 </div>
 <ng-template #content>
   <ng-content></ng-content>

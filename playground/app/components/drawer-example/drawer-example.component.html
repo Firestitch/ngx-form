@@ -1,12 +1,14 @@
 <button
-    mat-flat-button
-    color="primary"
-    (click)="open()">
+  mat-flat-button
+  color="primary"
+  (click)="open()">
   Open
 </button>
-<fieldset *ngIf="response">
-  <legend>
-    Response
-  </legend>
-  {{ response|json }}
-</fieldset>
+@if (response) {
+  <fieldset>
+    <legend>
+      Response
+    </legend>
+    {{ response|json }}
+  </fieldset>
+}

@@ -1,327 +1,365 @@
 <form
-    fsForm
-    [submit]="save"
-    (submit)="submitting()"
-    (invalid)="invalid()">
+  fsForm
+  [submit]="save"
+  (submit)="submitting()"
+  (invalid)="invalid()">
   <div class="fs-column">
-    <fs-radio-group
-        *ngIf="render"
+    @if (render) {
+      <fs-radio-group
         [(ngModel)]="radioRequired"
         label="Required"
         name="radio_required"
         [required]="required && validations"
         requiredMessage="Custom: Please select at least one option">
-      <mat-radio-button
-          *ngFor="let item of items"
-          [value]="item.id">
-        {{ item.name }}
-      </mat-radio-button>
-    </fs-radio-group>
+        @for (item of items; track item) {
+          <mat-radio-button
+            [value]="item.id">
+            {{ item.name }}
+          </mat-radio-button>
+        }
+      </fs-radio-group>
+    }
     <fs-checkbox-group
-        [(ngModel)]="checkbox"
-        name="checkbox"
-        [required]="required && validations"
-        label="Checkboxes">
-      <mat-checkbox
-          *ngFor="let item of items"
+      [(ngModel)]="checkbox"
+      name="checkbox"
+      [required]="required && validations"
+      label="Checkboxes">
+      @for (item of items; track item) {
+        <mat-checkbox
           [value]="$any(item)">
-        {{ item.name }}
-      </mat-checkbox>
+          {{ item.name }}
+        </mat-checkbox>
+      }
       <mat-hint>
         Hint hint hint!!!
       </mat-hint>
     </fs-checkbox-group>
-    <fs-autocomplete-chips
-        *ngIf="render"
+    @if (render) {
+      <fs-autocomplete-chips
         [(ngModel)]="chips"
         [fetch]="fetchChips"
         placeholder="Autocomplete Chips"
         [required]="required && validations"
         name="chips">
-      <ng-template
+        <ng-template
           fsAutocompleteObject
           let-object="object">
-        {{ object.name }}
-      </ng-template>
-    </fs-autocomplete-chips>
-    <div
+          {{ object.name }}
+        </ng-template>
+      </fs-autocomplete-chips>
+    }
+    @if (render) {
+      <div
         class="fs-row.gap-xs"
-        *ngIf="render">
+        >
+        <mat-form-field>
+          <mat-label>
+            Password
+          </mat-label>
+          <input
+            #passwordInput
+            name="password"
+            [required]="required && validations"
+            [(ngModel)]="password"
+            matInput>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>
+            Password Confirm
+          </mat-label>
+          <input
+            [(ngModel)]="passwordConfirm"
+            name="confirm"
+            [required]="required && validations"
+            [fsFormCompare]="passwordInput"
+            [fsFormNumeric]="validations"
+            matInput>
+        </mat-form-field>
+      </div>
+    }
+    @if (render) {
       <mat-form-field>
         <mat-label>
-          Password
+          Integer
         </mat-label>
         <input
-          #passwordInput
-          name="password"
-          [required]="required && validations"
-          [(ngModel)]="password"
-          matInput>
+          [(ngModel)]="integer"
+          name="integer_input"
+          matInput
+          [fsFormInteger]="validations">
       </mat-form-field>
+    }
+    @if (render) {
       <mat-form-field>
         <mat-label>
-          Password Confirm
+          Email
         </mat-label>
         <input
-          [(ngModel)]="passwordConfirm"
-          name="confirm"
-          [required]="required && validations"
-          [fsFormCompare]="passwordInput"
-          [fsFormNumeric]="validations"
-          matInput>
+          [(ngModel)]="email"
+          name="email"
+          matInput
+          [fsFormEmail]="validations">
       </mat-form-field>
-    </div>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Integer
-      </mat-label>
-      <input
-        [(ngModel)]="integer"
-        name="integer_input"
-        matInput
-        [fsFormInteger]="validations">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Email
-      </mat-label>
-      <input
-        [(ngModel)]="email"
-        name="email"
-        matInput
-        [fsFormEmail]="validations">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Phone
-      </mat-label>
-      <input
-        [(ngModel)]="phone"
-        name="phoneInput"
-        matInput
-        [fsFormPhone]="validations"
-        fsPhone>
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Url
-      </mat-label>
-      <input
-        [(ngModel)]="url"
-        name="urlInput"
-        matInput
-        [fsFormUrl]="validations">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Numeric
-      </mat-label>
-      <input
-        [(ngModel)]="numeric"
-        name="numericInput"
-        matInput
-        [fsFormNumeric]="validations">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Greater
-      </mat-label>
-      <input
-        [(ngModel)]="model.greater"
-        name="greater"
-        matInput
-        [fsFormGreater]="0">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Greater or equal
-      </mat-label>
-      <input
-        [(ngModel)]="model.greaterEqual"
-        name="greaterEqual"
-        matInput
-        [fsFormGreaterEqual]="0">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Lesser
-      </mat-label>
-      <input
-        [(ngModel)]="model.lesser"
-        name="lesser"
-        matInput
-        [fsFormLesser]="10">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Lesser or equal
-      </mat-label>
-      <input
-        [(ngModel)]="model.lesserEqual"
-        name="lesserEqual"
-        matInput
-        [fsFormLesserEqual]="10">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Min
-      </mat-label>
-      <input
-        [(ngModel)]="model.min"
-        name="min"
-        matInput
-        [fsFormMin]="10">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Max
-      </mat-label>
-      <input
-        [(ngModel)]="model.max"
-        name="maxInput"
-        matInput
-        [fsFormMax]="100">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Min Length
-      </mat-label>
-      <input
-        [(ngModel)]="minLengthInput"
-        name="minLengthInput"
-        matInput
-        [fsFormMinLength]="5">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Max Length
-      </mat-label>
-      <input
-        [(ngModel)]="maxLengthInput"
-        name="maxLengthInput"
-        matInput
-        [fsFormMaxLength]="10">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Pattern
-      </mat-label>
-      <input
-        [(ngModel)]="pattern"
-        name="pattern_input"
-        matInput
-        fsFormPattern="[0-9]{2,}">
-    </mat-form-field>
-    <mat-form-field *ngIf="render">
-      <mat-label>
-        Date
-      </mat-label>
-      <input
-        matInput
-        fsDatePicker
-        [(ngModel)]="datepicker"
-        name="datepicker">
-    </mat-form-field>
-    <div
-        class="fs-row.gap-xs"
-        *ngIf="render">
+    }
+    @if (render) {
       <mat-form-field>
         <mat-label>
-          Time Range From
+          Phone
+        </mat-label>
+        <input
+          [(ngModel)]="phone"
+          name="phoneInput"
+          matInput
+          [fsFormPhone]="validations"
+          fsPhone>
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Url
+        </mat-label>
+        <input
+          [(ngModel)]="url"
+          name="urlInput"
+          matInput
+          [fsFormUrl]="validations">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Numeric
+        </mat-label>
+        <input
+          [(ngModel)]="numeric"
+          name="numericInput"
+          matInput
+          [fsFormNumeric]="validations">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Greater
+        </mat-label>
+        <input
+          [(ngModel)]="model.greater"
+          name="greater"
+          matInput
+          [fsFormGreater]="0">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Greater or equal
+        </mat-label>
+        <input
+          [(ngModel)]="model.greaterEqual"
+          name="greaterEqual"
+          matInput
+          [fsFormGreaterEqual]="0">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Lesser
+        </mat-label>
+        <input
+          [(ngModel)]="model.lesser"
+          name="lesser"
+          matInput
+          [fsFormLesser]="10">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Lesser or equal
+        </mat-label>
+        <input
+          [(ngModel)]="model.lesserEqual"
+          name="lesserEqual"
+          matInput
+          [fsFormLesserEqual]="10">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Min
+        </mat-label>
+        <input
+          [(ngModel)]="model.min"
+          name="min"
+          matInput
+          [fsFormMin]="10">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Max
+        </mat-label>
+        <input
+          [(ngModel)]="model.max"
+          name="maxInput"
+          matInput
+          [fsFormMax]="100">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Min Length
+        </mat-label>
+        <input
+          [(ngModel)]="minLengthInput"
+          name="minLengthInput"
+          matInput
+          [fsFormMinLength]="5">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Max Length
+        </mat-label>
+        <input
+          [(ngModel)]="maxLengthInput"
+          name="maxLengthInput"
+          matInput
+          [fsFormMaxLength]="10">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Pattern
+        </mat-label>
+        <input
+          [(ngModel)]="pattern"
+          name="pattern_input"
+          matInput
+          fsFormPattern="[0-9]{2,}">
+      </mat-form-field>
+    }
+    @if (render) {
+      <mat-form-field>
+        <mat-label>
+          Date
         </mat-label>
         <input
           matInput
-          fsDateTimeRangeFrom="timerangepicker"
-          [(ngModel)]="startDate"
-          name="date_from">
+          fsDatePicker
+          [(ngModel)]="datepicker"
+          name="datepicker">
       </mat-form-field>
-      <fs-date-range-separator></fs-date-range-separator>
-      <mat-form-field>
-        <mat-label>
-          Time Range To
-        </mat-label>
-        <input
-          matInput
-          fsDateTimeRangeTo="timerangepicker"
-          [(ngModel)]="endDate"
-          name="date_to">
-      </mat-form-field>
-    </div>
+    }
+    @if (render) {
+      <div
+        class="fs-row.gap-xs"
+        >
+        <mat-form-field>
+          <mat-label>
+            Time Range From
+          </mat-label>
+          <input
+            matInput
+            fsDateTimeRangeFrom="timerangepicker"
+            [(ngModel)]="startDate"
+            name="date_from">
+        </mat-form-field>
+        <fs-date-range-separator></fs-date-range-separator>
+        <mat-form-field>
+          <mat-label>
+            Time Range To
+          </mat-label>
+          <input
+            matInput
+            fsDateTimeRangeTo="timerangepicker"
+            [(ngModel)]="endDate"
+            name="date_to">
+        </mat-form-field>
+      </div>
+    }
     <div class="fs-row.gap-xs.wrap">
       <button
-          mat-flat-button
-          color="primary"
-          type="submit">
+        mat-flat-button
+        color="primary"
+        type="submit">
         Submit
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="required = !(!!required)">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="required = !(!!required)">
         {{ required ? 'Disable Required' : 'Enable Required' }}
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="validations = !validations">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="validations = !validations">
         {{ validations ? 'Disable Validations' : 'Enable Validations' }}
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="render = !(!!render)">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="render = !(!!render)">
         {{ render ? 'Destroy' : 'Render' }} Inputs
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="toggleDisable()">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="toggleDisable()">
         {{ disabled ? 'Enable Form' : 'Disable Form' }}
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="submit()">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="submit()">
         Manual Submit
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="reset()">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="reset()">
         Reset
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="clear()">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="clear()">
         Clear
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="createSnapshot()">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="createSnapshot()">
         Create Snapshot
       </button>
       <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="dirty()">
+        mat-stroked-button
+        color="primary"
+        type="button"
+        (click)="dirty()">
         Dirty
       </button>
       <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          [dirtySubmit]="false">
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [dirtySubmit]="false">
         Submit (Dirty Disabled)
       </button>
     </div>

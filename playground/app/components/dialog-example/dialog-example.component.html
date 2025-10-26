@@ -1,24 +1,26 @@
 <button
-    mat-flat-button
-    color="primary"
-    (click)="openTabs()">
+  mat-flat-button
+  color="primary"
+  (click)="openTabs()">
   Tabs Dialog
 </button>
 <button
-    mat-flat-button
-    color="primary"
-    (click)="openCreate()">
+  mat-flat-button
+  color="primary"
+  (click)="openCreate()">
   Create Dialog
 </button>
 <button
-    mat-flat-button
-    color="primary"
-    (click)="openSave()">
+  mat-flat-button
+  color="primary"
+  (click)="openSave()">
   Save Dialog
 </button>
-<fieldset *ngIf="response">
-  <legend>
-    Response
-  </legend>
-  {{ response|json }}
-</fieldset>
+@if (response) {
+  <fieldset>
+    <legend>
+      Response
+    </legend>
+    {{ response|json }}
+  </fieldset>
+}
