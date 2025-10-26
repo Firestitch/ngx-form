@@ -3,7 +3,8 @@ import { NgForm, NgModel } from '@angular/forms';
 
 
 @Directive({
-  selector: '[fsFormTemplate],fs-form-template',
+    selector: '[fsFormTemplate],fs-form-template',
+    standalone: true,
 })
 export class FsFormTemplateDirective implements AfterContentInit {
 

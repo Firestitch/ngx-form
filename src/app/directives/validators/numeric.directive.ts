@@ -9,10 +9,11 @@ import { isEnabled } from '../../helpers/is-enabled';
 
 
 @Directive({
-  selector: '[fsFormNumeric]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[fsFormNumeric]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormNumericDirective extends FsControlDirective implements OnChanges, FsValidator {
 

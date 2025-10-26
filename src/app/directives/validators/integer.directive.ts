@@ -10,10 +10,11 @@ import { FsControlDirective } from './control.directive';
 
 
 @Directive({
-  selector: '[fsFormInteger]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER,
-  ],
+    selector: '[fsFormInteger]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER,
+    ],
+    standalone: true,
 })
 export class FsFormIntegerDirective extends FsControlDirective implements OnChanges, FsValidator {
 

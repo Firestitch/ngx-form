@@ -8,10 +8,11 @@ import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
-  selector: '[fsFormLesser]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[fsFormLesser]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormLesserDirective extends FsControlDirective implements OnChanges, FsValidator {
 

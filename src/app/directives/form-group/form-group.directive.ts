@@ -9,8 +9,9 @@ import { FsFormBaseDirective } from '../form-base';
 
 
 @Directive({
-  selector: '[fsFormGroup]',
-  exportAs: 'fsFormGroup',
+    selector: '[fsFormGroup]',
+    exportAs: 'fsFormGroup',
+    standalone: true,
 })
 export class FsFormGroupDirective extends FsFormBaseDirective {
 

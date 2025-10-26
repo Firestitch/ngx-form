@@ -14,7 +14,8 @@ import { FsFormGroupDirective } from './form-group';
 
 
 @Directive({
-  selector: '[mat-raised-button],[mat-button],[mat-flat-button],[mat-stroked-button]',
+    selector: '[mat-raised-button],[mat-button],[mat-flat-button],[mat-stroked-button]',
+    standalone: true,
 })
 export class FsButtonDirective implements OnInit, OnDestroy {
 

@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 
 @Directive({
-  selector: '[fsFormTemplateOutlet]',
+    selector: '[fsFormTemplateOutlet]',
+    standalone: true,
 })
 export class FsFormTemplateOutletDirective implements OnInit {
 

@@ -4,7 +4,8 @@ import { FsButtonDirective } from './button.directive';
 
 
 @Directive({
-  selector: 'dummy-selector',
+    selector: 'dummy-selector',
+    standalone: true,
 })
 export class FsSubmitButtonDirective extends FsButtonDirective {
 }

@@ -8,10 +8,11 @@ import { FsControlDirective } from './control.directive';
 
 
 @Directive({
-  selector: '[fsFormCompare]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER,
-  ],
+    selector: '[fsFormCompare]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER,
+    ],
+    standalone: true,
 })
 export class FsFormCompareDirective extends FsControlDirective
   implements OnChanges, AfterViewInit, OnDestroy, FsValidator {

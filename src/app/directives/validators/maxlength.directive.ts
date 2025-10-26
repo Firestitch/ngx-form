@@ -7,10 +7,11 @@ import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
-  selector: '[fsFormMaxLength]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[fsFormMaxLength]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormMaxLengthDirective extends FsControlDirective implements OnChanges, FsValidator {
 

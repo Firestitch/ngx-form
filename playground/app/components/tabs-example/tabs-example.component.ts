@@ -4,12 +4,38 @@ import { FsMessage } from '@firestitch/message';
 
 import { of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { FormsModule } from '@angular/forms';
+import { FsFormDirective } from '../../../../src/app/directives/form/form.directive';
+import { FsSkeletonModule } from '@firestitch/skeleton';
+import { MatTabGroup, MatTab, MatTabContent } from '@angular/material/tabs';
+import { FsTabsModule } from '@firestitch/tabs';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FsFormRequiredDirective } from '../../../../src/app/directives/validators/required.directive';
+import { MatButton } from '@angular/material/button';
+import { FsButtonDirective } from '../../../../src/app/directives/button.directive';
 
 
 @Component({
-  selector: 'tabs-example',
-  templateUrl: './tabs-example.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'tabs-example',
+    templateUrl: './tabs-example.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        FormsModule,
+        FsFormDirective,
+        FsSkeletonModule,
+        MatTabGroup,
+        FsTabsModule,
+        MatTab,
+        MatTabContent,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        FsFormRequiredDirective,
+        MatButton,
+        FsButtonDirective,
+    ],
 })
 export class TabsExampleComponent {
 

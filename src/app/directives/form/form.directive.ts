@@ -61,8 +61,9 @@ import { SubmitEvent } from './../../interfaces/submit-event';
 
 
 @Directive({
-  selector: '[fsForm]',
-  exportAs: 'fsForm',
+    selector: '[fsForm]',
+    exportAs: 'fsForm',
+    standalone: true,
 })
 export class FsFormDirective 
   extends FsFormBaseDirective 

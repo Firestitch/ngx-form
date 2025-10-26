@@ -9,10 +9,11 @@ import { FsControlDirective } from './control.directive';
 
 
 @Directive({
-  selector: '[fsFormRequired],[ngModel][required]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER,
-  ],
+    selector: '[fsFormRequired],[ngModel][required]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER,
+    ],
+    standalone: true,
 })
 export class FsFormRequiredDirective extends FsControlDirective implements OnChanges, FsValidator {
   public required = false;

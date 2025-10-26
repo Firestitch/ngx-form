@@ -9,10 +9,11 @@ import { isEnabled } from '../../helpers/is-enabled';
 
 
 @Directive({
-  selector: '[fsFormDateRange]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[fsFormDateRange]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormDateRangeDirective extends FsControlDirective implements OnChanges, FsValidator {
 

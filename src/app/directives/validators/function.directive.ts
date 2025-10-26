@@ -11,10 +11,11 @@ import { FsControlDirective } from './control.directive';
 
 
 @Directive({
-  selector: '[fsFormFunction]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER,
-  ],
+    selector: '[fsFormFunction]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER,
+    ],
+    standalone: true,
 })
 export class FsFormFunctionDirective extends FsControlDirective implements OnChanges, FsAsyncValidator {
 

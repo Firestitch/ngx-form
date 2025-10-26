@@ -9,10 +9,11 @@ import { isEnabled } from '../../helpers/is-enabled';
 
 
 @Directive({
-  selector: '[fsFormEmails]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[fsFormEmails]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormEmailsDirective extends FsControlDirective implements OnChanges, FsValidator {
 

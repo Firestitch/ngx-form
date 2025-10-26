@@ -8,13 +8,27 @@ import { Subject } from 'rxjs';
 import { delay, filter, takeUntil } from 'rxjs/operators';
 
 import { FsFormDirective } from '../../directives/form/form.directive';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { MatButton } from '@angular/material/button';
+import { FsButtonDirective } from '../../directives/button.directive';
+import { MatDialogClose } from '@angular/material/dialog';
+import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 
 
 @Component({
-  selector: 'fs-form-dialog-actions',
-  templateUrl: './form-dialog-actions.component.html',
-  styleUrls: ['./form-dialog-actions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'fs-form-dialog-actions',
+    templateUrl: './form-dialog-actions.component.html',
+    styleUrls: ['./form-dialog-actions.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [
+        NgClass,
+        MatButton,
+        FsButtonDirective,
+        MatDialogClose,
+        NgTemplateOutlet,
+        FsFormDialogCloseDirective,
+    ],
 })
 export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
 

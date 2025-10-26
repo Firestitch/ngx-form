@@ -6,10 +6,11 @@ import { FsValidator } from '../../interfaces/validator';
 
 
 @Directive({
-  selector: '[fsFormPattern]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[fsFormPattern]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormPatternDirective extends FsControlDirective implements OnChanges, FsValidator {
 

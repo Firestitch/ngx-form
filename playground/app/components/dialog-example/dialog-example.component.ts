@@ -8,12 +8,21 @@ import { takeUntil } from 'rxjs/operators';
 import { DialogCreateComponent } from '../dialog-create/dialog-create.component';
 import { DialogSaveComponent } from '../dialog-save/dialog-save.component';
 import { DialogComponent } from '../dialog/dialog.component';
+import { MatButton } from '@angular/material/button';
+import { FsButtonDirective } from '../../../../src/app/directives/button.directive';
+import { JsonPipe } from '@angular/common';
 
 
 @Component({
-  selector: 'dialog-example',
-  templateUrl: 'dialog-example.component.html',
-  styleUrls: ['./dialog-example.component.scss'],
+    selector: 'dialog-example',
+    templateUrl: 'dialog-example.component.html',
+    styleUrls: ['./dialog-example.component.scss'],
+    standalone: true,
+    imports: [
+        MatButton,
+        FsButtonDirective,
+        JsonPipe,
+    ],
 })
 export class DialogExampleComponent implements OnDestroy{
 

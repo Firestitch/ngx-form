@@ -10,30 +10,31 @@ import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.pro
  * This directive required for automatic validation messages
  */
 @Directive({
-  selector: '[ngModel]' +
-    ':not([required])' +
-    ':not([fsFormRequired])' +
-    ':not([fsFormCompare])' +
-    ':not([fsFormDateRange])' +
-    ':not([fsFormEmail])' +
-    ':not([fsFormEmails])' +
-    ':not([fsFormFunction])' +
-    ':not([fsFormGreater])' +
-    ':not([fsFormGreaterEqual])' +
-    ':not([fsFormInteger])' +
-    ':not([fsFormLesser])' +
-    ':not([fsFormMax])' +
-    ':not([fsFormMaxLength])' +
-    ':not([fsFormMin])' +
-    ':not([fsFormMinLength])' +
-    ':not([fsFormNumeric])' +
-    ':not([fsFormPattern])' +
-    ':not([fsFormPhone])' +
-    ':not([fsFormUrl])' +
-    ':not([validate])',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER
-  ],
+    selector: '[ngModel]' +
+        ':not([required])' +
+        ':not([fsFormRequired])' +
+        ':not([fsFormCompare])' +
+        ':not([fsFormDateRange])' +
+        ':not([fsFormEmail])' +
+        ':not([fsFormEmails])' +
+        ':not([fsFormFunction])' +
+        ':not([fsFormGreater])' +
+        ':not([fsFormGreaterEqual])' +
+        ':not([fsFormInteger])' +
+        ':not([fsFormLesser])' +
+        ':not([fsFormMax])' +
+        ':not([fsFormMaxLength])' +
+        ':not([fsFormMin])' +
+        ':not([fsFormMinLength])' +
+        ':not([fsFormNumeric])' +
+        ':not([fsFormPattern])' +
+        ':not([fsFormPhone])' +
+        ':not([fsFormUrl])' +
+        ':not([validate])',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER
+    ],
+    standalone: true,
 })
 export class FsFormNoFsValidatorsDirective extends FsControlDirective implements OnChanges {
 

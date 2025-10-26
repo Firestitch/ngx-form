@@ -11,7 +11,8 @@ import { FsFormDirective } from './form';
 
 
 @Directive({
-  selector: '[fsFormDialogClose],[fs-form-dialog-close]',
+    selector: '[fsFormDialogClose],[fs-form-dialog-close]',
+    standalone: true,
 })
 export class FsFormDialogCloseDirective implements OnDestroy {
 

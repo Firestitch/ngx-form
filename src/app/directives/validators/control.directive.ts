@@ -32,10 +32,11 @@ export interface FsControlDirective {
 
 
 @Directive({
-  selector: '[fsFormControl]',
-  providers: [
-    VALIDATE_MESSAGE_PROVIDER,
-  ],
+    selector: '[fsFormControl]',
+    providers: [
+        VALIDATE_MESSAGE_PROVIDER,
+    ],
+    standalone: true,
 })
 export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 

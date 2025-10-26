@@ -2,10 +2,15 @@ import { DrawerComponent } from './../drawer/drawer.component';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { FsDrawerService, FsDrawerAction } from '@firestitch/drawer';
+import { MatButton } from '@angular/material/button';
+import { FsButtonDirective } from '../../../../src/app/directives/button.directive';
+import { JsonPipe } from '@angular/common';
 
 @Component({
-  selector: 'drawer-example',
-  templateUrl: 'drawer-example.component.html'
+    selector: 'drawer-example',
+    templateUrl: 'drawer-example.component.html',
+    standalone: true,
+    imports: [MatButton, FsButtonDirective, JsonPipe]
 })
 export class DrawerExampleComponent implements OnDestroy {
 
