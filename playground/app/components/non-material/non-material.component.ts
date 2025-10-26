@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { FormsModule } from '@angular/forms';
 import { FsFormDirective } from '../../../../src/app/directives/form/form.directive';
@@ -15,10 +15,11 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     imports: [FormsModule, FsFormDirective, FsFormRequiredDirective, FsFormPhoneDirective, MatButton, FsButtonDirective]
 })
 export class NonMaterialComponent {
+  private fsMessage = inject(FsMessage);
+
 
   public phone1;
   public phone2;
-  constructor(private fsMessage: FsMessage) {}
 
 
   save() {

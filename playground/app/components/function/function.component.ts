@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
 
@@ -31,13 +31,11 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     ],
 })
 export class FunctionComponent {
+  private _message = inject(FsMessage);
+
 
   public email = 'email@email.com';
   public models: any = {};
-
-  constructor(
-    private _message: FsMessage,
-  ) { }
 
   public validatePromise = (formControl) => {
     return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 
@@ -25,12 +25,12 @@ import { JsonPipe } from '@angular/common';
     ],
 })
 export class DialogExampleComponent implements OnDestroy{
+  private _dialog = inject(MatDialog);
+
 
   public response;
 
   private _destroy$ = new Subject();
-
-  public constructor(private _dialog: MatDialog) {  }
 
   public openTabs() {
     this.response = null;

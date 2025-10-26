@@ -1,6 +1,6 @@
 import { MatTabGroup } from '@angular/material/tabs';
 import { SubmitEvent } from '../../../../src/app/interfaces/submit-event';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { of } from 'rxjs';
@@ -25,13 +25,11 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     imports: [FormsModule, FsFormDirective, FsDialogModule, MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, MatInput, FsFormRequiredDirective, FsFormNoFsValidatorsDirective, MatDialogActions, FsFormDialogActionsComponent, MatButton, FsButtonDirective]
 })
 export class DialogCreateComponent  {
+  private _message = inject(FsMessage);
+  private _dialogRef = inject<MatDialogRef<DialogCreateComponent>>(MatDialogRef);
+
 
   public account = { id: null, name: '', email: '' };
-
-  public constructor(
-    private _message: FsMessage,
-    private _dialogRef: MatDialogRef<DialogCreateComponent>
-  ) {}
 
   public save = (event: SubmitEvent) => {
     return of(this.account)

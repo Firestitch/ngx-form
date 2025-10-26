@@ -1,16 +1,4 @@
-import {
-  AfterContentInit,
-  Directive,
-  ElementRef,
-  Inject,
-  Injector,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Renderer2,
-  Self,
-} from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, Injector, Input, OnDestroy, OnInit, Renderer2, inject } from '@angular/core';
 import { AbstractControl, NgControl, ValidationErrors } from '@angular/forms';
 
 import { Observable, Subject } from 'rxjs';
@@ -39,6 +27,13 @@ export interface FsControlDirective {
     standalone: true,
 })
 export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
+  protected _elementRef = inject(ElementRef);
+  protected _renderer2 = inject(Renderer2);
+  protected _injector = inject(Injector);
+  protected _validateMessages = inject(VALIDATE_MESSAGES, { self: true });
+  protected _ngControl = inject(NgControl, { optional: true });
+  protected _formDirective = inject<FsFormDirective>(FsFormDirective, { optional: true });
+
 
   @Input() public wrapperSelector: string | false;
   @Input() public messageSelector: string | false;
@@ -63,14 +58,9 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
   private _destroy$ = new Subject();
 
-  constructor(
-    protected _elementRef: ElementRef,
-    protected _renderer2: Renderer2,
-    protected _injector: Injector,
-    @Self() @Inject(VALIDATE_MESSAGES) protected _validateMessages,
-    @Optional() protected _ngControl: NgControl,
-    @Optional() @Inject(FsFormDirective) protected _formDirective: FsFormDirective,
-  ) {
+  constructor() {
+    const _ngControl = this._ngControl;
+
 
     if (_ngControl) {
       this._control = _ngControl.control;

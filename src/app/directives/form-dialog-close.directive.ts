@@ -1,4 +1,4 @@
-import { Directive, HostBinding, HostListener, Input, OnDestroy, Optional } from '@angular/core';
+import { Directive, HostBinding, HostListener, Input, OnDestroy, inject } from '@angular/core';
 
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -15,18 +15,15 @@ import { FsFormDirective } from './form';
     standalone: true,
 })
 export class FsFormDialogCloseDirective implements OnDestroy {
+  private _form = inject(FsFormDirective, { optional: true });
+  private _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, { optional: true });
+
 
   @Input() public closeData;
 
   @HostBinding('attr.type') public type = 'button';
 
   private _destroy$ = new Subject();
- 
-  constructor(
-    @Optional() private _form: FsFormDirective,
-    @Optional() private _dialogRef: MatDialogRef<any>,
-  ) {
-  }
 
   @HostListener('click', ['$event.target'])
   public closeClick(): void {

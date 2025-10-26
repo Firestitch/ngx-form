@@ -1,7 +1,4 @@
-import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, Input, OnDestroy, OnInit, Optional,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 
 
 import { Subject } from 'rxjs';
@@ -31,6 +28,9 @@ import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.d
     ],
 })
 export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
+  private _form = inject(FsFormDirective, { optional: true });
+  private _cdRef = inject(ChangeDetectorRef);
+
 
   @Input() public save = true;
   @Input() public create = false;
@@ -42,11 +42,6 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   public dirty = false;
 
   private _destroy$ = new Subject<void>();
-  
-  constructor(
-    @Optional() private _form: FsFormDirective,
-    private _cdRef: ChangeDetectorRef,   
-  ) {}
 
   public ngOnInit(): void {
     if(this._form) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { of, Subject } from 'rxjs';
 import { tap, delay } from 'rxjs/operators';
@@ -19,11 +19,11 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     imports: [FormsModule, FsFormDirective, MatFormField, MatInput, FsFormNoFsValidatorsDirective, MatButton, FsButtonDirective]
 })
 export class DrawerComponent  {
+  private _message = inject(FsMessage);
+  private _dialogRef = inject<DrawerRef<DrawerComponent>>(DrawerRef);
+
 
   public animal = { name: '', color: '' };
-
-  constructor(private _message: FsMessage,
-              private _dialogRef: DrawerRef<DrawerComponent>) {}
 
   public close() {
   }

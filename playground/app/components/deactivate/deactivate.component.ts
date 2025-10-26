@@ -1,5 +1,5 @@
 import { delay, tap } from 'rxjs/operators';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, inject } from '@angular/core';
 
 import { FsMessage } from '@firestitch/message';
 import { FsFormDirective } from '@firestitch/form';
@@ -24,14 +24,14 @@ import { RouterLink } from '@angular/router';
     imports: [FormsModule, FsFormDirective_1, MatFormField, MatInput, FsFormEmailDirective, FsFormRequiredDirective, MatButton, FsButtonDirective, MatAnchor, FsTabsModule, RouterLink]
 })
 export class DeactivateComponent {
+  private _message = inject(FsMessage);
+
 
   @ViewChild(FsFormDirective)
   public form: FsFormDirective;
 
   public email = 'bob@email.com';
   public email1 = 'ray@email.com';
-
-  constructor(private _message: FsMessage) {}
 
   submit = () => {
     return of(true)

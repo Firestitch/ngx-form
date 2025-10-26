@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 import { FormsModule } from '@angular/forms';
 import { FsFormDirective } from '../../../../src/app/directives/form/form.directive';
@@ -29,16 +29,13 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     ],
 })
 export class NestedComponent {
+  private _message = inject(FsMessage);
+  private _cdRef = inject(ChangeDetectorRef);
+
 
   public firstname;
   public email;
   public show = false;
-
-  constructor(
-    private _message: FsMessage,
-    private _cdRef: ChangeDetectorRef,
-  ) {
-  }
 
   public save() {
     this._message.success('Successfully submitted');

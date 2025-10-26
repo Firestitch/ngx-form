@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 
@@ -30,14 +30,12 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     imports: [FormsModule, FsFormDirective, FsDialogModule, MatDialogTitle, CdkScrollable, MatDialogContent, MatTabGroup, FsTabsModule, MatTab, MatFormField, MatInput, FsFormRequiredDirective, FsFormNoFsValidatorsDirective, MatDialogActions, FsFormDialogActionsComponent, MatButton, FsButtonDirective, MatDialogClose]
 })
 export class DialogComponent  {
+  private _message = inject(FsMessage);
+  private _dialogRef = inject<MatDialogRef<DialogComponent>>(MatDialogRef);
+
 
   public tab = 'tab-1';
   public account = { id: 1, name: '', email: '' };
-
-  public constructor(
-    private _message: FsMessage,
-    private _dialogRef: MatDialogRef<DialogComponent>
-  ) {}
 
   public save = (event: SubmitEvent) => {
     return of(this.account)

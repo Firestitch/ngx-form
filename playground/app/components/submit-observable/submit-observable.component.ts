@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { FsApi } from '@firestitch/api';
 import { FsMessage } from '@firestitch/message';
@@ -32,16 +32,14 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     ],
 })
 export class SubmitObservableComponent {
+  private _message = inject(FsMessage);
+  private _api = inject(FsApi);
+
 
   public required = 'required';
   public delay = 1000;
   
   private _status;
-
-  constructor(
-    private _message: FsMessage,
-    private _api: FsApi,
-  ) {}
 
   public submit = () => {
     const data: any = {

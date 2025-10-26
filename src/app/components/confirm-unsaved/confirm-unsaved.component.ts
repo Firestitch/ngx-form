@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -21,6 +21,9 @@ import { Subject } from 'rxjs';
   ],
 })
 export class ConfirmUnsavedComponent implements OnInit, OnDestroy {
+  private _data = inject(MAT_DIALOG_DATA);
+  private _dialogRef = inject<MatDialogRef<ConfirmUnsavedComponent>>(MatDialogRef);
+
 
   public saveLabel;
   public discardLabel;
@@ -29,11 +32,6 @@ export class ConfirmUnsavedComponent implements OnInit, OnDestroy {
   public title;
 
   private _destroy$ = new Subject<void>();
-  
-  constructor(
-    @Inject(MAT_DIALOG_DATA) private _data: any,
-    private _dialogRef: MatDialogRef<ConfirmUnsavedComponent>,
-  ) {}
 
   public ngOnInit(): void {
     this.saveLabel = this._data.saveLabel;

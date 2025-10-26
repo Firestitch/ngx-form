@@ -1,5 +1,5 @@
 import { DrawerComponent } from './../drawer/drawer.component';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { FsDrawerService, FsDrawerAction } from '@firestitch/drawer';
 import { MatButton } from '@angular/material/button';
@@ -13,12 +13,12 @@ import { JsonPipe } from '@angular/common';
     imports: [MatButton, FsButtonDirective, JsonPipe]
 })
 export class DrawerExampleComponent implements OnDestroy {
+  drawer = inject(FsDrawerService);
+
 
   public response;
 
   private _destroy$ = new Subject();
-
-  constructor(public drawer: FsDrawerService) {}
 
   public open() {
     const drawerRef = this.drawer.open(DrawerComponent, {

@@ -1,18 +1,4 @@
-import {
-  AfterContentInit,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  HostBinding,
-  Inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Optional,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { AfterContentInit, Directive, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { AbstractControl, NgForm } from '@angular/forms';
 import { ActivatedRoute, Route } from '@angular/router';
 
@@ -68,6 +54,15 @@ import { SubmitEvent } from './../../interfaces/submit-event';
 export class FsFormDirective 
   extends FsFormBaseDirective 
   implements OnInit, OnDestroy, AfterContentInit, OnChanges {
+  ngForm = inject<NgForm>(NgForm);
+  private _form = inject(FsForm);
+  private _element = inject(ElementRef);
+  private _message = inject(FsMessage);
+  private _formGroup = inject(FsFormGroupDirective, { optional: true });
+  private _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, { optional: true });
+  private _drawerRef = inject<DrawerRef<any>>(DrawerRef, { optional: true });
+  private _route = inject(ActivatedRoute);
+
 
   @Input()
   public wrapperSelector = '.fs-form-wrapper,.mat-mdc-form-field';
@@ -147,24 +142,6 @@ export class FsFormDirective
   private _activatedRouteConfig: Route | null;
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _submit$: (event?: SubmitEvent) => Observable<any> = null;
-
-  constructor(
-    @Inject(NgForm)
-    public ngForm: NgForm,
-    private _form: FsForm,
-    private _element: ElementRef,
-    private _message: FsMessage,
-    @Optional() private _formGroup: FsFormGroupDirective,
-    @Optional() @Inject(MatDialogRef)
-    private _dialogRef: MatDialogRef<any>,
-
-    @Optional() @Inject(DrawerRef)
-    private _drawerRef: DrawerRef<any>,
-
-    private _route: ActivatedRoute,
-  ) { 
-    super();
-  }
 
   public get submitting(): boolean {
     return this._status$.getValue() === FormStatus.Submitting;

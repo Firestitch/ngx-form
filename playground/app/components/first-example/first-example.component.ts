@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, inject } from '@angular/core';
 
 
 import { filter } from '@firestitch/common';
@@ -81,6 +81,8 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     ],
 })
 export class FirstExampleComponent {
+  private _message = inject(FsMessage);
+
 
   @ViewChild(FsFormDirective)
   public form: FsFormDirective;
@@ -123,9 +125,7 @@ export class FirstExampleComponent {
 
   public selectedAccounts = [];
 
-  constructor(
-    private _message: FsMessage,
-  ) {
+  constructor() {
     setTimeout(() => {
       this.skeleton = true;
     }, 2000);
