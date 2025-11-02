@@ -18,6 +18,14 @@
     display: inline-flex;
   }
 
+  .fs-form-hint-wrapper {
+    padding: 0 16px;
+  }
+  
+  .fs-form-error {
+    color: #f44336;
+  }
+
   .fs-form-wrapper.ng-invalid.ng-dirty .fs-form-label,
   .ng-invalid.ng-dirty:not(form) .fs-form-label {
     color: #f44336;
@@ -25,10 +33,6 @@
   
   .ng-invalid.ng-dirty:not(form) .mat-form-field-underline {
     background-color: #f44336;
-  }
-  
-  .fs-form-error {
-    color: #f44336;
   }
   
   .mat-placeholder-required {

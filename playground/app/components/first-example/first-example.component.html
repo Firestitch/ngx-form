@@ -1,32 +1,31 @@
 <form
-  fsForm
-  [submit]="save"
-  (submit)="submitting()"
-  (invalid)="invalid()">
+    fsForm
+    [submit]="save"
+    (submit)="submitting()"
+    (invalid)="invalid()"
+    [dirtySubmitButton]="false">
   <div class="fs-column">
     @if (render) {
       <fs-radio-group
-        [(ngModel)]="radioRequired"
-        label="Required"
-        name="radio_required"
-        [required]="required && validations"
-        requiredMessage="Custom: Please select at least one option">
+          [(ngModel)]="radioRequired"
+          label="Required"
+          name="radio_required"
+          [required]="required && validations"
+          requiredMessage="Custom: Please select at least one option">
         @for (item of items; track item) {
-          <mat-radio-button
-            [value]="item.id">
+          <mat-radio-button [value]="item.id">
             {{ item.name }}
           </mat-radio-button>
         }
       </fs-radio-group>
     }
     <fs-checkbox-group
-      [(ngModel)]="checkbox"
-      name="checkbox"
-      [required]="required && validations"
-      label="Checkboxes">
+        [(ngModel)]="checkbox"
+        name="checkbox"
+        [required]="required && validations"
+        label="Checkboxes">
       @for (item of items; track item) {
-        <mat-checkbox
-          [value]="$any(item)">
+        <mat-checkbox [value]="item.id">
           {{ item.name }}
         </mat-checkbox>
       }
@@ -36,22 +35,20 @@
     </fs-checkbox-group>
     @if (render) {
       <fs-autocomplete-chips
-        [(ngModel)]="chips"
-        [fetch]="fetchChips"
-        placeholder="Autocomplete Chips"
-        [required]="required && validations"
-        name="chips">
+          [(ngModel)]="chips"
+          [fetch]="fetchChips"
+          placeholder="Autocomplete Chips"
+          [required]="required && validations"
+          name="chips">
         <ng-template
-          fsAutocompleteObject
-          let-object="object">
+            fsAutocompleteObject
+            let-object="object">
           {{ object.name }}
         </ng-template>
       </fs-autocomplete-chips>
     }
     @if (render) {
-      <div
-        class="fs-row.gap-xs"
-        >
+      <div class="fs-row.gap-xs">
         <mat-form-field>
           <mat-label>
             Password
@@ -259,9 +256,7 @@
       </mat-form-field>
     }
     @if (render) {
-      <div
-        class="fs-row.gap-xs"
-        >
+      <div class="fs-row.gap-xs">
         <mat-form-field>
           <mat-label>
             Time Range From
@@ -287,79 +282,79 @@
     }
     <div class="fs-row.gap-xs.wrap">
       <button
-        mat-flat-button
-        color="primary"
-        type="submit">
+          mat-flat-button
+          color="primary"
+          type="submit">
         Submit
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="required = !(!!required)">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="required = !(!!required)">
         {{ required ? 'Disable Required' : 'Enable Required' }}
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="validations = !validations">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="validations = !validations">
         {{ validations ? 'Disable Validations' : 'Enable Validations' }}
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="render = !(!!render)">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="render = !(!!render)">
         {{ render ? 'Destroy' : 'Render' }} Inputs
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="toggleDisable()">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="toggleDisable()">
         {{ disabled ? 'Enable Form' : 'Disable Form' }}
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="submit()">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="submit()">
         Manual Submit
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="reset()">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="reset()">
         Reset
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="clear()">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="clear()">
         Clear
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="createSnapshot()">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="createSnapshot()">
         Create Snapshot
       </button>
       <button
-        mat-stroked-button
-        color="primary"
-        type="button"
-        (click)="dirty()">
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="dirty()">
         Dirty
       </button>
       <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        [dirtySubmit]="false">
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [dirtySubmit]="false">
         Submit (Dirty Disabled)
       </button>
     </div>
