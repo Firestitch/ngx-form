@@ -14,8 +14,8 @@ import { FsFormGroupDirective } from './form-group';
 
 
 @Directive({
-    selector: '[mat-raised-button],[mat-button],[mat-flat-button],[mat-stroked-button]',
-    standalone: true,
+  selector: '[mat-raised-button],[mat-button],[mat-flat-button],[mat-stroked-button]',
+  standalone: true,
 })
 export class FsButtonDirective implements OnInit, OnDestroy {
 
@@ -52,7 +52,8 @@ export class FsButtonDirective implements OnInit, OnDestroy {
           .pipe(
             takeUntil(this._destroy$),
           )
-          .subscribe(() => {
+          .subscribe((event: MouseEvent) => {
+            event.preventDefault();
             this._formBase.activeSubmitButton = this;
             this._formBase.triggerSubmit();
           });
