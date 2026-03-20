@@ -61,7 +61,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
         this.transitionStyle = 'none';
         setTimeout(() => {
           this.transitionStyle = null;
-          this._cdRef.detectChanges();
+          this._cdRef.markForCheck();
         }, 500);
       }
     }
