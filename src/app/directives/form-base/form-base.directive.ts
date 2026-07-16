@@ -75,6 +75,10 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
           ...this._buttons.toArray(),
           button,
         ]);
+
+    // QueryList.reset() does not emit `changes`; notify so subscribers (e.g. the
+    // form's dirty-submit-button tracking) react to buttons being registered.
+    this._buttons.notifyOnChanges();
   }
 
   public removeButton(button: FsButtonDirective): void {
@@ -87,6 +91,8 @@ export abstract class FsFormBaseDirective implements AfterContentInit, OnDestroy
         ...this._buttons.toArray()
           .filter((item) => (button !== item)),
       ]);
+
+    this._buttons.notifyOnChanges();
   }
   
 

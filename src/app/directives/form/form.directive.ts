@@ -702,11 +702,23 @@ export class FsFormDirective
         takeUntil(this.destroy$),
       )
       .subscribe(() => {
-        this._updateDirtySubmitButtons();
+        // Buttons (de)register during change detection (their ngOnInit/ngOnDestroy),
+        // so defer to a microtask to update the disabled state outside that pass and
+        // avoid ExpressionChangedAfterItHasBeenChecked on the button's disabled binding.
+        Promise.resolve().then(() => this._updateDirtySubmitButtons());
       });
+
+    // The initial content buttons register (addButton) before the subscription above
+    // exists, so their `changes` emission is missed. Apply the initial pristine/dirty
+    // disabled state once, deferred so it runs after the current change-detection pass.
+    Promise.resolve().then(() => this._updateDirtySubmitButtons());
   }
 
   private _updateDirtySubmitButtons(): void {
+    if (!this.ngForm) {
+      return;
+    }
+
     this._getFormGroup()
       .buttons
       .filter((button) => button.submit)

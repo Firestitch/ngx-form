@@ -25,11 +25,23 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   @Input()
   public dirtySubmit = true;
 
+  @Input()
+  public set submitDisabled(value: boolean) {
+    this._submitDisabled = value;
+    this._applyDisabled();
+  }
+
+  public get submitDisabled(): boolean {
+    return this._submitDisabled;
+  }
+
   @HostBinding('style.transition')
   public transitionStyle = null;
 
   public submit = false;
 
+  private _submitDisabled = false;
+  private _formDisabled = false;
   private _previousDisabled = false;
   private _destroy$ = new Subject();
 
@@ -42,7 +54,12 @@ export class FsButtonDirective implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.submit = this._elementRef.nativeElement.getAttribute('type') === 'submit';
-    this._formBase = this._form || this._formGroup;
+    // Prefer the enclosing form group over the form: the form's own button
+    // management (dirty-submit tracking, activeSubmitButton, reset) resolves its
+    // registry via `_formGroup || this`, so buttons must register with the same
+    // owner. Registering with the form while the form reads the group leaves the
+    // group's button list empty and the submit button never gets dirty-disabled.
+    this._formBase = this._formGroup || this._form;
 
     if (this._formBase) {
       this._formBase.addButton(this);
@@ -67,20 +84,20 @@ export class FsButtonDirective implements OnInit, OnDestroy {
     }
   }
 
-  public disable() {    
+  public disable() {
     if (this._matButton && !this._formBase.activeSubmitButton) {
       this._previousDisabled = this._matButton.disabled;
-      this._matButton.disabled = true;
+      this._formDisabled = true;
       this._matButton.disableRipple = true;
-      this._cdRef.markForCheck(); 
+      this._applyDisabled();
     }
   }
 
   public enable() {
     if (this._matButton) {
-      this._matButton.disabled = false;
+      this._formDisabled = false;
       this._matButton.disableRipple = true;
-      this._cdRef.markForCheck();
+      this._applyDisabled();
     }
   }
 
@@ -117,7 +134,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   }
 
   public reset() {
-    if(!this._previousDisabled) {
+    if (!this._previousDisabled) {
       this.enable();
     }
 
@@ -136,6 +153,16 @@ export class FsButtonDirective implements OnInit, OnDestroy {
     this._destroy$.next(null);
     this._destroy$.complete();
     this._formBase?.removeButton(this);
+  }
+
+  // Effective disabled combines the consumer-controlled submitDisabled input with
+  // the form's submit-lifecycle state, so form enable/disable never clobbers an
+  // explicit [submitDisabled] and the two channels stay independent.
+  private _applyDisabled() {
+    if (this._matButton) {
+      this._matButton.disabled = this._submitDisabled || this._formDisabled;
+      this._cdRef.markForCheck();
+    }
   }
 
   private _resetClass() {
