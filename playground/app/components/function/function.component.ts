@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FsMessage } from '@firestitch/message';
 
 import { of, throwError } from 'rxjs';
-import { FsFormGroupDirective } from '../../../../src/app/directives/form-group/form-group.directive';
+import { FsFormContainerDirective } from '../../../../src/app/directives/form-container/form-container.directive';
 import { FormsModule } from '@angular/forms';
 import { FsFormDirective } from '../../../../src/app/directives/form/form.directive';
 import { MatFormField, MatHint } from '@angular/material/form-field';
@@ -19,7 +19,7 @@ import { FsButtonDirective } from '../../../../src/app/directives/button.directi
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        FsFormGroupDirective,
+        FsFormContainerDirective,
         FormsModule,
         FsFormDirective,
         MatFormField,

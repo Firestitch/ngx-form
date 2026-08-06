@@ -1,0 +1,21 @@
+<!--
+  A second tab that also owns a form. It exists to prove the switch: moving
+  between two form-bearing tabs has to leave the footer driving whichever one is
+  mounted, and Material attaches the incoming tab body before it detaches the
+  outgoing one - so linking has to be identity-based, not last-one-wins.
+-->
+<div
+    ngForm
+    fsForm
+    [submit]="save">
+  <h2>Notes</h2>
+  <mat-form-field class="full-width">
+    <mat-label>Note</mat-label>
+    <textarea
+      matInput
+      rows="5"
+      [(ngModel)]="account.note"
+      name="note"
+      [fsFormRequired]="true"></textarea>
+  </mat-form-field>
+</div>

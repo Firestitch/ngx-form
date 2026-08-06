@@ -8,7 +8,7 @@ export { FsForm } from './app/services/fsform.service';
 export { FsFormGreaterDirective, FsFormGreaterEqualDirective, FsFormLesserEqualDirective, FsFormTemplateDirective } from './app/directives';
 export { FsButtonDirective } from './app/directives/button.directive';
 export { FsFormDialogCloseDirective } from './app/directives/form-dialog-close.directive';
-export { FsFormGroupDirective } from './app/directives/form-group/form-group.directive';
+export { FsFormContainerDirective } from './app/directives/form-container/form-container.directive';
 export { FsFormDirective } from './app/directives/form/form.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';
 export { FsFormCompareDirective } from './app/directives/validators/compare.directive';
@@ -41,6 +41,7 @@ export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
 
 // Interfaces
 export { ConfirmConfig } from './app/interfaces/confirm-config';
+export { FsFormOwner } from './app/interfaces/form-owner';
 export { SubmitEvent } from './app/interfaces/submit-event';
 export { SubmittedEvent } from './app/interfaces/submitted-event';
 

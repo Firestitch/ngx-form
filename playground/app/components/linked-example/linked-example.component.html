@@ -1,0 +1,25 @@
+<p>
+  A dialog with side tabs, top tabs inside them, a form scoped to just the
+  Settings tab's fields, an instant-save panel beside it, and Save/Cancel in the
+  dialog footer outside every form.
+</p>
+<p>
+  The dialog carries <code>fsFormContainer</code> rather than a form of its own -
+  no <code>ngForm</code>, no wrapper element, no empty control namespace. Forms
+  register into it as tabs mount, the footer buttons resolve to it, and
+  <code>&lt;fs-form-dialog-actions&gt;</code> is left completely bare.
+</p>
+<ul>
+  <li>Edit a Settings field &rarr; Save enables. Edit the Status panel &rarr; it doesn't.</li>
+  <li>Save validates only the mounted tab's fields, never the whole dialog.</li>
+  <li>Switch Settings &harr; Notes and Save keeps working - it follows the mounted form.</li>
+  <li>Go to Activity, which has no form, and the footer shows Done on its own.</li>
+  <li>Close with unsaved Settings edits and it prompts; with only panel edits it doesn't.</li>
+</ul>
+<button
+    mat-flat-button
+    color="primary"
+    type="button"
+    (click)="open()">
+  Open Dialog
+</button>

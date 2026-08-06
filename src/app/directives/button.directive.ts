@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FsFormDirective } from './form';
 import { FsFormBaseDirective } from './form-base';
-import { FsFormGroupDirective } from './form-group';
+import { FsFormContainerDirective } from './form-container';
 
 
 @Directive({
@@ -45,7 +45,7 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   private _previousDisabled = false;
   private _destroy$ = new Subject();
 
-  private _formGroup = inject(FsFormGroupDirective, { optional: true });
+  private _container = inject(FsFormContainerDirective, { optional: true });
   private _form = inject(FsFormDirective, { optional: true });
   private _matButton = inject(MatButton, { optional: true, host: true });
   private _elementRef = inject(ElementRef);
@@ -54,12 +54,17 @@ export class FsButtonDirective implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.submit = this._elementRef.nativeElement.getAttribute('type') === 'submit';
-    // Prefer the enclosing form group over the form: the form's own button
+    // Prefer the enclosing container over the form: the form's own button
     // management (dirty-submit tracking, activeSubmitButton, reset) resolves its
-    // registry via `_formGroup || this`, so buttons must register with the same
-    // owner. Registering with the form while the form reads the group leaves the
-    // group's button list empty and the submit button never gets dirty-disabled.
-    this._formBase = this._formGroup || this._form;
+    // registry the same way, so buttons must register with the same owner.
+    // Registering with the form while the form reads the container leaves the
+    // container's button list empty and the submit button never gets
+    // dirty-disabled.
+    //
+    // Note this resolves the ROOT of the linked set, not the nearest form: the
+    // button that saves a tab's form typically sits outside it, down in the
+    // dialog footer, and drives the whole linked set from there.
+    this._formBase = this._container || this._form?.rootForm;
 
     if (this._formBase) {
       this._formBase.addButton(this);

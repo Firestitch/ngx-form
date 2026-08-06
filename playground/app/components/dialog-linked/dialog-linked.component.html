@@ -1,0 +1,67 @@
+<!--
+  The dialog frames the layout and owns the footer buttons, so it carries an
+  fsFormContainer - not a form. There is no `ngForm` here and no wrapper div:
+  the container holds no controls of its own, it just bounds the region that
+  forms register into and that buttons resolve against.
+
+  Every form mounted below joins it automatically, which is what lets the Save
+  button live down here while the fields it saves live several tab levels up.
+-->
+<fs-dialog
+    fsFormContainer
+    [mode]="'stretch'">
+  <fs-dialog-title>
+    Account
+    <ng-template fsDialogSubtitle>
+      {{ account.firstName }} {{ account.lastName }}
+    </ng-template>
+  </fs-dialog-title>
+  <div mat-dialog-content>
+    <mat-tab-group
+        fsTabs
+        orientation="vertical"
+        [(selected)]="sideTab">
+      <mat-tab
+          label="Profile"
+          name="profile">
+        <ng-template matTabContent>
+          <mat-tab-group
+              fsTabs
+              [(selected)]="topTab">
+            <mat-tab
+                label="Settings"
+                name="settings">
+              <ng-template matTabContent>
+                <app-linked-settings [account]="account"></app-linked-settings>
+              </ng-template>
+            </mat-tab>
+            <mat-tab
+                label="Notes"
+                name="notes">
+              <ng-template matTabContent>
+                <app-linked-notes [account]="account"></app-linked-notes>
+              </ng-template>
+            </mat-tab>
+          </mat-tab-group>
+        </ng-template>
+      </mat-tab>
+      <mat-tab
+          label="Activity"
+          name="activity">
+        <ng-template matTabContent>
+          <div class="content">
+            Nothing here saves, so no form registers and the footer shows Done.
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+  <mat-dialog-actions>
+    <!--
+      No inputs at all. Inside a container the actions read whether anything
+      mounted can save, so the footer swaps between Save and Done on its own -
+      the dialog never has to keep a list of which tab names can save.
+    -->
+    <fs-form-dialog-actions></fs-form-dialog-actions>
+  </mat-dialog-actions>
+</fs-dialog>

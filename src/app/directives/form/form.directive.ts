@@ -1,20 +1,17 @@
-import { AfterContentInit, Directive, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { AfterContentInit, Directive, EventEmitter, HostBinding, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AbstractControl, NgForm } from '@angular/forms';
-import { ActivatedRoute, Route } from '@angular/router';
-
-import { MatDialogRef } from '@angular/material/dialog';
 
 import { guid } from '@firestitch/common';
-import { DrawerRef } from '@firestitch/drawer';
-import { FsMessage, MessageMode } from '@firestitch/message';
+import { MessageMode } from '@firestitch/message';
+import { FsMessage } from '@firestitch/message';
 
 import {
   BehaviorSubject,
-  defer,
-  fromEvent,
-  iif,
+  combineLatest,
+  concat,
   Observable,
   of,
+  Subject,
   throwError,
 } from 'rxjs';
 import {
@@ -29,40 +26,30 @@ import {
   take,
   takeUntil,
   tap,
+  toArray,
 } from 'rxjs/operators';
 
-import { FormDeactivateGuard } from '../../guards/form-deactivate.guard';
-import { confirmResultContinue } from '../../helpers/confirm-result-continue';
-import { getActiveRoute } from '../../helpers/get-active-route';
 import { getFormErrors } from '../../helpers/get-form-errors';
-import { FsForm } from '../../services/fsform.service';
 import { FsButtonDirective } from '../button.directive';
 import { FsFormBaseDirective } from '../form-base';
-import { FsFormGroupDirective } from '../form-group';
+import { FsFormContainerDirective } from '../form-container';
 
 import { ConfirmResult } from './../../enums/confirm-result';
 import { FormStatus } from './../../enums/form-status';
-import { ConfirmConfig, SubmittedEvent } from './../../interfaces';
+import { SubmittedEvent } from './../../interfaces';
 import { SubmitEvent } from './../../interfaces/submit-event';
 
 
 @Directive({
-    selector: '[fsForm]',
-    exportAs: 'fsForm',
-    standalone: true,
+  selector: '[fsForm]',
+  exportAs: 'fsForm',
+  standalone: true,
 })
-export class FsFormDirective 
-  extends FsFormBaseDirective 
+export class FsFormDirective
+  extends FsFormBaseDirective
   implements OnInit, OnDestroy, AfterContentInit, OnChanges {
-  ngForm = inject<NgForm>(NgForm);
-  private _form = inject(FsForm);
-  private _element = inject(ElementRef);
-  private _message = inject(FsMessage);
-  private _formGroup = inject(FsFormGroupDirective, { optional: true });
-  private _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, { optional: true });
-  private _drawerRef = inject<DrawerRef<any>>(DrawerRef, { optional: true });
-  private _route = inject(ActivatedRoute);
 
+  public ngForm = inject<NgForm>(NgForm);
 
   @Input()
   public wrapperSelector = '.fs-form-wrapper,.mat-mdc-form-field';
@@ -78,21 +65,6 @@ export class FsFormDirective
 
   @Input()
   public autocomplete = false;
-
-  @Input()
-  public shortcuts = true; // Ctrl + s
-
-  @Input()
-  public confirm: ConfirmConfig | boolean = true;
-
-  @Input()
-  public confirmDialog = true;
-
-  @Input()
-  public confirmDrawer = true;
-
-  @Input()
-  public confirmBrowser = true;
 
   @Input()
   public dirtySubmitButton = true;
@@ -112,9 +84,23 @@ export class FsFormDirective
   @Input()
   public errorDelay = 1000;
 
+  /**
+   * Whether this form joins the set around it - the `fsForm` it is nested inside,
+   * or the `fsFormContainer` enclosing it.
+   *
+   * Forms in a set behave as one submittable unit: the outermost form is what the
+   * submit buttons drive, and validation, dirty state, the unsaved-changes
+   * confirm and the pristine reset all span the set. That is what lets a form
+   * wrap only one tab's fields while the dialog footer stays outside it.
+   *
+   * Set `[link]="false"` for a panel that owns its own saving - an instant-save
+   * side panel, say. It keeps every fsForm feature for itself, but its dirty
+   * state never enables the outer Save button, its validation never blocks the
+   * outer submit, and the outer submit never touches it.
+   */
   @Input()
-  public deactivationGuard = true;
- 
+  public link = true;
+
   @Output('fsForm')
   public submitEvent: EventEmitter<SubmitEvent> = new EventEmitter();
 
@@ -137,11 +123,87 @@ export class FsFormDirective
   public fsFormClass = true;
 
   private _registerControl;
-  private _dialogBackdropEscape = false;
   private _snapshot: { [key: string]: any } = {};
-  private _activatedRouteConfig: Route | null;
   private _status$ = new BehaviorSubject(FormStatus.Valid);
   private _submit$: (event?: SubmitEvent) => Observable<any> = null;
+  private _linkedForms = new Set<FsFormDirective>();
+  private _containerParent: FsFormDirective = null;
+  private _dirtyChange$ = new Subject<void>();
+  private _message = inject(FsMessage);
+  private _container = inject(FsFormContainerDirective, { optional: true });
+  private _ancestorForm = inject(FsFormDirective, { optional: true, skipSelf: true });
+
+
+  /**
+   * Emits whenever the set's dirty state may have moved. Anything outside the
+   * form that renders off it - the dialog actions, say - can't watch
+   * `ngForm.valueChanges` on its own, because the edits happen in a nested form's
+   * NgForm, not this one's.
+   */
+  public get dirtyChange$(): Observable<void> {
+    return this._dirtyChange$.asObservable();
+  }
+
+  public get submitted$(): Observable<SubmittedEvent> {
+    return this.submitted.asObservable() as Observable<SubmittedEvent>;
+  }
+
+  public get status$(): Observable<FormStatus> {
+    return this._status$.asObservable();
+  }
+
+  public get element(): HTMLElement {
+    return this._element.nativeElement;
+  }
+
+  /** True when a Save button driving this form would have something to run. */
+  public get hasSubmit(): boolean {
+    return !!this._submit$;
+  }
+
+  /**
+   * The form this one is linked into, or null when it is a root - either because
+   * nothing encloses it or because `[link]="false"` cut it loose. A container
+   * supplies the parent when the forms are siblings rather than nested.
+   */
+  public get parentForm(): FsFormDirective {
+    if (!this.link) {
+      return null;
+    }
+
+    return this._ancestorForm || this._containerParent;
+  }
+
+  /** The outermost form of this set. Submit buttons drive this one. */
+  public get rootForm(): FsFormDirective {
+    return this.parentForm?.rootForm || this;
+  }
+
+  /** This form plus every form linked into it, at any depth. */
+  public get linkedForms(): FsFormDirective[] {
+    return [
+      this,
+      ...[...this._linkedForms]
+        .reduce((forms, form) => [...forms, ...form.linkedForms], []),
+    ];
+  }
+
+  /** True when this form or anything linked into it has unsaved changes. */
+  public get dirtyLinked(): boolean {
+    return this.linkedForms
+      .some((form) => form.ngForm.dirty);
+  }
+
+  /**
+   * True when this form or anything linked into it has a submit handler - i.e.
+   * there is something for a Save button to do. A dialog footer can bind to this
+   * to swap Save for Done as the mounted tab changes, instead of hard-coding
+   * which tab names happen to be savable.
+   */
+  public get submits(): boolean {
+    return this.linkedForms
+      .some((form) => form.hasSubmit);
+  }
 
   public get submitting(): boolean {
     return this._status$.getValue() === FormStatus.Submitting;
@@ -153,6 +215,16 @@ export class FsFormDirective
 
   public get completing(): boolean {
     return this._status$.getValue() === FormStatus.Completing;
+  }
+
+  /**
+   * True when nothing above this form speaks for the set it belongs to. Reads the
+   * raw injections rather than `parentForm`, so an unlinked panel inside a dialog
+   * still defers to whatever encloses it instead of registering a second backdrop
+   * confirm on the same dialog.
+   */
+  private get _owns(): boolean {
+    return !this._ancestorForm && !this._container;
   }
 
   private get _submitEvent(): SubmitEvent {
@@ -172,8 +244,18 @@ export class FsFormDirective
       response: null,
     };
 
-    const submit$: Observable<any> = this._submit$ ?
-      this._submit$(this._submitEvent) : of(submittedEvent);
+    // Every form in the set gets to save. A form that only frames the layout - a
+    // dialog wrapper around a tab group - carries no submit of its own and simply
+    // defers to the tab form linked into it. When several are linked they run in
+    // nesting order, so an outer save lands before an inner one, and the response
+    // of the last is what the submit resolves with.
+    const submits = this.linkedForms
+      .filter((form) => form.hasSubmit)
+      .map((form) => form._submit$(this._submitEvent));
+
+    const submit$: Observable<any> = submits.length ?
+      concat(...submits).pipe(toArray(), map((responses) => responses[responses.length - 1])) :
+      of(submittedEvent);
 
     return submit$
       .pipe(
@@ -204,25 +286,76 @@ export class FsFormDirective
   }
 
   private get _submitter(): string {
-    return this._getFormGroup().activeSubmitButton?.name;
+    return this._getOwner().activeSubmitButton?.name;
   }
 
   public ngOnInit() {
-    this._formGroup?.registerForm(this);
-
-    if (this.deactivationGuard) {
-      this._registerCanDeactivateGuard();
+    // A form already nested inside another links to that one, which is itself in
+    // the container - so it joins the set transitively and must not also register
+    // as a container sibling.
+    if (this.link) {
+      if (this._ancestorForm) {
+        this._ancestorForm.linkForm(this);
+      } else {
+        this._container?.registerForm(this);
+      }
     }
 
-    this._registerConfirmDialogBackdropEscape();
-    this._listenHotKeys();
-    this._listenWindowClose();
+    // The route guard, dialog backdrop, Ctrl+S and browser close prompt all act
+    // on the set as a whole, so exactly one thing registers them: a linked child
+    // defers to its parent, and every form in a container defers to the container.
+    if (this._owns) {
+      super.ngOnInit();
+    }
+
     this._listenSubmit();
     this._listenFormStatus();
 
     if (!this.autocomplete) {
       this._registerAutocomplete();
     }
+  }
+
+  /**
+   * Take a nested form into this one's set. Called by the child on init, or by a
+   * container linking its siblings - consumers never call it directly.
+   */
+  public linkForm(form: FsFormDirective): void {
+    this._linkedForms.add(form);
+
+    Promise.resolve()
+      .then(() => {
+        this.rootForm._updateDirtySubmitButtons();
+        this._cdRef.markForCheck();
+      });
+  }
+
+  public unlinkForm(form: FsFormDirective): void {
+    this._linkedForms.delete(form);
+
+    Promise.resolve()
+      .then(() => {
+        this.rootForm._updateDirtySubmitButtons();
+        this._cdRef.markForCheck();
+      });
+  }
+
+  /**
+   * Adopt a parent that DI could not supply. Only a container calls this, to link
+   * forms that are siblings in the template into one set.
+   */
+  public linkTo(form: FsFormDirective): void {
+    if (!form || form === this) {
+      return;
+    }
+
+    this._containerParent = form;
+    form.linkForm(this);
+  }
+
+  public unlinkFrom(): void {
+    this._containerParent?.unlinkForm(this);
+    this._containerParent = null;
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -250,18 +383,24 @@ export class FsFormDirective
   }
 
   public ngAfterContentInit(): void {
-    super.ngAfterContentInit(); 
+    // Tab and drawer confirmation belong to whoever owns the set. A linked child
+    // shares the same tab groups and the same drawer, so letting it register too
+    // would put a second confirm on the same click.
+    if (this._owns) {
+      super.ngAfterContentInit();
+    }
+
     this._registerConfirm();
-    this._registerConfirmDrawerClose();
-    this._registerDrawerClose();
     this._registerDirtySubmitButton();
   }
 
   public ngOnDestroy(): void {
-    this._formGroup?.deregisterForm();
+    // Deregister first: it clears the container-supplied parent, so the unlink
+    // below falls through to the DI ancestor rather than repeating the same work.
+    this._container?.deregisterForm(this);
+    this.parentForm?.unlinkForm(this);
 
     super.ngOnDestroy();
-    this._cleanupCanDeactivate();
   }
 
   public createSnapshot(): void {
@@ -273,12 +412,15 @@ export class FsFormDirective
   }
 
   public reset(): void {
-    this.ngForm.resetForm();
+    this.linkedForms
+      .forEach((form) => {
+        form.ngForm.resetForm();
 
-    Object.keys(this.ngForm.controls)
-      .forEach((name: string) => {
-        const control = this.ngForm.controls[name];
-        control.reset(this._snapshot[name]);
+        Object.keys(form.ngForm.controls)
+          .forEach((name: string) => {
+            const control = form.ngForm.controls[name];
+            control.reset(form._snapshot[name]);
+          });
       });
 
     this.reseted.emit();
@@ -322,22 +464,25 @@ export class FsFormDirective
   public disable(): void {
     this.ngForm.control.disable();
 
-    this._getFormGroup()
+    this._getOwner()
       .buttons.forEach((button) => {
         button.disable();
       });
   }
 
   public validate(): void {
-    Object.values(this.ngForm.controls)
-      .forEach((control) => {
-        control.markAsDirty();
-        control.markAsTouched();
-        control.updateValueAndValidity();
+    this.linkedForms
+      .forEach((form) => {
+        Object.values(form.ngForm.controls)
+          .forEach((control) => {
+            control.markAsDirty();
+            control.markAsTouched();
+            control.updateValueAndValidity();
+          });
       });
   }
 
-  public submit$(submitEvent: SubmitEvent): Observable<SubmittedEvent> {
+  public submit$(submitEvent?: SubmitEvent): Observable<SubmittedEvent> {
     return of(submitEvent)
       .pipe(
         tap(() => this._statusValidating()),
@@ -348,9 +493,12 @@ export class FsFormDirective
         switchMap((data) => this._waitUntilStatusPending()
           .pipe(
             map(() => data),
-          )),       
+          )),
         mergeMap(() => {
-          if (this.ngForm.status === 'INVALID') {
+          const invalid = this.linkedForms
+            .some((form) => form.ngForm.status === 'INVALID');
+
+          if (invalid) {
             return this._formInvalidState$;
           }
 
@@ -406,116 +554,34 @@ export class FsFormDirective
 
   }
 
-  private _listenWindowClose(): void {
-    fromEvent(window, 'beforeunload')
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe((event: Event) => {
-        if (this.confirm && this.confirmBrowser && this.ngForm.dirty) {
-          event.returnValue = false;
-        }
-      });
-  }
-
-  private _activeDialog(el, dialog: HTMLElement): boolean {
-    if (el.isSameNode(dialog)) {
-      return true;
-    } else if (el.parentElement) {
-      return this._activeDialog(el.parentElement, dialog);
-    }
-
-    return false;
-  }
-
-  private _listenHotKeys(): void {
-    this._ngZone.runOutsideAngular(() => {
-      fromEvent(document, 'keydown')
-        .pipe(
-          takeUntil(this.destroy$),
-        )
-        .subscribe((event: KeyboardEvent) => {
-          if (this._dialogBackdropEscape && event.code === 'Escape') {
-            const cdkOverlayPane = Array
-              .from(document.querySelectorAll<HTMLElement>('.cdk-overlay-pane')).pop();
-    
-            const activeDialog = this
-              ._activeDialog(document.getElementById(this._dialogRef.id), cdkOverlayPane);
-
-            if (activeDialog) {
-              this._ngZone.run(() => {
-                this._formClose();
-              });
-            }
-          }
-
-          if ((event.ctrlKey || event.metaKey) && event.code === 'KeyS') {
-            event.preventDefault();
-
-            if (this.shortcuts) {
-              if (this._elementInForm(document.activeElement)) {
-                this.ngForm.ngSubmit.next(null);
-              }
-            }
-          }
-        });
-    });
-  }
-
-  private _formClose(): void {
-    if (this.confirm && this.confirmDialog) {
-      this.triggerConfirm()
-        .pipe(
-          filter((result) => confirmResultContinue(result)),
-          switchMap((result) => {
-            return result === ConfirmResult.NoChanges || result === ConfirmResult.Discard
-              ? of(null)
-              : this.submitted.asObservable();
-          }),
-          takeUntil(this.destroy$),
-        )
-        .subscribe((result: SubmittedEvent) => {
-          this._dialogRef.close(result?.response);
-        });
-    } else {
-      this._dialogRef.close(null);
-    }
-  }
-
   private _getActiveSubmitButton(): FsButtonDirective {
-    if(this._getFormGroup().activeSubmitButton) {
-      return this._getFormGroup().activeSubmitButton;
+    if(this._getOwner().activeSubmitButton) {
+      return this._getOwner().activeSubmitButton;
     }
 
-    return this._getFormGroup()
+    return this._getOwner()
       .buttons
       .filter((button) => button.submit)[0];
   }
 
-  private _elementInForm(el: Element): boolean {
-    if (el.isSameNode(this._element.nativeElement)) {
-      return true;
-    } else if (el.parentElement) {
-      return this._elementInForm(el.parentElement);
-    }
-
-    return false;
-  }
-
   private _completeSubmit(success, submitEvent: SubmittedEvent): void {
     if (success) {
-      this.ngForm.control.markAsPristine();
-      this.createSnapshot();
+      this.linkedForms
+        .forEach((form) => {
+          form.ngForm.control.markAsPristine();
+          form.createSnapshot();
+        });
+
       this.submitted.emit(submitEvent);
     } else {
       this._resetButtons();
     }
 
-    if (this._getFormGroup().activeSubmitButton) {
+    if (this._getOwner().activeSubmitButton) {
       if (success) {
-        this._getFormGroup().activeSubmitButton.success();
+        this._getOwner().activeSubmitButton.success();
       } else {
-        this._getFormGroup().activeSubmitButton.error();
+        this._getOwner().activeSubmitButton.error();
       }
     }
 
@@ -538,24 +604,38 @@ export class FsFormDirective
         takeUntil(this.destroy$),
       )
       .subscribe(() => {
-        if (this.ngForm.form.status === 'VALID') {
+        const valid = this.linkedForms
+          .every((form) => form.ngForm.form.status === 'VALID');
+
+        if (valid) {
           this._status$.next(FormStatus.Valid);
         } else {
           this._status$.next(FormStatus.Invalid);
         }
 
         this._resetButtons();
-        this._getFormGroup().activeSubmitButton = null;
+        this._getOwner().activeSubmitButton = null;
         this._updateDirtySubmitButtons();
       });
   }
 
-  private _getFormGroup(): FsFormBaseDirective {
-    return this._formGroup || this;
+  /**
+   * Whoever holds the submit buttons for this form. A container when one encloses
+   * it, otherwise the root of its linked set - the button that saves a tab's form
+   * typically sits outside it, down in the dialog footer.
+   *
+   * Only a form that actually joined the container may drive its buttons. DI
+   * hands `_container` to every form inside, including one cut loose with
+   * `[link]="false"`, and an instant-save panel is usually `[confirm]="false"`
+   * too - so without this it would take the `!confirm` branch below and
+   * re-enable the footer's Save button that the linked set had just disabled.
+   */
+  private _getOwner(): FsFormBaseDirective {
+    return (this.link ? this._container : null) || this.rootForm;
   }
 
   private _resetButtons(): void {
-    this._getFormGroup()
+    this._getOwner()
       .buttons.forEach((button) => {
         button.reset();
       });
@@ -584,87 +664,6 @@ export class FsFormDirective
       });
   }
 
-  private _registerDrawerClose(): void {
-    if (this._drawerRef) {
-      this._drawerRef.closeStart$
-        .pipe(
-          takeUntil(this.destroy$),
-        )
-        .subscribe((subscriber) => {
-          if (this.submitting) {
-            this._status$
-              .pipe(
-                filter((status) => status === FormStatus.Success || status === FormStatus.Error),
-                takeUntil(this.destroy$),
-              )
-              .subscribe((status) => {
-                if (status === FormStatus.Success) {
-                  subscriber.next(null);
-                  subscriber.complete();
-                } else {
-                  subscriber.error();
-                }
-              });
-          } else {
-            subscriber.next(null);
-            subscriber.complete();
-          }
-        });
-    }
-  }
-
-  private _registerConfirmDrawerClose(): void {
-    if (this._drawerRef) {
-      this._drawerRef.closeStart$
-        .pipe(
-          switchMap((subscriber) => {
-            return iif(
-              () => this.confirm && this.confirmDrawer,
-              this.triggerConfirm()
-                .pipe(
-                  map((result) => confirmResultContinue(result)),
-                  tap((result) => {
-                    if (result) {
-                      subscriber.next(null);
-                      subscriber.complete();
-                    }
-                  }),
-                ),
-              defer(() => {
-                subscriber.next(null);
-                subscriber.complete();
-
-                return of(null);
-              }),
-            );
-          }),
-          takeUntil(this.destroy$),
-        )
-        .subscribe();
-    }
-  }
-  
-  private _registerConfirmDialogBackdropEscape(): void {
-    if(this._dialogRef) {
-      this._dialogBackdropEscape = !this._dialogRef?.disableClose;
-
-      if (this._dialogBackdropEscape) {
-        this._dialogRef.backdropClick()
-          .pipe(
-            takeUntil(this.destroy$),
-          )
-          .subscribe(() => {
-            this._formClose();
-          });
-
-        this.destroy$
-          .subscribe(() => {
-            this._dialogRef.disableClose = false;
-          });
-      }
-    }
-  }
-
   private _registerAutocomplete(): void {
     this._registerControl = this.ngForm.form.registerControl.bind(this.ngForm.form);
 
@@ -688,15 +687,17 @@ export class FsFormDirective
       return;
     }
 
+    // Report up: a linked child's edits have to reach the root, since that is
+    // where the submit buttons live and what decides whether they are enabled.
     this.ngForm.form.valueChanges
       .pipe(
         takeUntil(this.destroy$),
       )
       .subscribe(() => {
-        this._updateDirtySubmitButtons();
+        this.rootForm._updateDirtySubmitButtons();
       });
 
-    this._getFormGroup()
+    this._getOwner()
       .buttons.changes
       .pipe(
         takeUntil(this.destroy$),
@@ -719,12 +720,14 @@ export class FsFormDirective
       return;
     }
 
-    this._getFormGroup()
+    this._dirtyChange$.next();
+
+    this._getOwner()
       .buttons
       .filter((button) => button.submit)
       .forEach((submitButton: FsButtonDirective) => {
         if (
-          !this.confirm || !this.dirtySubmitButton || this.ngForm.dirty || !submitButton.dirtySubmit
+          !this.confirm || !this.dirtySubmitButton || this.dirtyLinked || !submitButton.dirtySubmit
         ) {
           submitButton.enable();
         } else {
@@ -742,27 +745,34 @@ export class FsFormDirective
   }
 
   private _setupActiveSubmitButton(): void {
-    this._getFormGroup()
+    this._getOwner()
       .activeSubmitButton = this._getActiveSubmitButton();
     this._resetButtons();
 
-    if (this._getFormGroup().activeSubmitButton) {
-      this._getFormGroup().activeSubmitButton.process();
+    if (this._getOwner().activeSubmitButton) {
+      this._getOwner().activeSubmitButton.process();
     }
   }
 
   private _disableButtons(): void {
-    this._getFormGroup()
+    this._getOwner()
       .buttons.forEach((button) => {
         button.disable();
       });
   }
 
-  private _waitUntilStatusPending(): Observable<string> {
-    return this.ngForm.statusChanges
+  private _waitUntilStatusPending(): Observable<string[]> {
+    // Async validators can be pending in any linked form, so hold the submit
+    // until every one of them has settled - not just this form's.
+    return combineLatest(
+      this.linkedForms
+        .map((form) => form.ngForm.statusChanges
+          .pipe(
+            startWith(form.ngForm.status),
+          )),
+    )
       .pipe(
-        startWith(this.ngForm.status),
-        first((state) => state !== 'PENDING'),
+        first((states) => states.every((state) => state !== 'PENDING')),
       );
   }
 
@@ -779,35 +789,6 @@ export class FsFormDirective
 
     console.groupEnd();
     this._completeSubmit(false, null);
-  }
-
-  private _registerCanDeactivateGuard(): void {
-    this._activatedRouteConfig = getActiveRoute(this._route).routeConfig;
-
-    if (!this._activatedRouteConfig) {
-      return;
-    }
-
-    this._form.registerFormDirective(this._activatedRouteConfig.component, this);
-
-    if (!Array.isArray(this._activatedRouteConfig.canDeactivate)) {
-      this._activatedRouteConfig.canDeactivate = [];
-    }
-
-    if (this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard) === -1) {
-      this._activatedRouteConfig.canDeactivate.push(FormDeactivateGuard);
-    }
-  }
-
-  private _cleanupCanDeactivate(): void {
-    if (!this._activatedRouteConfig) {
-      return;
-    }
-
-    const guardIndex = this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard);
-    this._activatedRouteConfig.canDeactivate.splice(guardIndex, 1);
-
-    this._form.removeFormDirective(this._activatedRouteConfig.component);
   }
 
 }

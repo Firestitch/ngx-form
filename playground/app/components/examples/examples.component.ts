@@ -11,6 +11,7 @@ import { NonMaterialComponent } from '../non-material/non-material.component';
 import { SubmitObservableComponent } from '../submit-observable/submit-observable.component';
 import { DialogExampleComponent } from '../dialog-example/dialog-example.component';
 import { DrawerExampleComponent } from '../drawer-example/drawer-example.component';
+import { LinkedExampleComponent } from '../linked-example/linked-example.component';
 import { TabsExampleComponent } from '../tabs-example/tabs-example.component';
 import { TemplateComponent } from '../template/template.component';
 
@@ -30,6 +31,7 @@ import { TemplateComponent } from '../template/template.component';
         DeactivateComponent,
         DialogExampleComponent,
         DrawerExampleComponent,
+        LinkedExampleComponent,
         TabsExampleComponent,
         TemplateComponent,
     ],

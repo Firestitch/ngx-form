@@ -5,9 +5,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { FsFormDirective } from '../directives/form/form.directive';
 import { confirmResultContinue } from '../helpers';
 import { getActiveRoute } from '../helpers/get-active-route';
+import { FsFormOwner } from '../interfaces';
 import { FsForm } from '../services/fsform.service';
 
 
@@ -28,7 +28,7 @@ export class FormDeactivateGuard  {
       return of(true);
     }
 
-    const directives: FsFormDirective[] = this._form
+    const directives: FsFormOwner[] = this._form
       .getFormDirectives(route.routeConfig.component);
 
     if (!Array.isArray(directives) || directives.length === 0) {

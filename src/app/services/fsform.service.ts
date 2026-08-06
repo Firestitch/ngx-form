@@ -7,8 +7,8 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { ConfirmUnsavedComponent } from '../components/confirm-unsaved';
-import type { FsFormDirective } from '../directives/form/form.directive';
 import { ConfirmResult } from '../enums';
+import { FsFormOwner } from '../interfaces';
 
 
 @Injectable({
@@ -17,17 +17,17 @@ import { ConfirmResult } from '../enums';
 export class FsForm {
 
   // value is array for future possibilities of extension
-  private _formDirectiveStore = new WeakMap<Type<any>, FsFormDirective[]>();
+  private _formDirectiveStore = new WeakMap<Type<any>, FsFormOwner[]>();
   private _dialog = inject(MatDialog);
 
-  public registerFormDirective(routeComponent: Type<any>, directive: FsFormDirective) {
+  public registerFormDirective(routeComponent: Type<any>, directive: FsFormOwner) {
     const directives = this.getFormDirectives(routeComponent) || [];
     directives.push(directive);
 
     this._formDirectiveStore.set(routeComponent, directives);
   }
 
-  public getFormDirectives(routeComponent): FsFormDirective[] {
+  public getFormDirectives(routeComponent): FsFormOwner[] {
     return this._formDirectiveStore.get(routeComponent);
   }
 
@@ -35,17 +35,18 @@ export class FsForm {
     this._formDirectiveStore.delete(routeComponent);
   }
 
-  public hasChanges(form: FsFormDirective): boolean {
-    return Object.keys(form.ngForm.control.controls)
-      .some((key) => {
-        const control = form.ngForm.control.controls[key];
-
-        return control.dirty;
-      });
+  public hasChanges(form: FsFormOwner): boolean {
+    // Spans the linked set, so a dialog whose fields live in a nested tab form
+    // still knows it has changes. A form linked out with `[link]="false"` is
+    // absent from that set and never triggers the prompt - which is the point of
+    // an instant-save panel: it has nothing outstanding to warn about.
+    return form.linkedForms
+      .some((linkedForm) => Object.keys(linkedForm.ngForm.control.controls)
+        .some((key) => linkedForm.ngForm.control.controls[key].dirty));
   }
 
   public confirmUnsaved(
-    form: FsFormDirective, 
+    form: FsFormOwner,
   ): Observable<ConfirmResult> {
     if (!form.confirm || !this.hasChanges(form)) {
       return of(ConfirmResult.NoChanges);
@@ -90,7 +91,8 @@ export class FsForm {
           }
 
           if (result === 'save') {
-            form.ngForm.control.markAsPristine();
+            form.linkedForms
+              .forEach((linkedForm) => linkedForm.ngForm.control.markAsPristine());
 
             return form.submit$({ confirmed: true })
               .pipe(

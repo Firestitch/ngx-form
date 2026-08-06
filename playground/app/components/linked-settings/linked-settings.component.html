@@ -1,0 +1,84 @@
+<div class="fs-row.gap-lg.align-start">
+  <!--
+    The linked form. It wraps this tab's fields and nothing else - no dialog
+    chrome, no other tab - so validating it validates only what is on screen.
+    Nesting inside the dialog's fsForm links it automatically, which is how the
+    footer's Save button reaches it.
+  -->
+  <form
+      ngForm
+      fsForm
+      [submit]="save"
+      class="fs-flex">
+    <h2>
+      Settings
+    </h2>
+    <div class="fs-column">
+      <mat-form-field>
+        <mat-label>
+          First Name
+        </mat-label>
+        <input
+          matInput
+          [(ngModel)]="account.firstName"
+          name="firstName"
+          [fsFormRequired]="true">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>
+          Last Name
+        </mat-label>
+        <input
+          matInput
+          [(ngModel)]="account.lastName"
+          name="lastName"
+          [fsFormRequired]="true">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>
+          Email
+        </mat-label>
+        <input
+          matInput
+          [(ngModel)]="account.email"
+          name="email"
+          [fsFormRequired]="true"
+          [fsFormEmail]="true">
+      </mat-form-field>
+    </div>
+  </form>
+  <!--
+    The instant-save panel. `[link]="false"` cuts it out of the linked set: it
+    keeps fsForm's validation and error rendering for its own fields, but editing
+    it never enables the footer's Save, never blocks the settings submit, and
+    never raises an unsaved-changes prompt - because it has already saved.
+
+    `[confirm]="false"` follows from that: there is never anything outstanding.
+  -->
+  <div class="fs-column">
+    <h2>
+      Status
+    </h2>
+    <mat-form-field>
+      <mat-label>
+        Status
+      </mat-label>
+      <mat-select
+          [(ngModel)]="account.status"
+          name="status"
+          (ngModelChange)="saveInstantly('Status')">
+        @for (status of statuses; track status) {
+          <mat-option [value]="status">
+            {{ status }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-slide-toggle
+        [(ngModel)]="account.notify"
+        name="notify"
+        (ngModelChange)="saveInstantly('Notifications')">
+      Email notifications
+    </mat-slide-toggle>
+  </div>
+</div>
