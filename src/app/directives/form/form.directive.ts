@@ -30,6 +30,7 @@ import {
 } from 'rxjs/operators';
 
 import { getFormErrors } from '../../helpers/get-form-errors';
+import { withinSameDialog } from '../../helpers/within-same-dialog';
 import { FsButtonDirective } from '../button.directive';
 import { FsFormBaseDirective } from '../form-base';
 import { FsFormContainerDirective } from '../form-container';
@@ -130,8 +131,12 @@ export class FsFormDirective
   private _containerParent: FsFormDirective = null;
   private _dirtyChange$ = new Subject<void>();
   private _message = inject(FsMessage);
-  private _container = inject(FsFormContainerDirective, { optional: true });
-  private _ancestorForm = inject(FsFormDirective, { optional: true, skipSelf: true });
+  // Both lookups walk the element injector, which reaches straight through a
+  // dialog opened with `viewContainerRef` into whatever opened it. Anything
+  // belonging to a different dialog is discarded, so a set never spans two.
+  private _container = this._ownDialogOnly(inject(FsFormContainerDirective, { optional: true }));
+  private _ancestorForm = this
+    ._ownDialogOnly(inject(FsFormDirective, { optional: true, skipSelf: true }));
 
 
   /**
@@ -632,6 +637,11 @@ export class FsFormDirective
    */
   private _getOwner(): FsFormBaseDirective {
     return (this.link ? this._container : null) || this.rootForm;
+  }
+
+  /** Keeps a DI-resolved owner only when it belongs to this form's dialog. */
+  private _ownDialogOnly<T extends FsFormBaseDirective>(owner: T): T {
+    return withinSameDialog(owner, this._dialogRef) ? owner : null;
   }
 
   private _resetButtons(): void {

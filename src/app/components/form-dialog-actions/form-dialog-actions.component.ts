@@ -2,12 +2,15 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
-import { MatDialogClose } from '@angular/material/dialog';
+import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 
 import { Subject } from 'rxjs';
 import { delay, takeUntil } from 'rxjs/operators';
 
+import { withinSameDialog } from '../../helpers/within-same-dialog';
+
 import { FsButtonDirective } from '../../directives/button.directive';
+import { FsFormBaseDirective } from '../../directives/form-base';
 import { FsFormContainerDirective } from '../../directives/form-container';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 import { FsFormDirective } from '../../directives/form/form.directive';
@@ -42,8 +45,12 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   public dirty = false;
 
   private _destroy$ = new Subject<void>();
-  private _container = inject(FsFormContainerDirective, { optional: true });
-  private _form = inject(FsFormDirective, { optional: true });
+  private _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, { optional: true });
+  // A dialog opened with `viewContainerRef` resolves through to whatever opened
+  // it, so an owner from another dialog is discarded - these actions belong to
+  // their own dialog's form set and no one else's.
+  private _container = this._ownDialogOnly(inject(FsFormContainerDirective, { optional: true }));
+  private _form = this._ownDialogOnly(inject(FsFormDirective, { optional: true }));
   private _cdRef = inject(ChangeDetectorRef);
 
   /**
@@ -104,5 +111,10 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this._destroy$.next(null);
     this._destroy$.complete();
+  }
+
+  /** Keeps a DI-resolved owner only when it belongs to these actions' dialog. */
+  private _ownDialogOnly<T extends FsFormBaseDirective>(owner: T): T {
+    return withinSameDialog(owner, this._dialogRef) ? owner : null;
   }
 }

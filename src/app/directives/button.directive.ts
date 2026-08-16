@@ -4,9 +4,12 @@ import {
 } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { withinSameDialog } from '../helpers/within-same-dialog';
 
 import { FsFormDirective } from './form';
 import { FsFormBaseDirective } from './form-base';
@@ -45,8 +48,9 @@ export class FsButtonDirective implements OnInit, OnDestroy {
   private _previousDisabled = false;
   private _destroy$ = new Subject();
 
-  private _container = inject(FsFormContainerDirective, { optional: true });
-  private _form = inject(FsFormDirective, { optional: true });
+  private _dialogRef = inject<MatDialogRef<any>>(MatDialogRef, { optional: true });
+  private _container = this._ownDialogOnly(inject(FsFormContainerDirective, { optional: true }));
+  private _form = this._ownDialogOnly(inject(FsFormDirective, { optional: true }));
   private _matButton = inject(MatButton, { optional: true, host: true });
   private _elementRef = inject(ElementRef);
   private _cdRef = inject(ChangeDetectorRef);
@@ -158,6 +162,16 @@ export class FsButtonDirective implements OnInit, OnDestroy {
     this._destroy$.next(null);
     this._destroy$.complete();
     this._formBase?.removeButton(this);
+  }
+
+  /**
+   * Keeps a DI-resolved owner only when it belongs to this button's dialog. A
+   * dialog opened with `viewContainerRef` resolves through to whatever opened
+   * it, so without this the inner dialog's Save would register with - and
+   * submit - the outer dialog's form set.
+   */
+  private _ownDialogOnly<T extends FsFormBaseDirective>(owner: T): T {
+    return withinSameDialog(owner, this._dialogRef) ? owner : null;
   }
 
   // Effective disabled combines the consumer-controlled submitDisabled input with

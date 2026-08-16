@@ -10,8 +10,7 @@ import { FsTabsModule } from '@firestitch/tabs';
 
 import { FsFormDialogActionsComponent } from '../../../../src/app/components/form-dialog-actions/form-dialog-actions.component';
 import { FsFormContainerDirective } from '../../../../src/app/directives/form-container/form-container.directive';
-import { LinkedNotesComponent } from '../linked-notes/linked-notes.component';
-import { LinkedSettingsComponent } from '../linked-settings/linked-settings.component';
+import { LinkedProfileComponent } from '../linked-profile/linked-profile.component';
 
 
 @Component({
@@ -30,14 +29,12 @@ import { LinkedSettingsComponent } from '../linked-settings/linked-settings.comp
     MatTabContent,
     FsTabsModule,
     FsFormDialogActionsComponent,
-    LinkedSettingsComponent,
-    LinkedNotesComponent,
+    LinkedProfileComponent,
   ],
 })
 export class DialogLinkedComponent {
 
   public sideTab = 'profile';
-  public topTab = 'settings';
 
   public account = {
     id: 1,

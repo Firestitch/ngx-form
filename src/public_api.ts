@@ -8,6 +8,7 @@ export { FsForm } from './app/services/fsform.service';
 export { FsFormGreaterDirective, FsFormGreaterEqualDirective, FsFormLesserEqualDirective, FsFormTemplateDirective } from './app/directives';
 export { FsButtonDirective } from './app/directives/button.directive';
 export { FsFormDialogCloseDirective } from './app/directives/form-dialog-close.directive';
+export { FsFormConfirmTabsDirective } from './app/directives/confirm-tabs/confirm-tabs.directive';
 export { FsFormContainerDirective } from './app/directives/form-container/form-container.directive';
 export { FsFormDirective } from './app/directives/form/form.directive';
 export { FsSubmitButtonDirective } from './app/directives/submit-button.directive';

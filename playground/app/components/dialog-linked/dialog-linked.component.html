@@ -25,24 +25,12 @@
           label="Profile"
           name="profile">
         <ng-template matTabContent>
-          <mat-tab-group
-              fsTabs
-              [(selected)]="topTab">
-            <mat-tab
-                label="Settings"
-                name="settings">
-              <ng-template matTabContent>
-                <app-linked-settings [account]="account"></app-linked-settings>
-              </ng-template>
-            </mat-tab>
-            <mat-tab
-                label="Notes"
-                name="notes">
-              <ng-template matTabContent>
-                <app-linked-notes [account]="account"></app-linked-notes>
-              </ng-template>
-            </mat-tab>
-          </mat-tab-group>
+          <!--
+            The inner tabs are a child component, the way a real dialog splits up.
+            That puts them outside the container's content query, which is what
+            `fsFormConfirmTabs` in there resolves.
+          -->
+          <app-linked-profile [account]="account"></app-linked-profile>
         </ng-template>
       </mat-tab>
       <mat-tab

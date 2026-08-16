@@ -13,6 +13,7 @@ export * from './first-example';
 export * from './function';
 export * from './linked-example';
 export * from './linked-notes';
+export * from './linked-profile';
 export * from './linked-settings';
 export * from './nested';
 export * from './nested-level-1';

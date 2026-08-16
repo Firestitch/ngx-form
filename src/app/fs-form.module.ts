@@ -17,6 +17,7 @@ import {
 } from './directives';
 import { FsButtonDirective } from './directives/button.directive';
 import { FsFormDialogCloseDirective } from './directives/form-dialog-close.directive';
+import { FsFormConfirmTabsDirective } from './directives/confirm-tabs/confirm-tabs.directive';
 import { FsFormContainerDirective } from './directives/form-container/form-container.directive';
 import { FsFormDirective } from './directives/form/form.directive';
 import { FsFormCompareDirective } from './directives/validators/compare.directive';
@@ -81,6 +82,7 @@ import { FsFormTemplateOutletDirective } from './directives/form-template-outlet
         FsFormTemplateDirective,
         FsFormTemplateOutletDirective,
         FsFormContainerDirective,
+        FsFormConfirmTabsDirective,
     ],
     exports: [
         FsFormDirective,
@@ -114,6 +116,7 @@ import { FsFormTemplateOutletDirective } from './directives/form-template-outlet
         FsFormTemplateDirective,
         FsFormTemplateOutletDirective,
         FsFormContainerDirective,
+        FsFormConfirmTabsDirective,
     ],
     providers: [
         {

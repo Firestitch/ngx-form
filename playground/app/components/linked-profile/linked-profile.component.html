@@ -1,0 +1,26 @@
+<!--
+  These tabs live in a child component's own template, so the dialog's
+  fsFormContainer cannot see them: `@ContentChildren(MatTabGroup)` reaches
+  through projected content but stops at a component boundary. Without
+  `fsFormConfirmTabs` switching Settings <-> Notes with unsaved edits would go
+  through silently while the outer tabs still prompted.
+-->
+<mat-tab-group
+    fsTabs
+    fsFormConfirmTabs
+    [(selected)]="topTab">
+  <mat-tab
+      label="Settings"
+      name="settings">
+    <ng-template matTabContent>
+      <app-linked-settings [account]="account"></app-linked-settings>
+    </ng-template>
+  </mat-tab>
+  <mat-tab
+      label="Notes"
+      name="notes">
+    <ng-template matTabContent>
+      <app-linked-notes [account]="account"></app-linked-notes>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

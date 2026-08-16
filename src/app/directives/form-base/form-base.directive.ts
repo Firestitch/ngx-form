@@ -50,9 +50,6 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
   public confirmTabs = true;
 
   @Input()
-  public tabGroup: MatTabGroup;
-
-  @Input()
   public confirm: ConfirmConfig | boolean = true;
 
   @Input()
@@ -105,6 +102,14 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
   /** Tracks the owned set's submit lifecycle, so the drawer can wait one out. */
   public abstract status$: Observable<FormStatus>;
 
+  /**
+   * The dialog this owner lives in, or null outside one. Used to keep a form set
+   * from spanning a dialog boundary - see `withinSameDialog`.
+   */
+  public get dialogRef(): MatDialogRef<any> {
+    return this._dialogRef;
+  }
+
   public ngOnInit(): void {
     this._registerOwnerLifecycle();
   }
@@ -133,6 +138,17 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
 
   public set activeSubmitButton(button: FsButtonDirective) {
     this._activeSubmitButton = button;
+  }
+
+  /**
+   * Bring a tab group into this owner's unsaved-changes confirm.
+   *
+   * `_tabGroups` only reaches groups in this owner's projected content, so a group
+   * declared inside a child component's own template has to announce itself.
+   * `fsFormConfirmTabs` calls this - consumers never call it directly.
+   */
+  public registerTabGroup(tabGroup: MatTabGroup): void {
+    this._registerConfirmTabGroup(tabGroup);
   }
 
   public addButton(button: FsButtonDirective): void {

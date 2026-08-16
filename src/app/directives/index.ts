@@ -1,3 +1,4 @@
+export * from './confirm-tabs';
 export * from './form';
 export * from './form-container';
 export * from './validators';
