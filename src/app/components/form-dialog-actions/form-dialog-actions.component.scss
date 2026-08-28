@@ -1,9 +1,49 @@
+@use '@firestitch/style/styles' as fs-style;
+
+// Material's button class depends on the major: `.mat-button` through v14, then
+// `.mdc-button` and `.mat-mdc-button-base` from v15 - both of which v20/v21 still
+// emit. Bare `button` covers whatever else a caller projects in.
+$button-selectors: 'button, .mat-button, .mdc-button, .mat-mdc-button-base';
+
 :host {
+  display: block;
   width: 100%;
+
+  &.save-create .close-button {
+    float: right;
+  }
 }
 
-.form-buttons {
-  &.save-create .close-button{
-    float: right;
+// fs-dialog stacks `mat-dialog-actions` full width at this breakpoint, but that
+// rule sizes the buttons it finds directly beneath it. This component now sits
+// between the two, so it reproduces the same layout to stay in step with it.
+@media (max-width: fs-style.$break-xsmall) {
+  :host {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    // Direct children stretch on their own as flex items, which is what carries
+    // a caller that wraps its button in a span; the button inside still needs
+    // sizing. ::ng-deep because projected content keeps the encapsulation
+    // attribute of the component that declared it, not this one's.
+    ::ng-deep {
+      #{$button-selectors} {
+        width: 100%;
+        margin: 0 0 4px 0;
+
+        // Material spaces a row of actions with `.mat-mdc-dialog-actions
+        // .mat-mdc-button-base + .mat-mdc-button-base { margin-left: 8px }`,
+        // which outranks anything this component can put on its own
+        // descendants. Stacked, that offset carries every button after the
+        // first past the dialog's edge. `margin-inline` covers the RTL half of
+        // the rule, which sets `margin-right` instead.
+        margin-inline: 0 !important;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
   }
 }

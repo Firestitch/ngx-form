@@ -1,9 +1,18 @@
-<form fsForm [submit]="save" [confirm]="{ title: 'Custom Unsaved Changes Title', message: 'Custom unsaved message'}">
+<form
+    fsForm
+    [submit]="save"
+    [confirm]="{ title: 'Custom Unsaved Changes Title', message: 'Custom unsaved message'}">
   <fs-dialog>
-    <h1 mat-dialog-title>Account</h1>
+    <h1 mat-dialog-title>
+      Account
+    </h1>
     <div mat-dialog-content>
-      <mat-tab-group fsTabs [(selected)]="tab">
-        <mat-tab label="Tab 1" name="tab-1">
+      <mat-tab-group
+          fsTabs
+          [(selected)]="tab">
+        <mat-tab
+            label="Tab 1"
+            name="tab-1">
           <div class="fs-column">
             <mat-form-field>
               <input
@@ -22,37 +31,41 @@
             </mat-form-field>
           </div>
         </mat-tab>
-        <mat-tab label="Tab 2" name="tab-2">
+        <mat-tab
+            label="Tab 2"
+            name="tab-2">
           <div class="content">
             Ut in magna vitae enim tristique bibendum vitae a sapien. Quisque sed risus elit. Nulla risus mauris, ultricies ut orci eget, porta facilisis est. Aenean mollis rhoncus ante, ullamcorper vestibulum lorem sodales a. Phasellus ultricies aliquet libero, non vulputate sapien blandit in. Sed id tempor risus. Phasellus auctor nisi nulla, nec dignissim enim tempus a. Nunc nec sem elit.
           </div>
         </mat-tab>
-        <mat-tab label="Tab 3" name="tab-3">
-          <div class="content">
-
-          </div>
+        <mat-tab
+            label="Tab 3"
+            name="tab-3">
+          <div class="content"></div>
         </mat-tab>
       </mat-tab-group>
     </div>
     <div mat-dialog-actions>
       <fs-form-dialog-actions
-        [save]="tab === 'tab-1'"
-        [close]="true"
-        [closeData]="{ test: true }">
+          [save]="tab === 'tab-1'"
+          [close]="true"
+          [closeData]="{ test: true }">
         @if (tab === 'tab-1') {
           <button
-            mat-button
-            type="button"
-            color="warn"
-            [matDialogClose]="null">
+              mat-button
+              type="button"
+              color="warn"
+              [matDialogClose]="null">
             Delete
           </button>
         }
-        <button
-          mat-button
-          type="button">
-          Other Action
-        </button>
+        <div>
+          <button
+              mat-button
+              type="button">
+            Other Action
+          </button>
+        </div>
       </fs-form-dialog-actions>
     </div>
   </fs-dialog>

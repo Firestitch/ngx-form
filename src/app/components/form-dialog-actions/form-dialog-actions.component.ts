@@ -1,4 +1,4 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 
 import { MatButton } from '@angular/material/button';
@@ -7,13 +7,12 @@ import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { delay, takeUntil } from 'rxjs/operators';
 
-import { withinSameDialog } from '../../helpers/within-same-dialog';
-
 import { FsButtonDirective } from '../../directives/button.directive';
 import { FsFormBaseDirective } from '../../directives/form-base';
 import { FsFormContainerDirective } from '../../directives/form-container';
 import { FsFormDialogCloseDirective } from '../../directives/form-dialog-close.directive';
 import { FsFormDirective } from '../../directives/form/form.directive';
+import { withinSameDialog } from '../../helpers/within-same-dialog';
 
 
 @Component({
@@ -22,8 +21,11 @@ import { FsFormDirective } from '../../directives/form/form.directive';
   styleUrls: ['./form-dialog-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  host: {
+    'class': 'form-buttons',
+    '[class.save-create]': 'showSave || create',
+  },
   imports: [
-    NgClass,
     MatButton,
     FsButtonDirective,
     MatDialogClose,
