@@ -6,7 +6,7 @@
 $button-selectors: 'button, .mat-button, .mdc-button, .mat-mdc-button-base';
 
 :host {
-  display: block;
+  display: flex;
   width: 100%;
 
   &.save-create .close-button {
