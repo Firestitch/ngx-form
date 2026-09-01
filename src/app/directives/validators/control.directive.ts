@@ -13,6 +13,9 @@ import {
 import { FsFormDirective } from '../form/form.directive';
 
 
+const resolvedPromise = Promise.resolve();
+
+
 export interface FsControlDirective {
   validate?(control: AbstractControl): ValidationErrors | null;
   validateAsync?(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null>;
@@ -46,7 +49,6 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
 
   public errors = [];
 
-  protected _control: AbstractControl;
   protected _elementRef = inject(ElementRef);
   protected _renderer2 = inject(Renderer2);
   protected _injector = inject(Injector);
@@ -55,16 +57,27 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   protected _formDirective = inject<FsFormDirective>(FsFormDirective, { optional: true });
 
   private _destroy$ = new Subject();
+  private _statusChanges$ = new Subject<void>();
+  private _boundControl: AbstractControl;
 
   constructor() {
-    const _ngControl = this._ngControl;
-
-
-    if (_ngControl) {
-      this._control = _ngControl.control;
-    } else {
+    if (!this._ngControl) {
       console.error('The element does not have a valid ngModel', this._elementRef.nativeElement);
     }
+  }
+
+  /**
+   * Always read the control through the directive rather than caching it.
+   *
+   * NgForm.addControl() runs in a microtask and reassigns dir.control to
+   * whatever FormGroup.registerControl() returns — and registerControl() hands
+   * back the EXISTING control when the name is already taken (two fields
+   * sharing a name, or lazily created content re-registering). A control
+   * captured in the constructor is then an orphan: it never emits again, so
+   * statusChanges never fires and the validation message is never rendered.
+   */
+  protected get _control(): AbstractControl {
+    return this._ngControl?.control;
   }
 
   public ngOnInit() {
@@ -72,6 +85,7 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    this._statusChanges$.complete();
     this._destroy$.next(null);
     this._destroy$.complete();
   }
@@ -248,13 +262,39 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
   }
 
   protected _subscribeToStatusChagnes():void {
-    if (this._control) {
-      this._control.statusChanges
-        .pipe(
-          takeUntil(this._destroy$),
-        )
-        .subscribe(this.render.bind(this));
+    // Registration is deferred to a microtask by NgForm.addControl(), so wait
+    // for it to settle before binding — otherwise we subscribe to the control
+    // that is about to be replaced.
+    resolvedPromise
+      .then(() => this._bindStatusChanges());
+  }
+
+  private _bindStatusChanges(): void {
+    const control = this._control;
+
+    if (!control || control === this._boundControl) {
+      return;
     }
+
+    this._boundControl = control;
+    this._statusChanges$.next();
+
+    control.statusChanges
+      .pipe(
+        takeUntil(this._statusChanges$),
+        takeUntil(this._destroy$),
+      )
+      .subscribe(() => {
+        // The control can still be swapped out from under us (a sibling with
+        // the same name registering later), so re-bind before rendering.
+        if (this._control !== this._boundControl) {
+          this._bindStatusChanges();
+        }
+
+        this.render();
+      });
+
+    this.render();
   }
 
   protected _getWrapper(node, count = 0) {

@@ -1,7 +1,7 @@
 {
   "name": "@firestitch/form",
   "title": "Form",
-  "version": "18.0.34",
+  "version": "18.0.35",
   "repository": {
     "type": "git",
     "url": "https://github.com/Firestitch/ngx-form"
@@ -73,8 +73,16 @@
     "@firestitch/store": "^18.0.0",
     "@firestitch/style": "^18.0.54",
     "@firestitch/tabs": "^18.0.10",
+    "@types/jasmine": "^5.1.4",
     "hammerjs": "^2.0.8",
+    "jasmine-core": "^5.4.0",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage-istanbul-reporter": "^3.0.3",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.3.0",
     "lodash-es": "^4.17.21",
+    "puppeteer": "^25.9.0",
     "rxjs": "^7.5.6",
     "tslib": "^2.0.0",
     "typescript": "5.4.5",
