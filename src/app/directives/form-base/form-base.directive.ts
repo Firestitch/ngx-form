@@ -87,6 +87,14 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
 
   public abstract submitting: boolean;
 
+  /**
+   * True when anything in the owned set has a submit handler - i.e. there is
+   * something for a Save button to do. Both a form and a container answer this
+   * over their linked set, so whichever one owns a footer can be asked the same
+   * question without knowing which it got.
+   */
+  public abstract submits: boolean;
+
   /** True when anything in the owned set has unsaved changes. */
   public abstract dirtyLinked: boolean;
 

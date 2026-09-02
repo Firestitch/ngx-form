@@ -35,11 +35,11 @@ import { withinSameDialog } from '../../helpers/within-same-dialog';
 })
 export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
 
-  /** Leave unset inside an `fsFormContainer` to follow whether it has anything to save. */
+  /** Leave unset to follow whether the enclosing form or container has anything to save. */
   @Input() public save: boolean;
   @Input() public create = false;
   @Input() public close = false;
-  /** Leave unset inside an `fsFormContainer` to fill in whenever Save does not apply. */
+  /** Leave unset to fill in whenever Save does not apply. */
   @Input() public done: boolean;
   @Input() public closeData = null;
   @Input() public name: string;
@@ -56,22 +56,41 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
   private _cdRef = inject(ChangeDetectorRef);
 
   /**
-   * Inside a container these default to whether anything mounted can actually
-   * save, so a footer left as a bare `<fs-form-dialog-actions>` swaps Save for
-   * Done as tabs change without the dialog listing which tabs are savable. An
-   * explicit binding always wins, and outside a container Save stays on as it
-   * always did.
+   * Whatever owns the form set these actions act on, or null when nothing does.
+   * A container answers for every form mounted under it; failing that the
+   * enclosing form's root answers for itself and anything linked into it.
+   */
+  private get _owner(): FsFormBaseDirective {
+    return this._container || this._form?.rootForm || null;
+  }
+
+  /**
+   * Save and Done are one decision - whether there is anything to save - rather
+   * than two independent switches, so a bare `<fs-form-dialog-actions>` resolves
+   * it off the form set it sits in and needs no bindings at all. A footer in a
+   * container swaps Save for Done as tabs change without the dialog listing
+   * which tabs are savable, and a dialog with no form at all - a read-only one
+   * of labelled facts - gets Done, because a submit button there has nothing to
+   * submit.
+   *
+   * An explicit binding always wins. `[done]="true"` on its own means Done and
+   * only Done: turning Done on while leaving a Save beside it is never what the
+   * caller meant, and the two-flag version of this let that happen silently.
    */
   public get showSave(): boolean {
-    return this.save ?? (this._container ? this._container.submits : true);
+    if(this.save !== undefined) {
+      return this.save;
+    }
+
+    return this.done === true ? false : this._owner?.submits ?? false;
   }
 
   public get showDone(): boolean {
-    return this.done ?? (this._container ? !this._container.submits && !this.create : false);
+    return this.done ?? (!this.showSave && !this.create);
   }
 
   public ngOnInit(): void {
-    const owner = this._container || this._form?.rootForm;
+    const owner = this._owner;
 
     if(owner) {
       // Track the whole set, not one form's own controls: with a form scoped to a
