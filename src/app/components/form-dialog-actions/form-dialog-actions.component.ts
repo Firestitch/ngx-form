@@ -85,8 +85,15 @@ export class FsFormDialogActionsComponent implements OnInit, OnDestroy {
     return this.done === true ? false : this._owner?.submits ?? false;
   }
 
+  /**
+   * Done stands in for a Save that does not apply, so it fills in only where a
+   * Save would otherwise have gone. `[save]="false"` is the caller saying they
+   * are footing the dialog themselves - usually with buttons projected into the
+   * content slot, sometimes including their own submit - and dropping an
+   * unasked-for Done beside those would be this component overruling them.
+   */
   public get showDone(): boolean {
-    return this.done ?? (!this.showSave && !this.create);
+    return this.done ?? (this.save === undefined && !this.showSave && !this.create);
   }
 
   public ngOnInit(): void {
