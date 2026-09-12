@@ -478,8 +478,29 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
       return;
     }
 
-    const guardIndex = this._activatedRouteConfig.canDeactivate.indexOf(FormDeactivateGuard);
-    this._activatedRouteConfig.canDeactivate.splice(guardIndex, 1);
+    // GUARDED THE SAME WAY REGISTRATION IS, and for the same reason the
+    // registration above builds the array when it is missing.
+    //
+    // `routeConfig` is the router's own object, shared and cached for the life
+    // of the route. A route that declares no `canDeactivate` has none until
+    // registration creates one — so this cannot assume the array is here just
+    // because registration ran. `getActiveRoute()` walks to the DEEPEST active
+    // route, and destroy resolves it against whatever the router holds at
+    // teardown, which is not always the config registration mutated: a
+    // navigation that advances the route tree before the form's ngOnDestroy
+    // fires leaves this pointing at a config whose `canDeactivate` was never
+    // initialized, and `undefined.indexOf` throws mid-teardown. The form then
+    // never finishes cleaning up and the next screen renders against half-torn
+    // state — unstyled native inputs, a page that looks like it failed to boot.
+    const guards = this._activatedRouteConfig.canDeactivate;
+
+    if (Array.isArray(guards)) {
+      const guardIndex = guards.indexOf(FormDeactivateGuard);
+
+      if (guardIndex !== -1) {
+        guards.splice(guardIndex, 1);
+      }
+    }
 
     this._form.removeFormDirective(this._activatedRouteConfig.component);
   }
