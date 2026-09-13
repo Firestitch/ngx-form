@@ -26,6 +26,7 @@ import { FormStatus } from '../../enums/form-status';
 import { FormDeactivateGuard } from '../../guards/form-deactivate.guard';
 import { confirmResultContinue } from '../../helpers';
 import { getActiveRoute } from '../../helpers/get-active-route';
+import { getRouteComponent } from '../../helpers/get-route-component';
 import { ConfirmConfig, ConfirmTabGroup, SubmitEvent, SubmittedEvent } from '../../interfaces';
 import { FsForm } from '../../services/fsform.service';
 import { FsButtonDirective } from '../button.directive';
@@ -462,7 +463,7 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
       return;
     }
 
-    this._form.registerFormDirective(this._activatedRouteConfig.component, this);
+    this._form.registerFormDirective(getRouteComponent(this._activatedRouteConfig), this);
 
     if (!Array.isArray(this._activatedRouteConfig.canDeactivate)) {
       this._activatedRouteConfig.canDeactivate = [];
@@ -502,7 +503,7 @@ export abstract class FsFormBaseDirective implements OnInit, AfterContentInit, O
       }
     }
 
-    this._form.removeFormDirective(this._activatedRouteConfig.component);
+    this._form.removeFormDirective(getRouteComponent(this._activatedRouteConfig));
   }
 
 

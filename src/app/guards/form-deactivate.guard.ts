@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { confirmResultContinue } from '../helpers';
 import { getActiveRoute } from '../helpers/get-active-route';
+import { getRouteComponent } from '../helpers/get-route-component';
 import { FsFormOwner } from '../interfaces';
 import { FsForm } from '../services/fsform.service';
 
@@ -29,7 +30,7 @@ export class FormDeactivateGuard  {
     }
 
     const directives: FsFormOwner[] = this._form
-      .getFormDirectives(route.routeConfig.component);
+      .getFormDirectives(getRouteComponent(route.routeConfig));
 
     if (!Array.isArray(directives) || directives.length === 0) {
       console.error('Can not find a valid FsFormDirective');
