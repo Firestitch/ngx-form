@@ -32,21 +32,15 @@ $button-selectors: 'button, .mat-button, .mdc-button, .mat-mdc-button-base';
   }
 }
 
-// fs-dialog stacks `mat-dialog-actions` full width at this breakpoint, but that
-// rule sizes the buttons it finds directly beneath it. This component now sits
-// between the two, so it reproduces the same layout to stay in step with it.
-@media (max-width: fs-style.$break-xsmall) {
-  :host {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: stretch;
-
-    ::ng-deep {
-      > *,
-      #{$button-selectors} {
-        width: 100%;
-        margin: 0 !important;
-      }
-    }
-  }
-}
+// NO RESPONSIVE RULES HERE, DELIBERATELY - Ray 2026-09-14.
+//
+// This component decides WHICH buttons exist (save / create / close / done and
+// whatever the caller projects). It does not decide how they LOOK or how they
+// reflow, and it must not: fs-dialog already resolves the breakpoint to pick its
+// mode, so a second copy of the same threshold here drifted from it silently.
+//
+// There used to be a `@media (max-width: $break-xsmall)` block stacking the row
+// full width, whose own comment admitted it existed to "reproduce the same
+// layout to stay in step" with fs-dialog. One owner instead: fs-dialog's
+// full-width-actions() mixin lays the row out, and FsDialogActionsDirective sets
+// the button appearances. Do not reintroduce a breakpoint in this package.

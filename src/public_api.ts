@@ -40,6 +40,7 @@ export { FsValidators } from './app/validators/validators';
 
 export { FormDeactivateGuard } from './app/guards/form-deactivate.guard';
 
+
 // Interfaces
 export { ConfirmConfig } from './app/interfaces/confirm-config';
 export { FsFormOwner } from './app/interfaces/form-owner';
