@@ -1,4 +1,5 @@
 import { Directive, OnChanges } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
 
 import { FsControlDirective } from './control.directive';
 import { VALIDATE_MESSAGE_PROVIDER } from '../../providers/validate-messages.provider';
@@ -42,10 +43,14 @@ export class FsFormNoFsValidatorsDirective extends FsControlDirective implements
     this._control.updateValueAndValidity();
   }
 
-  protected _subscribeToStatusChagnes(): void {
-    if (!!this._control.validator || !!this._control.asyncValidator) {
-      super._subscribeToStatusChagnes();
-    }
+  /**
+   * A control with no validators has no message to show, so it is not bound (SP-T2996). Asked
+   * after NgForm has registered the control, because a custom control's own NG_VALIDATORS
+   * (fsDatePickerBirthday, fs-password…) only reach it then. Checked earlier, in
+   * ngAfterContentInit, they were never there yet, so those messages never showed (IEB-T254).
+   */
+  protected _shouldBind(control: AbstractControl): boolean {
+    return !!control.validator || !!control.asyncValidator;
   }
 
 }

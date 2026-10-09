@@ -269,10 +269,19 @@ export class FsControlDirective implements OnInit, AfterContentInit, OnDestroy {
       .then(() => this._bindStatusChanges());
   }
 
+  /**
+   * Whether this directive renders messages for the control. Asked once NgForm has registered
+   * the control, which is when its validators, its own NG_VALIDATORS included, are in place.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _shouldBind(control: AbstractControl): boolean {
+    return true;
+  }
+
   private _bindStatusChanges(): void {
     const control = this._control;
 
-    if (!control || control === this._boundControl) {
+    if (!control || control === this._boundControl || !this._shouldBind(control)) {
       return;
     }
 
